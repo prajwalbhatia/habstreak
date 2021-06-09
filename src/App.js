@@ -1,14 +1,44 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+
+//Third party libraries
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from 'react-router-dom';
+
+//Paged
+import DashboardPage from './pages/Dashboard/dashboard';
+import StreakPage from './pages/Streak/streak';
+import RewardsPage from "./pages/Rewards/rewards";
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-       <h1>HABSTREAK</h1>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        <Switch>
+          <Route path="/dashboard">
+            <DashboardPage />
+          </Route>
+          <Route path="/streak">
+            <StreakPage />
+          </Route>
+          <Route path="/rewards">
+            <RewardsPage />
+          </Route>
+          <Route path="/">
+            <Redirect to="/dashboard" />
+          </Route>
+        </Switch>
+      </Router>
+    );
+  }
 }
+
+
 
 export default App;
