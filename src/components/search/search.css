@@ -1,0 +1,10 @@
+.search-container input {
+  border: 0;
+  border-radius: 3px;
+  background-color: white;
+  box-shadow: 0px 4px 4px 0px #ccc;
+  height: 2rem;
+  min-width: 12rem;
+  outline: none;
+  padding: 0 5px;
+}

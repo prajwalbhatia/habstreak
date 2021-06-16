@@ -1,7 +1,7 @@
 import React , {useState} from 'react';
-import { AiFillHeart , AiFillFire , AiFillTrophy } from "react-icons/ai";
-import { RiDashboardFill } from "react-icons/ri";
+import { AiFillHeart  } from "react-icons/ai";
 import {IconContext} from "react-icons"
+import { useHistory } from "react-router";
 
 //Navigation list
 import navigationList  from './navigationList';
@@ -13,7 +13,7 @@ import "../../index.css";
 
 function Navigation(props) {
   const [navigation , setNavigation] = useState([...navigationList]);
-
+  const history = useHistory();
 
   const linkClick = (list) => {
     const id = list._id;
@@ -24,6 +24,9 @@ function Navigation(props) {
       if(el._id === id)
       {
         el.active = true;
+        history.push({
+          pathname : `${list.url}`
+        })  
       }
     });
 
@@ -48,7 +51,8 @@ function Navigation(props) {
                   >
                     <div className={list.active ? "active" : ""}></div>
                     <div className="d-flex">
-                    <IconContext.Provider value={{ style: {fontSize: '1.4rem', color: "white" , marginTop : "1px" , marginRight : "5px"}}}>
+                    <IconContext.Provider 
+                    value={{ style: {fontSize: '1.4rem', color: "white" , marginTop : "1px" , marginRight : "5px"}}}>
                       {list.iconJsx}
                     </IconContext.Provider>
                     <a href="" onClick={(e) => {e.preventDefault()}}>{list.name}</a>

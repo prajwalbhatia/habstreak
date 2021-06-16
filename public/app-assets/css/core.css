@@ -12,6 +12,10 @@
   src: url("../fonts/Montserrat-Light.ttf");
 }
 /*FONTS*/
+* {
+  margin: 0;
+  padding: 0;
+}
 :root {
   --navigationWidth: 18rem;
   --navigationAroundSpace: 1.5rem;
@@ -19,6 +23,7 @@
   --secondaryColor: #FAFF00;
 }
 h1,
+h2,
 p,
 span,
 a,

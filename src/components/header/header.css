@@ -1,0 +1,5 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding-top: calc(var(--navigationAroundSpace) + 1.2rem);
+}
