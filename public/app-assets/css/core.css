@@ -1,1 +1,37 @@
-:root{--navigationWidth:80px}
+/*FONTS*/
+@font-face {
+  font-family: "montserrat-bold";
+  src: url("../fonts/Montserrat-Bold.ttf");
+}
+@font-face {
+  font-family: "montserrat-regular";
+  src: url("../fonts/Montserrat-Regular.ttf");
+}
+@font-face {
+  font-family: "montserrat-light";
+  src: url("../fonts/Montserrat-Light.ttf");
+}
+/*FONTS*/
+:root {
+  --navigationWidth: 18rem;
+  --navigationAroundSpace: 1.5rem;
+  --primaryColor: #050038;
+  --secondaryColor: #FAFF00;
+}
+h1,
+p,
+span,
+a,
+li {
+  font-family: montserrat-regular;
+}
+ol {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+}
+a,
+a:visited,
+a:active {
+  text-decoration: none;
+}

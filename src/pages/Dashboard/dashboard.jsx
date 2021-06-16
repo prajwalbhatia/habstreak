@@ -10,7 +10,7 @@ function Dashboard(props) {
   return (
     <div className="dashboard">
       <Navigation />
-      <h1>DASHBOARD</h1>
+      {/* <h1>DASHBOARD</h1> */}
     </div>
   );
 }
