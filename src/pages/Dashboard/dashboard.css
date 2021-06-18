@@ -3,3 +3,22 @@
   margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
   padding: 0 1rem;
 }
+.dashboard .dashboard-main-container .notification-card {
+  margin-top: 2.5rem;
+}
+.dashboard .dashboard-main-container .progress-streak-container {
+  margin-top: 3rem;
+}
+.dashboard .dashboard-main-container .progress-streak-container .header-container {
+  display: flex;
+  justify-content: space-between;
+}
+.dashboard .dashboard-main-container .progress-streak-container .streak-list {
+  display: flex;
+  overflow: auto;
+}
+.dashboard .dashboard-main-container .progress-streak-container .streak-list .streak-card {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 200px;
+}

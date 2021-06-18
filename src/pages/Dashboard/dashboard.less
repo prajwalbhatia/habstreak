@@ -5,5 +5,34 @@
       height: 100vh;
       margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
       padding: 0 1rem;
+
+      .notification-card
+      {
+        margin-top: 2.5rem;
+      }
+
+      .progress-streak-container
+      {
+        margin-top: 3rem;
+
+        .header-container
+        {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .streak-list
+        {
+          display: flex;
+          overflow: auto;
+          .streak-card
+          {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 200px;
+          }
+        }
+
+      }
   }
 }
