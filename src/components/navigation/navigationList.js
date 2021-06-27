@@ -1,4 +1,4 @@
-import { AiFillHeart , AiFillFire , AiFillTrophy } from "react-icons/ai";
+import { AiFillFire , AiFillTrophy } from "react-icons/ai";
 import { RiDashboardFill } from "react-icons/ri";
 
 const navigationList = [

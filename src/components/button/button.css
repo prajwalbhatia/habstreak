@@ -4,8 +4,13 @@
   font-family: montserrat-regular;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
 }
 .button-container .primary-btn {
   color: white;
-  background-color: #18A0FB;
+  background-color: var(--primaryBtnColor);
+}
+.button-container .secondary-btn {
+  background-color: var(--secondaryBtnColor);
+  color: black;
 }

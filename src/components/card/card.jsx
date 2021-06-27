@@ -5,7 +5,7 @@ import './card.css';
 
 function Card(props) {
     return(
-        <div className={`card ${props.cardClass}`}>
+        <div className={props.cardClass ? `card ${props.cardClass}` : "card"}>
             {props.withLine ?  <div className="card-line"></div> : null}
             {props.children}
         </div>

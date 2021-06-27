@@ -1,0 +1,79 @@
+.streak .streak-main-container {
+  margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
+  padding: 0 1rem;
+}
+.streak .streak-main-container .tab-container {
+  margin-top: 1rem;
+  display: flex;
+}
+.streak .streak-main-container .tab-container .tab-item {
+  width: max-content;
+  cursor: pointer;
+}
+.streak .streak-main-container .tab-container .tab-item:not(:last-child) {
+  margin-right: 0.5rem;
+}
+.streak .streak-main-container .tab-container .active-tab {
+  width: 100%;
+  background-color: var(--secondaryColor);
+  height: 5px;
+}
+.streak .streak-main-container .streak-list {
+  margin-top: 1rem;
+}
+.streak .streak-main-container .streak-list .streak-card {
+  padding: 0 0 0 1rem;
+  display: flex;
+}
+.streak .streak-main-container .streak-list .streak-card .info-container {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  flex: 8;
+}
+.streak .streak-main-container .streak-list .streak-card .info-container h4 {
+  margin-top: 0.5rem;
+}
+.streak .streak-main-container .streak-list .streak-card .image-container {
+  display: flex;
+  flex: 5;
+  background: url("undraw_By_the_road_re_vvs7.svg");
+  background-size: cover;
+}
+.streak .streak-main-container .streak-list .streak-card .icons-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.streak .streak-main-container .streak-list .streak-card .icons-container .icn {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.streak .streak-main-container .streak-list .streak-card .icons-container .icn:hover {
+  background-color: #fff4f4;
+}
+.streak .streak-main-container .streak-list .streak-card .icons-container icon-delete:hover {
+  border-top-right-radius: 0.5rem;
+}
+.streak .streak-main-container .streak-list .streak-card .icons-container icon-arrow:hover {
+  border-bottom-right-radius: 0.5rem;
+}
+.streak .streak-main-container .new-streak {
+  margin-top: 2rem;
+}
+.streak .streak-main-container .new-streak .new-streak-card {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.streak .streak-main-container .new-streak .new-streak-card .content-container {
+  width: max-content;
+  display: flex;
+}
+.streak .streak-main-container .new-streak .new-streak-card .content-container h2 {
+  margin-right: 5px;
+}

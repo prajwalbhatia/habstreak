@@ -19,6 +19,8 @@ class App extends Component {
   render() {
     return (
       <Router>
+        {/* Modal Container */}
+        <div id="modal-container-id"></div>
         <Switch>
           <Route path="/dashboard">
             <DashboardPage />
@@ -37,7 +39,5 @@ class App extends Component {
     );
   }
 }
-
-
 
 export default App;

@@ -15,6 +15,7 @@ function Dashboard(props) {
     <div className="dashboard">
       <Navigation />
       <div className="dashboard-main-container">
+          {/* Header */}
           <div className="pad-global">
             <Header
               headerText={'DASHBOARD'}
@@ -64,9 +65,8 @@ function Dashboard(props) {
             </div>
           </div>
 
-
-            {/* Activities */}
-            <div className="activities-container pad-global">
+          {/* Activities */}
+          <div className="activities-container pad-global">
               <diV className="header-container pad-global">
                 <h4>Activities</h4>
               

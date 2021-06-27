@@ -27,7 +27,7 @@
   margin-top: 0.5rem;
 }
 .dashboard .dashboard-main-container .progress-streak-container .streak-list .streak-card:not(:last-child) {
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 }
 .dashboard .dashboard-main-container .activities-container {
   margin-top: 3rem;
