@@ -3,11 +3,14 @@ import React from 'react';
 //Css
 import './card.css';
 
-function Card(props) {
+function Card({cardClass , withLine , children  , ...rest}) {
     return(
-        <div className={props.cardClass ? `card ${props.cardClass}` : "card"}>
-            {props.withLine ?  <div className="card-line"></div> : null}
-            {props.children}
+        <div 
+        className={cardClass ? `card ${cardClass}` : "card"}
+        {...rest}
+        >
+            {withLine ?  <div className="card-line"></div> : null}
+            {children}
         </div>
     );
 }

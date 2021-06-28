@@ -1,5 +1,8 @@
 .header {
-  display: flex;
   justify-content: space-between;
+  display: flex;
   padding-top: calc(var(--navigationAroundSpace) + 1.2rem);
+}
+.header .header-text-container {
+  display: flex;
 }

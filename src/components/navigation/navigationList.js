@@ -13,7 +13,7 @@ const navigationList = [
         _id : "2",
         name: "Streak",
         active: false,
-        url : "/streak",
+        url : "/streak-list",
         iconJsx: <AiFillFire/> ,
     },
     {
