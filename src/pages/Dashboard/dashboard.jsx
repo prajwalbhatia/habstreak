@@ -1,8 +1,7 @@
 import React from 'react';
 
 //COMPONENTS
-import Navigation from "../../components/navigation/navigation";
-import Header from "../../components/header/header";
+import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 import {PrimaryButton} from "../../components/button/button";
 
@@ -12,19 +11,14 @@ import "../../index.css";
 
 function Dashboard(props) {
   return (
-    <div className="dashboard">
-      <Navigation />
-      <div className="dashboard-main-container">
-          {/* Header */}
-          <div className="pad-global">
-            <Header
-              headerText={'DASHBOARD'}
-              withSearchBox={true}
-            />
-          </div>
-
-          {/* Notification Card */}
-          <div className="pad-global">
+    <Frame
+      withHeader={true}
+      headerTitle={'DASHBOARD'}
+      withSearchBox={true}
+      containerClass="dashboard"
+    >
+        {/* Notification Card */}
+        <div className="pad-global">
             <Card cardClass="notification-card">
               <h2>Welcom back, Prajwal Bhatia!</h2>
               <h4 className="mt-1">You have 10 task to complete today</h4>
@@ -94,8 +88,7 @@ function Dashboard(props) {
               </Card>
             </div>
           </div>
-      </div>
-    </div>
+    </Frame>
   );
 }
 

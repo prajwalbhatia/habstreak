@@ -1,23 +1,19 @@
-.rewards .rewards-main-container {
-  margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
-  padding: 0 1rem;
-}
-.rewards .rewards-main-container .rewards-area {
+.rewards .rewards-area {
   display: flex;
   flex-direction: row;
   margin-top: 1rem;
 }
-.rewards .rewards-main-container .rewards-area .left-portion {
+.rewards .rewards-area .left-portion {
   flex: 1;
   margin-right: 2rem;
 }
-.rewards .rewards-main-container .rewards-area .right-portion {
+.rewards .rewards-area .right-portion {
   flex: 1;
 }
-.rewards .rewards-main-container .rewards-area .rewards-list {
+.rewards .rewards-area .rewards-list {
   margin-top: 1rem;
 }
-.rewards .rewards-main-container .rewards-area .new-reward-card {
+.rewards .rewards-area .new-reward-card {
   margin-top: 1rem;
   display: flex;
   flex-direction: row;
@@ -25,10 +21,10 @@
   justify-content: center;
   padding: 0.8rem;
 }
-.rewards .rewards-main-container .rewards-area .new-reward-card .content-container {
+.rewards .rewards-area .new-reward-card .content-container {
   display: flex;
   cursor: pointer;
 }
-.rewards .rewards-main-container .rewards-area .new-reward-card .content-container h5 {
+.rewards .rewards-area .new-reward-card .content-container h5 {
   margin-right: 10px;
 }

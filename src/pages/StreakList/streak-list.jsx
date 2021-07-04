@@ -7,10 +7,10 @@ import { FaLocationArrow } from "react-icons/fa";
 import {IconContext} from "react-icons"
 
 //COMPONENTS
-import Navigation from "../../components/navigation/navigation";
-import Header from "../../components/header/header";
+import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 import Modal from "../../components/modal";
+
 
 //CSS
 import './streak-list.css';
@@ -64,18 +64,12 @@ function Streak(props) {
   }
 
   return (
-    <>
-    <div className="streak-list">
-      <Navigation />
-      <div className="streak-list-main-container">
-        {/* Header */}
-        <div className="pad-global">
-            <Header
-              headerText={'STREAK'}
-              withSearchBox={false}
-            />
-        </div>
-
+       <Frame
+        containerClass="streak-list"
+        withHeader={true}
+        headerTitle="Streaks"
+        withSearchBox={false}
+       >
           {/* Tab area */}
           <div className="tab-container" >
           <div 
@@ -141,9 +135,7 @@ function Streak(props) {
                   </div>
               </Card>
           </div>
-          </div>
-    </div>
-    </>
+       </Frame>
   );
 }
 

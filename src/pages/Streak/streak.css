@@ -1,25 +1,21 @@
-.streak .streak-main-container {
-  margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
-  padding: 0 1rem;
-}
-.streak .streak-main-container .streak-details {
+.streak .streak-details {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   max-height: calc(100vh - 72px);
 }
-.streak .streak-main-container .streak-details .streak-detail-card {
+.streak .streak-details .streak-detail-card {
   margin-top: 1.4rem;
   display: flex;
   flex-direction: row;
   width: fit-content;
 }
-.streak .streak-main-container .streak-details .streak-detail-card .day-info {
+.streak .streak-details .streak-detail-card .day-info {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.streak .streak-main-container .streak-details .streak-detail-card .day-info .day {
+.streak .streak-details .streak-detail-card .day-info .day {
   height: 4rem;
   width: 4rem;
   border-radius: 50%;
@@ -29,7 +25,7 @@
   justify-content: center;
   align-items: center;
 }
-.streak .streak-main-container .streak-details .streak-detail-card .day-info .day::after {
+.streak .streak-details .streak-detail-card .day-info .day::after {
   content: "";
   position: relative;
   display: block;
@@ -40,13 +36,13 @@
   left: -18px;
   background-color: var(--lightColor);
 }
-.streak .streak-main-container .streak-details .streak-detail-card .streak-info {
+.streak .streak-details .streak-detail-card .streak-info {
   padding: 1rem;
 }
-.streak .streak-main-container .streak-details .streak-detail-card .streak-info p {
+.streak .streak-details .streak-detail-card .streak-info p {
   font-size: 14px;
 }
-.streak .streak-main-container .streak-details .streak-detail-card .streak-info .status-block {
+.streak .streak-details .streak-detail-card .streak-info .status-block {
   width: fit-content;
   padding: 0.1rem 1.5rem;
   line-height: 1.3rem;
@@ -54,6 +50,6 @@
   background: var(--superLight);
   margin-top: 0.5rem;
 }
-.streak .streak-main-container .streak-details .streak-detail-card .streak-info .status-block span {
+.streak .streak-details .streak-detail-card .streak-info .status-block span {
   font-size: 14px;
 }

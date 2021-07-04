@@ -1,72 +1,66 @@
 .streak
 {
-    .streak-main-container
+    .streak-details
     {
-        margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
-        padding: 0 1rem;
-
-        .streak-details
-        {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        max-height: calc(100vh - 72px);
+        
+        .streak-detail-card
+        {   margin-top: 1.4rem;
             display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            max-height: calc(100vh - 72px);
-            
-            .streak-detail-card
-            {   margin-top: 1.4rem;
+            flex-direction: row;
+            width: fit-content;
+            .day-info
+            {
                 display: flex;
-                flex-direction: row;
-                width: fit-content;
-                .day-info
+                justify-content: center;
+                align-items: center;
+                .day
                 {
+                    height: 4rem;
+                    width: 4rem;
+                    border-radius: 50%;
+                    border: 1px solid var(--lightColor);
+                    margin-right: 0.5rem;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    .day
-                    {
-                        height: 4rem;
-                        width: 4rem;
-                        border-radius: 50%;
-                        border: 1px solid var(--lightColor);
-                        margin-right: 0.5rem;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
-
-                    .day::after
-                    {
-                        content: "";
-                        position: relative;
-                        display: block;
-                        height: 3.8rem;
-                        width: 5px;
-                        border-radius: 4px;
-                        top: 3.8rem;
-                        left: -18px;
-                        background-color: var(--lightColor);
-                    }
                 }
 
-                .streak-info
-                {   
-                    padding: 1rem;
-                    p
+                .day::after
+                {
+                    content: "";
+                    position: relative;
+                    display: block;
+                    height: 3.8rem;
+                    width: 5px;
+                    border-radius: 4px;
+                    top: 3.8rem;
+                    left: -18px;
+                    background-color: var(--lightColor);
+                }
+            }
+
+            .streak-info
+            {   
+                padding: 1rem;
+                p
+                {
+                    font-size: 14px;
+                }
+                .status-block
+                {
+                    width: fit-content;
+                    padding: 0.1rem 1.5rem;
+                    line-height: 1.3rem;
+                    border-radius: 4px;
+                    background: var(--superLight);
+                    margin-top: 0.5rem;
+                    span
                     {
                         font-size: 14px;
-                    }
-                    .status-block
-                    {
-                        width: fit-content;
-                        padding: 0.1rem 1.5rem;
-                        line-height: 1.3rem;
-                        border-radius: 4px;
-                        background: var(--superLight);
-                        margin-top: 0.5rem;
-                        span
-                        {
-                            font-size: 14px;
-                        }
                     }
                 }
             }

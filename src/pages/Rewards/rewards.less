@@ -1,49 +1,43 @@
 .rewards
 {
-    .rewards-main-container
+    .rewards-area
     {
-        margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
-        padding: 0 1rem;
-
-
-        .rewards-area
+        display: flex;
+        flex-direction: row;
+        margin-top: 1rem;
+        .left-portion
         {
+            flex: 1;
+            margin-right: 2rem;
+        }
+
+        .right-portion
+        {
+            flex: 1;
+        }
+
+        .rewards-list
+        {
+            margin-top: 1rem;
+
+        }
+
+        .new-reward-card
+        {
+            margin-top: 1rem;
             display: flex;
             flex-direction: row;
-            margin-top: 1rem;
-            .left-portion
-            {
-                flex: 1;
-                margin-right: 2rem;
-            }
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem;
 
-            .right-portion
+            .content-container
             {
-                flex: 1;
-            }
-
-            .rewards-list
-            {
-                margin-top: 1rem;
-            }
-
-            .new-reward-card
-            {
-                margin-top: 1rem;
                 display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                padding: 0.8rem;
-
-                .content-container
+                cursor: pointer;
+                h5
                 {
-                    display: flex;
-                    cursor: pointer;
-                    h5
-                    {
-                        margin-right: 10px;
-                    }
+                    margin-right: 10px;
                 }
             }
         }

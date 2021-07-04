@@ -8,8 +8,7 @@ import {IconContext} from "react-icons"
 
 
 //COMPONENTS
-import Navigation from "../../components/navigation/navigation";
-import Header from "../../components/header/header";
+import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 import Modal from "../../components/modal";
 
@@ -54,17 +53,12 @@ function Streak(props) {
 
 
   return (
-    <div className="rewards">
-       <Navigation />
-       <div className="rewards-main-container">
-          {/* Header */}
-          <div className="pad-global">
-              <Header
-                  headerText={'Rewards'}
-                  withSearchBox={false}
-              />
-          </div>
-
+    <Frame
+      withHeader={true}
+      withSearchBox={false}
+      headerTitle="Rewards"
+      containerClass="rewards"
+    >
           <div className="rewards-area">
             <div className="left-portion">
               <h4>TO BUY</h4>
@@ -99,8 +93,7 @@ function Streak(props) {
               </div>
             </div>
           </div>
-       </div>
-    </div>
+      </Frame>
   );
 }
 
