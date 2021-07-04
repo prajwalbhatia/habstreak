@@ -25,6 +25,7 @@ function Modal(props)
                     lable={data.label}
                     uid={data.uid}
                     onChange={changeHandler}
+                    type={data.type}
                 />)
             }
             else if(data.eleType == 'textArea')
@@ -34,6 +35,7 @@ function Modal(props)
                     lable={data.label}
                     uid={data.uid}
                     onChange={changeHandler}
+                    type={data.type}
                 />
                 )
             }

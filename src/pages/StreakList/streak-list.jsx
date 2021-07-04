@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import {useHistory} from 'react-router';
 
+//Redux
+import {useDispatch , useSelector} from 'react-redux';
+
+//Actions
+import {createStreak} from '../../redux/actions/streak';
+
 //Icons
 import { AiFillDelete , AiFillFire } from "react-icons/ai";
 import { FaLocationArrow } from "react-icons/fa";
@@ -17,6 +23,9 @@ import './streak-list.css';
 import "../../index.css";
 
 function Streak(props) {
+  const dispatch = useDispatch();
+  const streaks = useSelector((state) => state.streak.streaks);
+
   const [tabOne , setTabOne] = useState(true);
   const [tabTwo , setTabTwo] = useState(false);
 
