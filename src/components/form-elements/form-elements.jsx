@@ -37,6 +37,19 @@ export function TextInputElement ({lable , type , uid, ...rest}) {
     );
 }
 
+export function Dropdown ({}) {
+  return (
+    <div className="custom-select">
+      <select>
+        <option value="dog">Dog</option>
+        <option value="cat">Cat</option>
+        <option value="hamsterfdfdffdsfd">Hamsterdsdsdsdsdds</option>
+      </select>
+      <span className="custom-arrow"></span>
+    </div>
+  )
+}
+
 InputElement.defaultProps = {
     type : 'text'
 }

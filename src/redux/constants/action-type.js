@@ -1,2 +1,3 @@
 //STREAK
 export const CREATE_STREAK = "CREATE_STREAK";
+export const DELETE_STREAK = "DELETE_STREAK";
