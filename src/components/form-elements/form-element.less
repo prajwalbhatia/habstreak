@@ -21,28 +21,22 @@
   }
 }
 
-.custom-select {
-  position: relative;
-  width: max-content;
-}
-select {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
-  font-size: 0.8rem;
-  padding: 0.5rem 2.5rem 0.5rem 1rem;
-  background: #4d5061;
-  color: white;
-  border: 0;
-  text-overflow: ellipsis;
-  max-width: 50px;
-}
+.dropdown
+{
+  margin-top: 10px;
+  .MuiOutlinedInput-root
+  {
+    height: 30px;
+    min-width: 180px;
+  }
 
-.custom-arrow {
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: block;
-  background: red;
-  height: 100%;
-  width: 2rem;
-  pointer-events: none;
+  .MuiInputLabel-outlined
+  {
+    transform: translate(14px, 7px) scale(1);
+  }
+  
+  .MuiOutlinedInput-input
+  {
+    padding: 10px;
+  }
 }

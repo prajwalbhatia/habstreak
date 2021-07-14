@@ -61,7 +61,19 @@ function Streak(props) {
           <div className="rewards-list">
             <Card withLine={true} cardClass="streak-card">
               <h4>Buy monitor</h4>
-              <Dropdown />
+              <Dropdown
+                labelName="Streak Name"
+                options={['Streak 1', 'Streak 2']}
+                optionSelect={(data) => {
+                }}
+              />
+
+              <Dropdown
+                labelName="To Date"
+                options={['12th Aug, 2021', '12th Aug, 2021']}
+                optionSelect={(data) => {
+                }}
+              />
             </Card>
 
             <Card cardClass="new-reward-card" onClick={() => dialog()}>
