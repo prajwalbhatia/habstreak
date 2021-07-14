@@ -24,7 +24,6 @@ import "../../index.css";
 function Streak(props) {
   const dispatch = useDispatch();
   const streaks = useSelector((state) => state.streak.streaks);
-  console.log('🚀 ~ file: streak-list.jsx ~ line 27 ~ Streak ~ streaks', streaks);
 
   const [tabOne, setTabOne] = useState(true);
   const [tabTwo, setTabTwo] = useState(false);
@@ -64,13 +63,11 @@ function Streak(props) {
         },
       ],
       btnClickHandler: (data) => {
-        console.log(data);
-        if (data.type == "primary") {
+        if (data.type === "primary") {
           delete data.type
           dispatch(createStreak(data));
         } 
 
-        //if (data.type === "secondary") 
         Modal.hide();
       },
     });

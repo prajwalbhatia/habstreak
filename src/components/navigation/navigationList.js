@@ -20,7 +20,7 @@ const navigationList = [
         _id : "3",
         name: "Rewards",
         active: false,
-        url : "/rewards",
+        url : "/reward",
         iconJsx: <AiFillTrophy/> ,
     }, 
 ]

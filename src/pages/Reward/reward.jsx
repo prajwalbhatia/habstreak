@@ -1,7 +1,13 @@
 import React from "react";
 
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+
+//Actions
+import { createReward } from "../../redux/actions/reward";
+
 //CSS
-import "./rewards.css";
+import "./reward.css";
 
 import { AiFillTrophy } from "react-icons/ai";
 import { GiGlassCelebration } from "react-icons/gi";
@@ -14,6 +20,11 @@ import Modal from "../../components/modal";
 import { Dropdown } from "../../components/form-elements/form-elements";
 
 function Streak(props) {
+  const dispatch = useDispatch();
+  const rewards = useSelector((state) => state.reward.rewards);
+  console.log('🚀 ~ file: reward.jsx ~ line 25 ~ Streak ~ rewards', rewards);
+
+
   const dialog = () => {
     Modal.show({
       title: "Create reward",
@@ -22,27 +33,39 @@ function Streak(props) {
       secondaryButtonText: "Cancel",
       content: [
         {
-          label: "Title",
+          // label: "Title",
           uid: "title",
           type: "text",
+          placeholder : 'Enter a title',
           eleType: "input",
         },
         {
-          label: "Add to streak",
-          uid: "add",
-          type: "text",
-          eleType: "input",
+          label: "Streak name",
+          uid: "streak-name",
+          eleType: "dropdown",
+          options : ['Streak 1' , 'Streak 2']
         },
         {
           label: "Date",
           uid: "date",
-          type: "date",
-          eleType: "input",
+          eleType: "dropdown",
+          options: ['12th Aug, 2021', '12th Aug, 2021']
         },
+        // {
+        //   label: "Date",
+        //   uid: "To date",
+        //   type: "date",
+        //   eleType: "input",
+        // },
       ],
       btnClickHandler: (data) => {
-        console.log(data);
-        if (data.type === "secondary") Modal.hide();
+      console.log('🚀 ~ file: reward.jsx ~ line 52 ~ dialog ~ data', data);
+        if (data.type === "primary") {
+          delete data.type
+          dispatch(createReward(data));
+        }
+
+        Modal.hide();
       },
     });
   };

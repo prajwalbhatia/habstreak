@@ -10,7 +10,7 @@ import "./form-element.css";
 import { noop } from 'lodash';
 
 
-export function InputElement({ lable, type, uid, ...rest }) {
+export function InputElement({ lable, type, uid, placeholder, ...rest }) {
   return (
     <div key={uid} className="element input-container">
       <label for={uid}>{lable}</label>
@@ -19,14 +19,14 @@ export function InputElement({ lable, type, uid, ...rest }) {
         type={type}
         name={uid}
         id={lable}
-        placeholder={`Enter a ${lable?.toLowerCase()}`}
+        placeholder={placeholder ? placeholder : `Enter a ${lable?.toLowerCase()}`}
         {...rest}
       />
     </div>
   );
 }
 
-export function TextInputElement({ lable, type, uid, ...rest }) {
+export function TextInputElement({ lable, type, uid, placeholder, ...rest }) {
   return (
     <div key={uid} className="element textArea-input-container">
       <label for={uid}>{lable}</label>
@@ -35,7 +35,7 @@ export function TextInputElement({ lable, type, uid, ...rest }) {
         type={type}
         name={uid}
         id={lable}
-        placeholder={`Enter a ${lable?.toLowerCase()}`}
+        placeholder={placeholder ? placeholder : `Enter a ${lable?.toLowerCase()}`}
         {...rest}
       />
     </div>
