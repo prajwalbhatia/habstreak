@@ -17,7 +17,7 @@ function Streak (props) {
             withHeader={true}
             withSearchBox={false}
             headerTitle={location?.state?.streakName}
-            headerIcon={<VscDebugRestart/>}
+            withBackIcon={true}
         >
             {/* Streak detail card container */}
             <div className="streak-details"> 

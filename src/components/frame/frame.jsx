@@ -10,43 +10,45 @@ import "./frame.css";
 
 export default function Frame(props) {
     const {
-        containerClass, 
+        containerClass,
         withHeader,
         headerTitle,
         withSearchBox,
         children,
-        headerIcon
+        withBackIcon
     } = props;
     return (
         <div className={`frame ${containerClass}`}>
-            <Navigation/>
+            <Navigation />
             {
-            withHeader &&
-            <Header
-              headerText={headerTitle}
-              withSearchBox={withSearchBox}
-              icon={headerIcon}
-            />
+                withHeader &&
+                <Header
+                    headerText={headerTitle}
+                    withSearchBox={withSearchBox}
+                    withBackIcon={withBackIcon}
+                />
             }
-            {children}
+            <div className="frame-children">
+                {children}
+            </div>
         </div>
     )
 }
 
-Frame.propTypes = 
+Frame.propTypes =
 {
-    containerClass : PropTypes.string,
-    withHeader : PropTypes.bool,
-    headerTitle : PropTypes.string,
-    withSearchBox : PropTypes.bool,
-    headerIcon : PropTypes.element
+    containerClass: PropTypes.string,
+    withHeader: PropTypes.bool,
+    headerTitle: PropTypes.string,
+    withSearchBox: PropTypes.bool,
+    headerIcon: PropTypes.element
 }
 
 Frame.defaultProps = {
-    containerClass : '',
-    withHeader : true,
-    headerTitle : 'FRAME',
-    withSearchBox : true
+    containerClass: '',
+    withHeader: true,
+    headerTitle: 'FRAME',
+    withSearchBox: true
 }
 
 

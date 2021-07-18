@@ -14,7 +14,7 @@ function Dashboard(props) {
     <Frame
       withHeader={true}
       headerTitle={'DASHBOARD'}
-      withSearchBox={true}
+      withSearchBox={false}
       containerClass="dashboard"
     >
         {/* Notification Card */}

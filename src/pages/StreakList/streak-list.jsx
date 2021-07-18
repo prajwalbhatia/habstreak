@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 //Actions
-import { createStreak } from "../../redux/actions/streak";
+import { createStreak , getStreaksData} from "../../redux/actions/streak";
 
 //Icons
 import { AiFillDelete, AiFillFire } from "react-icons/ai";
@@ -20,10 +20,16 @@ import Modal from "../../components/modal";
 //CSS
 import "./streak-list.css";
 import "../../index.css";
+import { useEffect } from "react";
 
 function Streak(props) {
   const dispatch = useDispatch();
   const streaks = useSelector((state) => state.streak.streaks);
+  console.log('🚀 ~ file: streak-list.jsx ~ line 28 ~ Streak ~ streaks', streaks);
+
+  useEffect(() => {
+    dispatch(getStreaksData());
+  } , [dispatch]);
 
   const [tabOne, setTabOne] = useState(true);
   const [tabTwo, setTabTwo] = useState(false);
@@ -50,7 +56,7 @@ function Streak(props) {
           eleType: "input",
         },
         {
-          label: "Date",
+          label: "Start date",
           uid: "date",
           type: "date",
           eleType: "input",
@@ -66,7 +72,7 @@ function Streak(props) {
         if (data.type === "primary") {
           delete data.type
           dispatch(createStreak(data));
-        } 
+        }
 
         Modal.hide();
       },
@@ -104,53 +110,83 @@ function Streak(props) {
           <div className={tabTwo ? "active-tab" : ""}></div>
         </div>
       </div>
-
+          
       {/*List of streak*/}
       <div className="streak-list">
-        <Card
-          onClick={() => {
-            history.push({
-              pathname: "/streak-list/1",
-              state: { streakName: "100 days of Javascript" },
-            });
-          }}
-          withLine={true}
-          cardClass="streak-card"
-        >
-          <div className="info-container">
-            <h3>100 days of Javascript</h3>
-            <h4>100 days</h4>
-            <p className="mt-1">
-              The motive of this streak is to keep learning JS with
-              consistency....
-            </p>
-          </div>
+        {
+          streaks.map((streak, index) => {
+            let someDate = new Date(streak.date);
+            let numberOfDaysToAdd = +streak.days;
+            someDate.setDate(someDate.getDate() + numberOfDaysToAdd);
 
-          <div className="image-container"></div>
 
-          <div className="icons-container">
-            <div className="icn icon-delete">
-              <IconContext.Provider
-                value={{
-                  style: { fontSize: "1.5rem", color: `var(--primaryColor)` },
+            let dd = someDate.getDate();
+            let mm = someDate.getMonth() + 1;
+            let y = someDate.getFullYear();
+ 
+            let formattedDate;
+            if(mm.toString().length === 1 && dd.toString().length === 1)
+            {
+              formattedDate = `${y}-0${mm}-0${dd}`
+            }
+            else if (mm.toString().length === 1)
+            {
+              formattedDate = `${y}-0${mm}-${dd}`
+            }
+            else if (dd.toString().length === 1) {
+              formattedDate = `${y}-${mm}-${dd}`
+            }
+            else{
+              formattedDate = `${y}-${mm}-${dd}`
+            }
+            return (
+              <Card
+                key={index}
+                onClick={() => {
+                  history.push({
+                    pathname: `/streak-list/${index}`,
+                    state: { streakName: streak.title },
+                  });
                 }}
+                withLine={true}
+                cardClass="streak-card"
               >
-                {" "}
-                <AiFillDelete />{" "}
-              </IconContext.Provider>
-            </div>
-            <div className="icn icon-arrow">
-              <IconContext.Provider
-                value={{
-                  style: { fontSize: "1.5rem", color: `var(--primaryColor)` },
-                }}
-              >
-                {" "}
-                <FaLocationArrow />{" "}
-              </IconContext.Provider>
-            </div>
-          </div>
-        </Card>
+                <div className="info-container">
+                  <h3>{streak.title}</h3>
+                  <h4>{`${streak.days} days`}</h4>
+                  <h4>{`${streak.date} to ${formattedDate}`}</h4>
+                  <p className="mt-1">
+                    {streak.description}
+                  </p>
+                </div>
+
+                <div className="image-container"></div>
+                <div className="icons-container">
+                  <div className="icn icon-delete">
+                    <IconContext.Provider
+                      value={{
+                        style: { fontSize: "1.5rem", color: `var(--primaryColor)` },
+                      }}
+                    >
+                      {" "}
+                      <AiFillDelete />{" "}
+                    </IconContext.Provider>
+                  </div>
+                  <div className="icn icon-arrow">
+                    <IconContext.Provider
+                      value={{
+                        style: { fontSize: "1.5rem", color: `var(--primaryColor)` },
+                      }}
+                    >
+                      {" "}
+                      <FaLocationArrow />{" "}
+                    </IconContext.Provider>
+                  </div>
+                </div>
+              </Card>
+            )
+          })
+        }
       </div>
 
       {/* New Streak creating */}
