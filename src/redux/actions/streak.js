@@ -1,18 +1,32 @@
-import { getStreaks } from '../api/streak';
+import { getStreaks, createStreak, deleteStreak, updateStreak } from '../api/streak';
 
-import { CREATE_STREAK, DELETE_STREAK, GET_STREAK } from '../constants/action-type';
+import { GET_STREAK } from '../constants/action-type';
 
 //Action Creators
-export const createStreak = (data) => {
-    return {
-        type: CREATE_STREAK,
-        payload: data
+export const createStreakData = (streak) => async (dispatch) => {
+    try {
+        await createStreak(streak);
+        dispatch(getStreaksData());
+    } catch (error) {
+        console.log(error);
     }
 }
 
-export const deleteStreak = (id) => {
-    return {
-        type: DELETE_STREAK,
+export const deleteStreakData = (streakId) => async (dispatch) => {
+    try {
+        await deleteStreak(streakId);
+        dispatch(getStreaksData());
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updateStreakData = (streak , streakId) => async (dispatch) => {
+    try {
+        await updateStreak(streak , streakId);
+        dispatch(getStreaksData());
+    } catch (error) {
+        console.log(error);
     }
 }
 

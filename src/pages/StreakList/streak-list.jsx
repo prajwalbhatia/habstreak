@@ -5,11 +5,11 @@ import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 //Actions
-import { createStreak , getStreaksData} from "../../redux/actions/streak";
+import { createStreakData, getStreaksData, deleteStreakData, updateStreakData} from "../../redux/actions/streak";
 
 //Icons
 import { AiFillDelete, AiFillFire } from "react-icons/ai";
-import { FaLocationArrow } from "react-icons/fa";
+import { HiPencil } from "react-icons/hi";
 import { IconContext } from "react-icons";
 
 //COMPONENTS
@@ -29,18 +29,24 @@ function Streak(props) {
 
   useEffect(() => {
     dispatch(getStreaksData());
-  } , [dispatch]);
+  }, [dispatch]);
 
   const [tabOne, setTabOne] = useState(true);
   const [tabTwo, setTabTwo] = useState(false);
 
   const history = useHistory();
 
-  const dialog = () => {
+  const dialog = (type , data , streakId) => {
     Modal.show({
-      title: "Create Streak",
+      title: type === 'create' ?  "Create Streak" : 'Update Streak',
       icon: <AiFillFire />,
-      primaryButtonText: "Create",
+      initialData: {
+        title: data?.title,
+        days: data?.days,
+        date: data?.date,
+        description: data?.description
+      },
+      primaryButtonText: type === 'create' ? "Create" : 'Update',
       secondaryButtonText: "Cancel",
       content: [
         {
@@ -71,13 +77,45 @@ function Streak(props) {
       btnClickHandler: (data) => {
         if (data.type === "primary") {
           delete data.type
-          dispatch(createStreak(data));
-        }
 
+          if(type === 'create')
+            dispatch(createStreakData(data));
+          else
+            dispatch(updateStreakData(data, streakId));
+        }
         Modal.hide();
       },
     });
   };
+
+  const dateConversion = (dateToConvert , daysToAdd) => {
+    let formattedDate;
+
+    let someDate = new Date(dateToConvert);
+    let numberOfDaysToAdd = +daysToAdd;
+    someDate.setDate(someDate.getDate() + numberOfDaysToAdd);
+
+
+    let dd = someDate.getDate();
+    let mm = someDate.getMonth() + 1;
+    let y = someDate.getFullYear();
+
+    if (mm.toString().length === 1 && dd.toString().length === 1) {
+      formattedDate = `${y}-0${mm}-0${dd}`
+    }
+    else if (mm.toString().length === 1) {
+      formattedDate = `${y}-0${mm}-${dd}`
+    }
+    else if (dd.toString().length === 1) {
+      formattedDate = `${y}-${mm}-${dd}`
+    }
+    else {
+      formattedDate = `${y}-${mm}-${dd}`
+    }
+
+
+    return formattedDate;
+  }
 
   return (
     <Frame
@@ -110,35 +148,13 @@ function Streak(props) {
           <div className={tabTwo ? "active-tab" : ""}></div>
         </div>
       </div>
-          
+
       {/*List of streak*/}
       <div className="streak-list">
         {
           streaks.map((streak, index) => {
-            let someDate = new Date(streak.date);
-            let numberOfDaysToAdd = +streak.days;
-            someDate.setDate(someDate.getDate() + numberOfDaysToAdd);
-
-
-            let dd = someDate.getDate();
-            let mm = someDate.getMonth() + 1;
-            let y = someDate.getFullYear();
- 
-            let formattedDate;
-            if(mm.toString().length === 1 && dd.toString().length === 1)
-            {
-              formattedDate = `${y}-0${mm}-0${dd}`
-            }
-            else if (mm.toString().length === 1)
-            {
-              formattedDate = `${y}-0${mm}-${dd}`
-            }
-            else if (dd.toString().length === 1) {
-              formattedDate = `${y}-${mm}-${dd}`
-            }
-            else{
-              formattedDate = `${y}-${mm}-${dd}`
-            }
+            let endDate = dateConversion(streak?.date , streak?.days);
+            let startDate = dateConversion(streak?.date, "0");
             return (
               <Card
                 key={index}
@@ -154,7 +170,7 @@ function Streak(props) {
                 <div className="info-container">
                   <h3>{streak.title}</h3>
                   <h4>{`${streak.days} days`}</h4>
-                  <h4>{`${streak.date} to ${formattedDate}`}</h4>
+                  <h4>{`${startDate} to ${endDate}`}</h4>
                   <p className="mt-1">
                     {streak.description}
                   </p>
@@ -169,7 +185,12 @@ function Streak(props) {
                       }}
                     >
                       {" "}
-                      <AiFillDelete />{" "}
+                      <AiFillDelete
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(deleteStreakData(streak._id))
+                        }}
+                      />{" "}
                     </IconContext.Provider>
                   </div>
                   <div className="icn icon-arrow">
@@ -179,7 +200,20 @@ function Streak(props) {
                       }}
                     >
                       {" "}
-                      <FaLocationArrow />{" "}
+                      <HiPencil
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dialog('update',
+                           {
+                            title: streak.title,
+                            date: startDate,
+                            days: streak.days,
+                            description: streak.description
+                          },
+                          streak._id
+                          )
+                        }}
+                      />{" "}
                     </IconContext.Provider>
                   </div>
                 </div>
@@ -190,7 +224,7 @@ function Streak(props) {
       </div>
 
       {/* New Streak creating */}
-      <div className="new-streak" onClick={() => dialog()}>
+      <div className="new-streak" onClick={() => dialog('create')}>
         <Card cardClass="new-streak-card">
           <div className="content-container">
             <h2>Create new streak</h2>

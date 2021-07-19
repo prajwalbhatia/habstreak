@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { React, useState } from "react";
 import { IconContext } from "react-icons"
 
@@ -9,8 +10,14 @@ import "./modal.css";
 
 function Modal(props) {
     const [formData, setFormData] = useState({});
+    console.log('🚀 ~ file: modal.jsx ~ line 14 ~ Modal ~ formData', formData);
+
+    useEffect(() => {
+        setFormData(props?.initialData || {});
+    }, [props.initialData])
 
     const changeHandler = (e) => {
+        console.log(e.target.name)
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
@@ -26,6 +33,7 @@ function Modal(props) {
                         lable={data.label}
                         uid={data.uid}
                         placeholder={data?.placeholder}
+                        value={formData?.[data.uid]}
                         onChange={changeHandler}
                         type={data.type}
                     />)
@@ -37,6 +45,7 @@ function Modal(props) {
                         uid={data.uid}
                         placeholder={data?.placeholder}
                         onChange={changeHandler}
+                        value={formData?.[data.uid]}
                         type={data.type}
                     />
                 )
@@ -46,6 +55,7 @@ function Modal(props) {
                     <Dropdown
                         labelName={data.label}
                         options={data.options}
+                        value={formData?.[data.uid]}
                         optionSelect={(value) => {
                             setDropDown(data.uid, value)
                         }}
