@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 //Actions
-import { createStreakData, getStreaksData, deleteStreakData, updateStreakData} from "../../redux/actions/streak";
+import { createStreakData, getStreaksData, deleteStreakData, updateStreakData } from "../../redux/actions/streak";
 
 //Icons
 import { AiFillDelete, AiFillFire } from "react-icons/ai";
@@ -24,21 +24,26 @@ import { useEffect } from "react";
 
 function Streak(props) {
   const dispatch = useDispatch();
-  const streaks = useSelector((state) => state.streak.streaks);
-  console.log('🚀 ~ file: streak-list.jsx ~ line 28 ~ Streak ~ streaks', streaks);
+  const [tabOne, setTabOne] = useState(true);
+  const [tabTwo, setTabTwo] = useState(false);
+  const history = useHistory();
 
+  //Getting the data from the state
+  const streaks = useSelector((state) => state.streak.streaks);
+  //Getting initial data
   useEffect(() => {
     dispatch(getStreaksData());
   }, [dispatch]);
 
-  const [tabOne, setTabOne] = useState(true);
-  const [tabTwo, setTabTwo] = useState(false);
-
-  const history = useHistory();
-
-  const dialog = (type , data , streakId) => {
+  /**
+   * 
+   * @param {String} type - type of action we want to take ('create' or 'update')
+   * @param {Object} data - Pre loaded data in case of update
+   * @param {String} streakId - In case of update id of streak we want to update
+   */
+  const dialog = (type, data, streakId) => {
     Modal.show({
-      title: type === 'create' ?  "Create Streak" : 'Update Streak',
+      title: type === 'create' ? "Create Streak" : 'Update Streak',
       icon: <AiFillFire />,
       initialData: {
         title: data?.title,
@@ -77,8 +82,7 @@ function Streak(props) {
       btnClickHandler: (data) => {
         if (data.type === "primary") {
           delete data.type
-
-          if(type === 'create')
+          if (type === 'create')
             dispatch(createStreakData(data));
           else
             dispatch(updateStreakData(data, streakId));
@@ -88,13 +92,18 @@ function Streak(props) {
     });
   };
 
-  const dateConversion = (dateToConvert , daysToAdd) => {
-    let formattedDate;
 
+  /**
+   * To convert the date in the format 'yyyy-mm-dd'
+   * @param {Date} dateToConvert - Date we want to convert
+   * @param {String} daysToAdd - If we want to add any days in the date
+   * @returns - It returns the new date in the form 'yyyy-mm-dd'
+   */
+  const dateConversion = (dateToConvert, daysToAdd) => {
+    let formattedDate;
     let someDate = new Date(dateToConvert);
     let numberOfDaysToAdd = +daysToAdd;
     someDate.setDate(someDate.getDate() + numberOfDaysToAdd);
-
 
     let dd = someDate.getDate();
     let mm = someDate.getMonth() + 1;
@@ -112,14 +121,39 @@ function Streak(props) {
     else {
       formattedDate = `${y}-${mm}-${dd}`
     }
-
-
     return formattedDate;
+  }
+
+  /**
+   * 
+   * @param {Object} e - event
+   * @param {String} id - Id of streak to delete 
+   */
+  const deleteStreak = (e, id) => {
+    e.stopPropagation();
+    dispatch(deleteStreakData(id));
+  }
+
+  /**
+   * 
+   * @param {Object} e - event 
+   * @param {Object} streak - data we want to update  
+   * @param {String} startDate - date in the format of 'yyyy-mm-dd' 
+   */
+  const updateStreak = (e, streak, startDate) => {
+    e.stopPropagation();
+    const data = {
+      title: streak.title,
+      date: startDate,
+      days: streak.days,
+      description: streak.description
+    }
+    dialog('update', data, streak._id);
   }
 
   return (
     <Frame
-      containerClass="streak-list"
+      containerClass="container-streak-list"
       withHeader={true}
       headerTitle="Streaks"
       withSearchBox={false}
@@ -153,7 +187,7 @@ function Streak(props) {
       <div className="streak-list">
         {
           streaks.map((streak, index) => {
-            let endDate = dateConversion(streak?.date , streak?.days);
+            let endDate = dateConversion(streak?.date, streak?.days);
             let startDate = dateConversion(streak?.date, "0");
             return (
               <Card
@@ -179,41 +213,16 @@ function Streak(props) {
                 <div className="image-container"></div>
                 <div className="icons-container">
                   <div className="icn icon-delete">
-                    <IconContext.Provider
-                      value={{
-                        style: { fontSize: "1.5rem", color: `var(--primaryColor)` },
-                      }}
-                    >
-                      {" "}
-                      <AiFillDelete
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          dispatch(deleteStreakData(streak._id))
-                        }}
-                      />{" "}
+                    <IconContext.Provider value={{ className: 'common-icon' }}>
+                      <AiFillDelete onClick={(e) => deleteStreak(e, streak._id)} />
                     </IconContext.Provider>
                   </div>
-                  <div className="icn icon-arrow">
-                    <IconContext.Provider
-                      value={{
-                        style: { fontSize: "1.5rem", color: `var(--primaryColor)` },
-                      }}
-                    >
-                      {" "}
-                      <HiPencil
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          dialog('update',
-                           {
-                            title: streak.title,
-                            date: startDate,
-                            days: streak.days,
-                            description: streak.description
-                          },
-                          streak._id
-                          )
-                        }}
-                      />{" "}
+                  <div
+                    className="icn icon-edit"
+                    onClick={(e) => updateStreak(e, streak, startDate)}
+                  >
+                    <IconContext.Provider value={{ className: 'common-icon' }}>
+                      <HiPencil />
                     </IconContext.Provider>
                   </div>
                 </div>
@@ -228,16 +237,7 @@ function Streak(props) {
         <Card cardClass="new-streak-card">
           <div className="content-container">
             <h2>Create new streak</h2>
-            <IconContext.Provider
-              value={{
-                style: {
-                  fontSize: "1.4rem",
-                  color: "var(--primaryColor)",
-                  marginTop: "1px",
-                  marginRight: "5px",
-                },
-              }}
-            >
+            <IconContext.Provider value={{ className: 'common-icon fire-icon' }}>
               <AiFillFire />
             </IconContext.Provider>
           </div>

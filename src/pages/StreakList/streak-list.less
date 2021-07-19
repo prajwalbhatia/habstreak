@@ -1,109 +1,100 @@
-.streak-list
-{
-    .tab-container
-    {
-        margin-top: 1rem;
+.container-streak-list {
+  .tab-container {
+    margin-top: 1rem;
+    display: flex;
+    .tab-item {
+      width: max-content;
+      cursor: pointer;
+    }
+
+    .tab-item:not(:last-child) {
+      margin-right: 0.5rem;
+    }
+
+    .active-tab {
+      width: 100%;
+      background-color: var(--secondaryColor);
+      height: 5px;
+    }
+  }
+
+  .common-icon {
+    font-size: 1.5rem;
+    color: var(--primaryColor);
+  }
+
+  .fire-icon {
+    margin-top: 1px;
+    margin-right: 5px;
+  }
+
+  .streak-list {
+    margin-top: 1rem;
+
+    .streak-card {
+      cursor: pointer;
+      padding: 0 0 0 1rem;
+      display: flex;
+      .info-container {
+        padding: 1rem 0;
         display: flex;
-        .tab-item
-        {
-            width: max-content;
-            cursor: pointer;
+        flex-direction: column;
+        flex: 8;
+        h4 {
+          margin-top: 0.5rem;
+        }
+      }
+
+      .image-container {
+        display: flex;
+        flex: 5;
+        background: url("./undraw_By_the_road_re_vvs7.svg");
+        background-size: cover;
+      }
+
+      .icons-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        .icn {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
         }
 
-        .tab-item:not(:last-child)
-        {
-            margin-right: 0.5rem;
+        .icn:hover {
+          background-color: #fff4f4;
         }
 
-        .active-tab
-        {
-            width:  100%;
-            background-color: var(--secondaryColor);
-            height: 5px;
+        icon-delete:hover {
+          border-top-right-radius: 0.5rem;
         }
+
+        icon-edit:hover {
+          border-bottom-right-radius: 0.5rem;
+        }
+      }
     }
+  }
 
-    .streak-list
-    {
-        margin-top: 1rem;
+  .new-streak {
+    margin-top: 2rem;
+    .new-streak-card {
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .content-container {
+        width: max-content;
+        display: flex;
 
-        .streak-card
-        {
-            cursor: pointer;
-            padding: 0 0 0 1rem;
-            display: flex;
-            .info-container
-            {
-                padding: 1rem 0;
-                display: flex;
-                flex-direction: column;
-                flex: 8;
-                h4
-                {
-                    margin-top: 0.5rem;
-                }
-            }
-
-            .image-container
-            {
-                display: flex;
-                flex: 5;
-                background: url("./undraw_By_the_road_re_vvs7.svg");
-                background-size: cover;
-            }
-
-            .icons-container
-            {
-                display: flex;
-                flex-direction: column;
-                flex: 1;
-
-                .icn
-                {
-                    display: flex;
-                    flex: 1;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                }
-
-                .icn:hover
-                {
-                    background-color: #fff4f4;
-                }
-
-                icon-delete:hover
-                {
-                    border-top-right-radius: 0.5rem;
-                }
-
-                icon-arrow:hover
-                {
-                    border-bottom-right-radius: 0.5rem;
-                }
-            }
+        h2 {
+          margin-right: 5px;
         }
+      }
     }
-
-    .new-streak
-    {
-        margin-top: 2rem;
-        .new-streak-card
-        {
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            .content-container
-            {  
-                width: max-content;
-                display: flex;
-
-                h2
-                {
-                    margin-right: 5px;
-                }
-            }
-        }
-    }
+  }
 }
