@@ -10,7 +10,6 @@ import "./modal.css";
 
 function Modal(props) {
     const [formData, setFormData] = useState({});
-    console.log('🚀 ~ file: modal.jsx ~ line 14 ~ Modal ~ formData', formData);
 
     useEffect(() => {
         setFormData(props?.initialData || {});

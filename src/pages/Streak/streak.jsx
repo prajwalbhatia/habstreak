@@ -1,17 +1,56 @@
-import React from 'react';
-import {useLocation} from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation, withRouter } from 'react-router-dom';
+
+//Libraries
+import moment from 'moment';
+
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+
+//Actions
+import { getStreaksDetailData, updateStreakDetailData } from "../../redux/actions/streak";
 
 //CSS
 import "./streak.css";
 
-import { VscDebugRestart  } from "react-icons/vsc";
-
 //COMPONENTS
 import Frame from "../../components/frame/frame";
+import { TextInputElement } from "../../components/form-elements/form-elements";
+import { PrimaryButton } from '../../components/button/button';
+import { updateStreakDetail } from '../../redux/api/streak';
 
-function Streak (props) {
+
+function Streak(props) {
     const location = useLocation();
-    return(
+    const dispatch = useDispatch();
+
+    const [desc, setDesc] = useState({});
+    console.log('🚀 ~ file: streak.jsx ~ line 28 ~ Streak ~ desc', desc);
+
+    //Getting the data from the state
+    const streakDetail = useSelector((state) => state.streak.streakDetail);
+    console.log('🚀 ~ file: streak.jsx ~ line 32 ~ Streak ~ streakDetail', streakDetail);
+    //Getting initial data
+    useEffect(() => {
+        if (props?.match?.params?.id)
+            dispatch(getStreaksDetailData(props.match.params.id));
+    }, [dispatch, props]);
+
+
+    useEffect(() => {
+        streakDetail.map((detail) => {
+            setDesc({ ...desc, [detail._id]: detail.description });
+        })
+    }, [streakDetail])
+
+    const updateStreakDetail = (detail) => {
+        dispatch(updateStreakDetailData({
+            description: desc[detail._id]
+        }, detail._id, detail.streakId));
+    }
+
+    return (
         <Frame
             containerClass="streak"
             withHeader={true}
@@ -20,96 +59,49 @@ function Streak (props) {
             withBackIcon={true}
         >
             {/* Streak detail card container */}
-            <div className="streak-details"> 
+            <div className="streak-details">
                 {/* Streak detail card */}
-                <div className="streak-detail-card">
-                    <div className="day-info">
-                        <div className="day">Day 1</div>
-                    </div>
-                    <div className="streak-info">
-                        <h4>10th July ,2021 </h4>
-                        <p>Today I have learned about promises</p>                        
-                        <div className="status-block">
-                            <span>Active</span>
-                        </div>
-                    </div>
-                </div>
+                {
+                    streakDetail.map((detail, index) => {
+                        const statusActive = moment(moment(detail.date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD'))
+                        return (
+                            <div key={detail._id} className="streak-detail-card">
+                                <div className="day-info">
+                                    <div className="day">Day {index + 1}</div>
+                                </div>
+                                <div className="streak-info">
+                                    <h4>{moment(detail?.date).format('MMMM Do, YYYY')}</h4>
+                                    <div className="description-block">
+                                        <TextInputElement
+                                            placeholder={'Description'}
+                                            onChange={(e) => {
+                                                setDesc({ ...desc, [detail._id]: e.target.value })
+                                            }}
+                                            value={desc?.[detail._id]}
+                                            type={'text'}
+                                            disabled={statusActive ? false : true}
+                                        />
+                                        <PrimaryButton
+                                            name={'Ok'}
+                                            click={() => updateStreakDetail(detail)}
+                                            btnContainerClass="ml-10"
+                                        />
+                                    </div>
 
-                {/* Streak detail card */}
-                <div className="streak-detail-card">
-                    <div className="day-info">
-                        <div className="day">Day 1</div>
-                    </div>
-                    <div className="streak-info">
-                        <h4>10th July ,2021 </h4>
-                        <p>Today I have learned about promises</p>                        
-                        <div className="status-block">
-                            <span>Active</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Streak detail card */}
-                <div className="streak-detail-card">
-                    <div className="day-info">
-                        <div className="day">Day 1</div>
-                    </div>
-                    <div className="streak-info">
-                        <h4>10th July ,2021 </h4>
-                        <p>Today I have learned about promises</p>                        
-                        <div className="status-block">
-                            <span>Active</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Streak detail card */}
-                <div className="streak-detail-card">
-                    <div className="day-info">
-                        <div className="day">Day 1</div>
-                    </div>
-                    <div className="streak-info">
-                        <h4>10th July ,2021 </h4>
-                        <p>Today I have learned about promises</p>                        
-                        <div className="status-block">
-                            <span>Active</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Streak detail card */}
-                <div className="streak-detail-card">
-                    <div className="day-info">
-                        <div className="day">Day 1</div>
-                    </div>
-                    <div className="streak-info">
-                        <h4>10th July ,2021 </h4>
-                        <p>Today I have learned about promises</p>                        
-                        <div className="status-block">
-                            <span>Active</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Streak detail card */}
-                <div className="streak-detail-card">
-                    <div className="day-info">
-                        <div className="day">Day 1</div>
-                    </div>
-                    <div className="streak-info">
-                        <h4>10th July ,2021 </h4>
-                        <p>Today I have learned about promises</p>                        
-                        <div className="status-block">
-                            <span>Active</span>
-                        </div>
-                    </div>
-                </div>
+                                    <div className="status-block">
+                                        <span>{statusActive ? 'Active' : 'Upcoming'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
             </div>
         </Frame>
     );
 }
 
-export default Streak;
+export default withRouter(Streak);
 
 
 

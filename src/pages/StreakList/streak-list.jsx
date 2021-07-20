@@ -3,6 +3,10 @@ import { useHistory } from "react-router";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+
+//Libraries
+import moment from 'moment';
 
 //Actions
 import { createStreakData, getStreaksData, deleteStreakData, updateStreakData } from "../../redux/actions/streak";
@@ -20,7 +24,6 @@ import Modal from "../../components/modal";
 //CSS
 import "./streak-list.css";
 import "../../index.css";
-import { useEffect } from "react";
 
 function Streak(props) {
   const dispatch = useDispatch();
@@ -92,38 +95,6 @@ function Streak(props) {
     });
   };
 
-
-  /**
-   * To convert the date in the format 'yyyy-mm-dd'
-   * @param {Date} dateToConvert - Date we want to convert
-   * @param {String} daysToAdd - If we want to add any days in the date
-   * @returns - It returns the new date in the form 'yyyy-mm-dd'
-   */
-  const dateConversion = (dateToConvert, daysToAdd) => {
-    let formattedDate;
-    let someDate = new Date(dateToConvert);
-    let numberOfDaysToAdd = +daysToAdd;
-    someDate.setDate(someDate.getDate() + numberOfDaysToAdd);
-
-    let dd = someDate.getDate();
-    let mm = someDate.getMonth() + 1;
-    let y = someDate.getFullYear();
-
-    if (mm.toString().length === 1 && dd.toString().length === 1) {
-      formattedDate = `${y}-0${mm}-0${dd}`
-    }
-    else if (mm.toString().length === 1) {
-      formattedDate = `${y}-0${mm}-${dd}`
-    }
-    else if (dd.toString().length === 1) {
-      formattedDate = `${y}-${mm}-${dd}`
-    }
-    else {
-      formattedDate = `${y}-${mm}-${dd}`
-    }
-    return formattedDate;
-  }
-
   /**
    * 
    * @param {Object} e - event
@@ -187,14 +158,14 @@ function Streak(props) {
       <div className="streak-list">
         {
           streaks.map((streak, index) => {
-            let endDate = dateConversion(streak?.date, streak?.days);
-            let startDate = dateConversion(streak?.date, "0");
+            let endDate = moment(streak?.date).add(+streak?.days, 'days').format('YYYY-MM-DD');
+            let startDate = moment(streak?.date).format('YYYY-MM-DD');
             return (
               <Card
                 key={index}
                 onClick={() => {
                   history.push({
-                    pathname: `/streak-list/${index}`,
+                    pathname: `/streak-list/${streak._id}`,
                     state: { streakName: streak.title },
                   });
                 }}

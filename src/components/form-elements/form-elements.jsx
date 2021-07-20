@@ -38,6 +38,7 @@ export function TextInputElement({ lable, type, uid, placeholder, ...rest }) {
         placeholder={placeholder ? placeholder : `Enter a ${lable?.toLowerCase()}`}
         {...rest}
       />
+      
     </div>
   );
 }
