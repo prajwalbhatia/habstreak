@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 //COMPONENTS
-import Navigation from "../navigation/navigation";
 import Header from "../header/header";
 
 //CSS
 import "./frame.css";
 
 export default function Frame(props) {
+ 
     const {
         containerClass,
         withHeader,
@@ -19,7 +19,6 @@ export default function Frame(props) {
     } = props;
     return (
         <div className={`frame ${containerClass}`}>
-            <Navigation />
             {
                 withHeader &&
                 <Header

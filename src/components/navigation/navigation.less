@@ -24,7 +24,7 @@
   }
 
   h1:not(:first-child) {
-    color: var(--secondaryColor)
+    color: var(--secondaryColor);
   }
 }
 
@@ -32,26 +32,23 @@
   display: flex;
   flex: 8;
 
-  a
-  {
+  a {
     color: white;
     margin-top: 3px;
   }
 
-  li
-  {
+  li {
     padding: 1rem 0;
     margin: 1rem 0;
     padding-left: 2rem;
     position: relative;
   }
 
-  .active
-  {
+  .active {
     position: absolute;
     left: 0;
     top: 50%;
-    transform: translate(0 , -50%);
+    transform: translate(0, -50%);
     width: 0;
     border: 10px solid yellow;
     border-radius: 0 7px 7px 0;
@@ -59,8 +56,13 @@
     background-color: yellow;
   }
 
+  .navigation-icons {
+    font-size: 1.4rem;
+    color: white;
+    margin-top: 1px;
+    margin-right: 5px;
+  }
 }
-
 
 .developer-container {
   display: flex;
@@ -74,5 +76,10 @@
     max-width: 14ch;
     color: white;
     line-height: 1.5rem;
+  }
+
+  .heart-icon {
+    font-size: 1rem;
+    color: #d7443e;
   }
 }

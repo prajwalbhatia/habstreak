@@ -52,7 +52,7 @@ export function Dropdown({ labelName , options , optionSelect }) {
           native
           // value={state.age}
           onChange={(e) => {
-            optionSelect(e.target.value)
+            optionSelect(JSON.parse(e.target.value))
           }}
           label={labelName}
           
@@ -60,7 +60,7 @@ export function Dropdown({ labelName , options , optionSelect }) {
           <option aria-label="None" value="" />
           {options.map((item , key) => {
             return (
-              <option key={key} value={item}>{item}</option>
+              <option key={key} value={JSON.stringify(item)}>{item?.title ? item.title : item}</option>
             )
           })}
        

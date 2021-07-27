@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState} from "react";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 
+//Libraries
+import moment from 'moment';
+
 //Actions
 import { createReward } from "../../redux/actions/reward";
+import { getStreaksData } from "../../redux/actions/streak";
 
 //CSS
 import "./reward.css";
@@ -21,9 +25,17 @@ import { Dropdown } from "../../components/form-elements/form-elements";
 
 function Streak(props) {
   const dispatch = useDispatch();
-  const rewards = useSelector((state) => state.reward.rewards);
-  console.log('🚀 ~ file: reward.jsx ~ line 25 ~ Streak ~ rewards', rewards);
 
+  const [dateShow , setDateShow] = useState(false);
+  const [dropdownDates , setDropdownDates] = useState([]);
+  console.log('🚀 ~ file: reward.jsx ~ line 31 ~ Streak ~ dropdownDates', dropdownDates);
+  const rewards = useSelector((state) => state.reward.rewards);
+  const streaks = useSelector((state) => state.streak.streaks);
+
+  //Getting initial data
+  useEffect(() => {
+    dispatch(getStreaksData());
+  }, [dispatch]);
 
   const dialog = () => {
     Modal.show({
@@ -43,13 +55,13 @@ function Streak(props) {
           label: "Streak name",
           uid: "streak-name",
           eleType: "dropdown",
-          options : ['Streak 1' , 'Streak 2']
+          options : [...streaks]
         },
         {
           label: "Date",
           uid: "date",
           eleType: "dropdown",
-          options: ['12th Aug, 2021', '12th Aug, 2021']
+          options: [...dropdownDates]
         },
         // {
         //   label: "Date",
@@ -67,8 +79,23 @@ function Streak(props) {
 
         Modal.hide();
       },
+      dropdownHandler : (data) => {
+        arrayOfDates(data)
+        console.log('🚀 ~ file: reward.jsx ~ line 82 ~ dialog ~ data', dropdownDates);
+        dialog()
+      }
     });
   };
+
+  const arrayOfDates = (data) => {
+    let dateArr = [];
+    for(let i = 0 ; i < +data.days ; i++)
+    {
+      let date = moment(data?.date).add(i, 'days').format('YYYY-MM-DD');
+      dateArr.push(date);
+    }
+    setDropdownDates([...dateArr]);
+  }
 
   return (
     <Frame
@@ -86,15 +113,17 @@ function Streak(props) {
               <h4>Buy monitor</h4>
               <Dropdown
                 labelName="Streak Name"
-                options={['Streak 1', 'Streak 2']}
+                options={streaks}
                 optionSelect={(data) => {
+                  arrayOfDates(data);
                 }}
               />
 
               <Dropdown
                 labelName="To Date"
-                options={['12th Aug, 2021', '12th Aug, 2021']}
+                options={dropdownDates}
                 optionSelect={(data) => {
+                console.log('🚀 ~ file: reward.jsx ~ line 120 ~ Streak ~ data', data);
                 }}
               />
             </Card>

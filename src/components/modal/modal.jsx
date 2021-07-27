@@ -57,6 +57,7 @@ function Modal(props) {
                         value={formData?.[data.uid]}
                         optionSelect={(value) => {
                             setDropDown(data.uid, value)
+                            props.dropdownHandler(value)
                         }}
                     />
                 )

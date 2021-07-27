@@ -1,19 +1,27 @@
-import React , {useState} from 'react';
-import { AiFillHeart  } from "react-icons/ai";
-import {IconContext} from "react-icons"
+import React, { useState } from 'react';
+import { AiFillHeart } from "react-icons/ai";
+import { IconContext } from "react-icons"
 import { useHistory } from "react-router";
 
 //Navigation list
-import navigationList  from './navigationList';
+import { navigationList, navigationIcons } from './navigationList';
 
 //CSS
 import "./navigation.css";
 import "../../index.css";
+import { useEffect } from 'react';
 
 
 function Navigation(props) {
-  const [navigation , setNavigation] = useState([...navigationList]);
+  const [navigation, setNavigation] = useState([...navigationList]);
   const history = useHistory();
+
+  useEffect(() => {
+    if (localStorage.getItem('navigationList')) {
+      const naigationData = JSON.parse(localStorage.getItem('navigationList'));
+      setNavigation([...naigationData]);
+    }
+  }, []);
 
   const linkClick = (list) => {
     const id = list._id;
@@ -21,16 +29,28 @@ function Navigation(props) {
 
     navigationList.forEach((el) => {
       el.active = false;
-      if(el._id === id)
-      {
+      if (el._id === id) {
         el.active = true;
         history.push({
-          pathname : `${list.url}`
-        })  
+          pathname: `${list.url}`
+        })
       }
     });
 
+    localStorage.setItem('navigationList', JSON.stringify([...navigationList]));
     setNavigation([...navigationList]);
+  }
+
+  const iconDisplay = (list) =>
+  {
+    let icon = navigationIcons.filter((icon) => {
+      if(icon._id === list._id)
+      {
+        return icon
+      }
+    })
+
+    return icon[0].iconJsx;
   }
 
   return (
@@ -39,33 +59,34 @@ function Navigation(props) {
         <h1>HAB</h1><h1>STREAK</h1>
       </div>
       <div className="navigation-container">
-          <ol>
-            {
-              navigation?.map((list) => {
-                return (
-                  <li 
-                    key={list._id}
-                    onClick={() => {
-                      linkClick(list)
-                    }}
-                  >
-                    <div className={list.active ? "active" : ""}></div>
-                    <div className="d-flex">
-                    <IconContext.Provider 
-                    value={{ style: {fontSize: '1.4rem', color: "white" , marginTop : "1px" , marginRight : "5px"}}}>
-                      {list.iconJsx}
+        <ol>
+          {
+            navigation?.map((list) => {
+              return (
+                <li
+                  key={list._id}
+                  onClick={() => {
+                    linkClick(list)
+                  }}
+                >
+                  <div className={list.active ? "active" : ""}></div>
+                  <div className="d-flex">
+                    <IconContext.Provider
+                      value={{ className: 'navigation-icons' }}
+                    >
+                      {iconDisplay(list)}
                     </IconContext.Provider>
-                    <a href="" onClick={(e) => {e.preventDefault()}}>{list.name}</a>
-                    </div>
-                   </li>
-                );
-              })
-            }
-          </ol>
+                    <a href="" onClick={(e) => { e.preventDefault() }}>{list.name}</a>
+                  </div>
+                </li>
+              );
+            })
+          }
+        </ol>
       </div>
       <div className="developer-container">
-        <span>Made with 
-          <IconContext.Provider value={{ style: {fontSize: '1rem', color: "#d7443e"}}}> <AiFillHeart/> </IconContext.Provider>by PRAJWAL BHATIA</span>
+        <span>Made with
+          <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
       </div>
     </nav>
   );

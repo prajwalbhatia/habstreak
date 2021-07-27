@@ -18,32 +18,32 @@ import "./streak.css";
 import Frame from "../../components/frame/frame";
 import { TextInputElement } from "../../components/form-elements/form-elements";
 import { PrimaryButton } from '../../components/button/button';
-import { updateStreakDetail } from '../../redux/api/streak';
-
 
 function Streak(props) {
     const location = useLocation();
     const dispatch = useDispatch();
-
     const [desc, setDesc] = useState({});
-    console.log('🚀 ~ file: streak.jsx ~ line 28 ~ Streak ~ desc', desc);
-
     //Getting the data from the state
     const streakDetail = useSelector((state) => state.streak.streakDetail);
-    console.log('🚀 ~ file: streak.jsx ~ line 32 ~ Streak ~ streakDetail', streakDetail);
     //Getting initial data
     useEffect(() => {
         if (props?.match?.params?.id)
             dispatch(getStreaksDetailData(props.match.params.id));
     }, [dispatch, props]);
 
-
+    //Whenver there is a change in streakDetails
+    //then we want to update out description array
+    //with the latest data 
     useEffect(() => {
         streakDetail.map((detail) => {
             setDesc({ ...desc, [detail._id]: detail.description });
         })
     }, [streakDetail])
 
+    /**
+     * 
+     * @param {Object} detail - Object of detail we want to update
+     */
     const updateStreakDetail = (detail) => {
         dispatch(updateStreakDetailData({
             description: desc[detail._id]

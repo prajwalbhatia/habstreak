@@ -5,7 +5,8 @@ import {
     updateStreak,
     createStreakDetail,
     getStreaksDetail,
-    updateStreakDetail
+    updateStreakDetail,
+    deleteStreakDetail
 } from '../api/streak';
 
 import { GET_STREAK, GET_STREAK_DETAIL } from '../constants/action-type';
@@ -78,6 +79,14 @@ export const updateStreakDetailData = (streakDetail, id , streakId) => async (di
     try {
         await updateStreakDetail(streakDetail, id);
         dispatch(getStreaksDetailData(streakId));
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteStreakDetailData = (streakId) => async (dispatch) => {
+    try {
+        await deleteStreakDetail(streakId);
     } catch (error) {
         console.log(error);
     }

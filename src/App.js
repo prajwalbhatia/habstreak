@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component , useEffect } from 'react';
 
 //Third party libraries
 import {
@@ -16,11 +16,26 @@ import RewardPage from "./pages/Reward/reward";
 
 import './App.css';
 
+//Components
+import Navigation from "./components/navigation/navigation";
+
+
+
+
 class App extends Component {
+
+  componentDidMount()
+  {
+    window.addEventListener('beforeunload' , () => {
+      console.log('refresh')
+   })
+  }
+
   render() {
     return (
       <Router>
         {/* Modal Container */}
+        <Navigation />
         <div id="modal-container-id"></div>
         <Switch>
           <Route path="/dashboard" component={DashboardPage}/>

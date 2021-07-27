@@ -29,14 +29,39 @@ function Streak(props) {
   const dispatch = useDispatch();
   const [tabOne, setTabOne] = useState(true);
   const [tabTwo, setTabTwo] = useState(false);
+  const [running, setRunning] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+
+  const [streakType, setStreakType] = useState('running');
+
   const history = useHistory();
 
   //Getting the data from the state
   const streaks = useSelector((state) => state.streak.streaks);
+
+
+  let dataToRender = streakType === 'running' ? running : upcoming;
   //Getting initial data
   useEffect(() => {
     dispatch(getStreaksData());
   }, [dispatch]);
+
+
+  useEffect(() => {
+    const running = streaks.filter((streak) => {
+      if (moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+        return streak;
+      }
+    });
+
+    const upcoming = streaks.filter((streak) => {
+      if (moment(moment(streak.date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD'))) {
+        return streak;
+      }
+    });
+    setRunning(running);
+    setUpcoming(upcoming);
+  }, [streaks]);
 
   /**
    * 
@@ -86,7 +111,22 @@ function Streak(props) {
         if (data.type === "primary") {
           delete data.type
           if (type === 'create')
+          {
             dispatch(createStreakData(data));
+            if (moment(moment(data.date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD')
+            ))
+            {
+              setStreakType('upcoming')
+              setTabOne(false)
+              setTabTwo(true)
+            }
+            else
+            {
+              setStreakType('running')
+              setTabOne(true)
+              setTabTwo(false)
+            }
+          }
           else
             dispatch(updateStreakData(data, streakId));
         }
@@ -136,6 +176,7 @@ function Streak(props) {
           onClick={(e) => {
             if (!tabOne) setTabOne(true);
             setTabTwo(false);
+            setStreakType('running');
           }}
         >
           <h4>Running</h4>
@@ -147,6 +188,7 @@ function Streak(props) {
           onClick={(e) => {
             if (!tabTwo) setTabTwo(true);
             setTabOne(false);
+            setStreakType('upcoming');
           }}
         >
           <span>Upcoming</span>
@@ -157,7 +199,7 @@ function Streak(props) {
       {/*List of streak*/}
       <div className="streak-list">
         {
-          streaks.map((streak, index) => {
+          dataToRender.map((streak, index) => {
             let endDate = moment(streak?.date).add(+streak?.days, 'days').format('YYYY-MM-DD');
             let startDate = moment(streak?.date).format('YYYY-MM-DD');
             return (
