@@ -1,4 +1,4 @@
-import { CREATE_REWARD } from "../constants/action-type";
+import { GET_REWARDS } from "../constants/action-type";
 
 const initialState = {
   rewards: []
@@ -6,8 +6,8 @@ const initialState = {
 
 const rewardReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CREATE_REWARD:
-      return { ...state, rewards : [...state.rewards , { ...action.payload }] }
+    case GET_REWARDS:
+      return { ...state, rewards : [...action.payload ] }
     default:
       return state;
   }

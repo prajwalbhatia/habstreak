@@ -1,9 +1,46 @@
-import { CREATE_REWARD } from '../constants/action-type';
+import {
+  getRewards,
+  createReward,
+  deleteReward,
+  updateReward,
+} from '../api/rewards';
+
+import { GET_REWARDS } from '../constants/action-type';
 
 //Action Creators
-export const createReward = (data) => {
-  return {
-    type: CREATE_REWARD,
-    payload: data
+export const createRewardData = (reward) => async (dispatch) => {
+  try {
+    const { data } = await createReward(reward);
+    dispatch(getRewardsData());
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const deleteRewardData = (rewardId) => async (dispatch) => {
+  try {
+    await deleteReward(rewardId);
+    dispatch(getRewardsData());
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const updateRewardData = (reward, rewardId) => async (dispatch) => {
+  try {
+    await updateReward(reward, rewardId);
+    dispatch(getRewardsData());
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getRewardsData = () => async (dispatch) => {
+  try {
+    const rewards = await getRewards();
+    const action = { type: GET_REWARDS, payload: rewards.data }
+    dispatch(action);
+  } catch (error) {
+    console.log(error);
   }
 }

@@ -4,4 +4,4 @@ export const GET_STREAK = "GET_STREAK";
 export const GET_STREAK_DETAIL = "GET_STREAK_DETAIL";
 
 //REWARDS
-export const CREATE_REWARD = "CREATE_REWARD";
+export const GET_REWARDS = 'GET_REWARDS';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
 
 //Actions
-import { createReward } from "../../redux/actions/reward";
+import { getRewardsData } from "../../redux/actions/reward";
 import { getStreaksData } from "../../redux/actions/streak";
 
 //CSS
@@ -26,8 +26,8 @@ import { Dropdown } from "../../components/form-elements/form-elements";
 function Streak(props) {
   const dispatch = useDispatch();
 
-  const [dateShow , setDateShow] = useState(false);
-  const [dropdownDates , setDropdownDates] = useState([]);
+  const [dateShow, setDateShow] = useState(false);
+  const [dropdownDates, setDropdownDates] = useState([]);
   console.log('🚀 ~ file: reward.jsx ~ line 31 ~ Streak ~ dropdownDates', dropdownDates);
   const rewards = useSelector((state) => state.reward.rewards);
   const streaks = useSelector((state) => state.streak.streaks);
@@ -37,7 +37,7 @@ function Streak(props) {
     dispatch(getStreaksData());
   }, [dispatch]);
 
-  const dialog = () => {
+  const dialog = (streaks, dropdownDates) => {
     Modal.show({
       title: "Create reward",
       icon: <AiFillTrophy />,
@@ -48,14 +48,14 @@ function Streak(props) {
           // label: "Title",
           uid: "title",
           type: "text",
-          placeholder : 'Enter a title',
+          placeholder: 'Enter a title',
           eleType: "input",
         },
         {
           label: "Streak name",
           uid: "streak-name",
           eleType: "dropdown",
-          options : [...streaks]
+          options: [...streaks]
         },
         {
           label: "Date",
@@ -71,30 +71,31 @@ function Streak(props) {
         // },
       ],
       btnClickHandler: (data) => {
-      console.log('🚀 ~ file: reward.jsx ~ line 52 ~ dialog ~ data', data);
+        console.log('🚀 ~ file: reward.jsx ~ line 52 ~ dialog ~ data', data);
         if (data.type === "primary") {
           delete data.type
-          dispatch(createReward(data));
+          // dispatch(createReward(data));
         }
 
         Modal.hide();
       },
-      dropdownHandler : (data) => {
-        arrayOfDates(data)
-        console.log('🚀 ~ file: reward.jsx ~ line 82 ~ dialog ~ data', dropdownDates);
-        dialog()
+      dropdownHandler: (uid, data) => {
+        if (uid === 'streak-name') {
+          const dateArr = arrayOfDates(data)
+          setDropdownDates([...dateArr]);
+          dialog(streaks, dateArr);
+        }
       }
     });
   };
 
   const arrayOfDates = (data) => {
     let dateArr = [];
-    for(let i = 0 ; i < +data.days ; i++)
-    {
+    for (let i = 0; i < +data.days; i++) {
       let date = moment(data?.date).add(i, 'days').format('YYYY-MM-DD');
       dateArr.push(date);
     }
-    setDropdownDates([...dateArr]);
+    return [...dateArr];
   }
 
   return (
@@ -123,12 +124,12 @@ function Streak(props) {
                 labelName="To Date"
                 options={dropdownDates}
                 optionSelect={(data) => {
-                console.log('🚀 ~ file: reward.jsx ~ line 120 ~ Streak ~ data', data);
+                  console.log('🚀 ~ file: reward.jsx ~ line 120 ~ Streak ~ data', data);
                 }}
               />
             </Card>
 
-            <Card cardClass="new-reward-card" onClick={() => dialog()}>
+            <Card cardClass="new-reward-card" onClick={() => dialog(streaks, dropdownDates)}>
               <div className="content-container">
                 <h5>Create new reward</h5>
                 <IconContext.Provider
