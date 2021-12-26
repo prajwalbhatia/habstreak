@@ -7,7 +7,7 @@ import {
     getStreaksDetail,
     updateStreakDetail,
     deleteStreakDetail
-} from '../api/streak';
+} from '../api';
 
 import { GET_STREAK, GET_STREAK_DETAIL } from '../constants/action-type';
 

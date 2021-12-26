@@ -179,7 +179,7 @@ function Streak(props) {
             setStreakType('running');
           }}
         >
-          <h4>Running</h4>
+          <h4>{`Running (${running.length})`}</h4>
           <div className={tabOne ? "active-tab" : ""}></div>
         </div>
 
@@ -191,7 +191,7 @@ function Streak(props) {
             setStreakType('upcoming');
           }}
         >
-          <span>Upcoming</span>
+          <span>{`Upcoming (${upcoming.length})`}</span>
           <div className={tabTwo ? "active-tab" : ""}></div>
         </div>
       </div>

@@ -1,36 +1,43 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 //COMPONENTS
-import Header from "../header/header";
+import Header from "components/header/header";
+import Navigation from "components/navigation/navigation";
 
 //CSS
 import "./frame.css";
 
 export default function Frame(props) {
- 
     const {
         containerClass,
         withHeader,
         headerTitle,
         withSearchBox,
         children,
-        withBackIcon
+        withBackIcon,
+        withNavigation = true,
     } = props;
     return (
-        <div className={`frame ${containerClass}`}>
+        <>
             {
-                withHeader &&
-                <Header
-                    headerText={headerTitle}
-                    withSearchBox={withSearchBox}
-                    withBackIcon={withBackIcon}
-                />
+                withNavigation &&
+                <Navigation />
             }
-            <div className="frame-children">
-                {children}
+            <div className={`frame ${containerClass}`}>
+                {
+                    withHeader &&
+                    <Header
+                        headerText={headerTitle}
+                        withSearchBox={withSearchBox}
+                        withBackIcon={withBackIcon}
+                    />
+                }
+                <div className="frame-children">
+                    {children}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

@@ -1,17 +1,31 @@
-import react from "react";
+import React from "react";
 import { useHistory } from "react-router";
 
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-
+import { IconContext } from "react-icons"
 
 import "./header.css";
-import { IconContext } from "react-icons"
+
+//REDUX
+import { useDispatch, useSelector } from "react-redux";
+
+//Actions
+import { logout } from "../../redux/actions/user";
 
 //Component 
 import Search from "../search/search";
+import { PrimaryButton } from "../../components/button/button";
+
 
 function Header(props) {
+    const dispatch = useDispatch();
     const history = useHistory();
+
+    const logoutFun = () => {
+        dispatch(logout());
+        history.replace('/');
+    }
+
     return (
         <header className="header">
             <div className="header-text-container">
@@ -34,6 +48,14 @@ function Header(props) {
                     :
                     null
             }
+
+            <div>
+                <PrimaryButton
+                    name={'Logout'}
+                    click={() => logoutFun()}
+                    btnContainerClass="ml-10"
+                />
+            </div>
 
         </header>
     );

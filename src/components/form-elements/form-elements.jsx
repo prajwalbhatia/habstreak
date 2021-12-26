@@ -49,13 +49,10 @@ export function Dropdown({ labelName , options , optionSelect }) {
       <FormControl variant="outlined">
         <InputLabel htmlFor="outlined-age-native-simple">{labelName}</InputLabel>
         <Select
-          native
-          // value={state.age}
           onChange={(e) => {
             optionSelect(JSON.parse(e.target.value))
           }}
           label={labelName}
-          
         >
           <option aria-label="None" value="" />
           {options.map((item , key) => {

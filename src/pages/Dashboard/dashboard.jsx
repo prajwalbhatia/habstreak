@@ -1,4 +1,6 @@
-import React , {useEffect} from 'react';
+import React from 'react';
+
+import { useDispatch, useSelector  } from "react-redux";
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
@@ -10,6 +12,8 @@ import './dashboard.css';
 import "../../index.css";
 
 function Dashboard(props) {
+   const user = useSelector((state) => state.user.user);
+  console.log('🚀 ~ file: login.jsx ~ line 16 ~ Dashboard ~ user', user);
   return (
     <Frame
       withHeader={true}
@@ -31,12 +35,12 @@ function Dashboard(props) {
 
           {/* Progress streak */}
           <div className="progress-streak-container pad-global">
-              <diV className="header-container pad-global">
+              <div className="header-container pad-global">
                 <h4>Streak in Progress</h4>
                 <PrimaryButton
                   name={'View all'}
                 />
-            </diV>
+            </div>
 
             <div className="streak-list pad-global">
               <Card withLine={true} cardClass="streak-card">

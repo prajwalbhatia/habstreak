@@ -3,7 +3,7 @@ import {
   createReward,
   deleteReward,
   updateReward,
-} from '../api/rewards';
+} from '../api';
 
 import { GET_REWARDS } from '../constants/action-type';
 

@@ -66,7 +66,13 @@ function Streak(props) {
                         const statusActive = moment(moment(detail.date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD'))
                         return (
                             <div key={detail._id} className="streak-detail-card">
-                                <div className="day-info">
+                                <div className="day-info" style={{ position: 'relative' }}>
+                                    {
+                                        detail.reward ?
+                                            <div style={{ position: 'absolute', top: 0 }}>{detail?.rewards?.[0]}</div>
+                                            :
+                                            null
+                                    }
                                     <div className="day">Day {index + 1}</div>
                                 </div>
                                 <div className="streak-info">
