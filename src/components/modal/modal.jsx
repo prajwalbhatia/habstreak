@@ -16,7 +16,6 @@ function Modal(props) {
     }, [props.initialData])
 
     const changeHandler = (e) => {
-        console.log(e.target.name)
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 

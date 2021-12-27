@@ -3,6 +3,8 @@ import { AiFillHeart } from "react-icons/ai";
 import { IconContext } from "react-icons"
 import { useHistory } from "react-router";
 
+import { useLocation  } from 'react-router-dom';
+
 //Navigation list
 import { navigationList, navigationIcons } from './navigationList';
 
@@ -15,6 +17,7 @@ import { useEffect } from 'react';
 function Navigation(props) {
   const [navigation, setNavigation] = useState([...navigationList]);
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     if (localStorage.getItem('navigationList')) {
@@ -52,6 +55,26 @@ function Navigation(props) {
 
     return icon[0].iconJsx;
   }
+
+
+  useEffect(() => {
+    const path = location.pathname;
+    const navigation = [...navigationList];
+
+    const modifiedNavigationList = navigation.map((item) => {
+      if(item.url === path)
+      {
+        item.active = true;
+      }
+      else
+      {
+        item.active = false;
+      }
+      return item;
+    });
+
+    setNavigation([...modifiedNavigationList]);
+  }, [location])
 
   return (
     <nav className="navigation">

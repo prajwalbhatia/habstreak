@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { useEffect } from "react";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 
 //Libraries
 import moment from 'moment';

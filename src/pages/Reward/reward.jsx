@@ -85,14 +85,12 @@ function Streak(props) {
         if (data.type === "primary") {
           delete data.type
           const rewardData = { title: data.title, date: data.date, streakId: data?.['streak-name']?._id }
-          console.log('🚀 ~ file: reward.jsx ~ line 78 ~ dialog ~ rewardData', rewardData);
           dispatch(createRewardData(rewardData));
         }
 
         Modal.hide();
       },
       dropdownHandler: (uid, data) => {
-        console.log('🚀 ~ file: reward.jsx ~ line 85 ~ dialog ~ data', data);
         if (uid === 'streak-name') {
           const dateArr = arrayOfDates(data);
           setDropdownDates([...dateArr]);
@@ -165,7 +163,7 @@ function Streak(props) {
           <h4>Rewards Earned</h4>
 
           <div className="rewards-list">
-            <Card withLine={true} cardClass="reward-earned-card">
+            {/* <Card withLine={true} cardClass="reward-earned-card">
               <h4>Buy laptop stand</h4>
 
               <IconContext.Provider
@@ -180,7 +178,7 @@ function Streak(props) {
               >
                 <GiGlassCelebration />
               </IconContext.Provider>
-            </Card>
+            </Card> */}
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@ export const navigationList = [
     {
         _id: "1",
         name: "Dashboard",
-        active: true,
+        active: false,
         url: '/dashboard',
     },
     {

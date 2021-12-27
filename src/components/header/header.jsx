@@ -54,6 +54,7 @@ function Header(props) {
                     name={'Logout'}
                     click={() => logoutFun()}
                     btnContainerClass="ml-10"
+                    btnClass='logout-btn'
                 />
             </div>
 

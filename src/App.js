@@ -24,7 +24,6 @@ import './App.css';
 function App(props) {
 
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
-  console.log('🚀 ~ file: App.js ~ line 27 ~ App ~ isAuthenticated', isAuthenticated);
 
   return (
     // isAuthenticated

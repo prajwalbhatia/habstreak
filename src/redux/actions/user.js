@@ -1,8 +1,13 @@
-import { AUTH , LOGOUT} from '../constants/action-type';
+import { AUTH, LOGOUT } from '../constants/action-type';
+
+import {
+    createUser
+} from '../api/user';
 
 export const auth = (data) => async (dispatch) => {
     try {
-        const action = { type: AUTH,  data }
+        await createUser(data.result);
+        const action = { type: AUTH, data }
         dispatch(action);
     } catch (error) {
         console.log(error);
