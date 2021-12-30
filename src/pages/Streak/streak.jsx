@@ -23,21 +23,32 @@ function Streak(props) {
     const location = useLocation();
     const dispatch = useDispatch();
     const [desc, setDesc] = useState({});
+    const [streaks, setStreaks] = useState([]);
+
     //Getting the data from the state
     const streakDetail = useSelector((state) => state.streak.streakDetail);
+    console.log('🚀 ~ file: streak.jsx ~ line 28 ~ Streak ~ streakDetail', streakDetail);
     //Getting initial data
     useEffect(() => {
         if (props?.match?.params?.id)
             dispatch(getStreaksDetailData(props.match.params.id));
-    }, [dispatch, props]);
+    }, []);
 
     //Whenver there is a change in streakDetails
     //then we want to update out description array
     //with the latest data 
     useEffect(() => {
-        streakDetail.map((detail) => {
-            setDesc({ ...desc, [detail._id]: detail.description });
-        })
+    if(streakDetail.length > 0 &&  JSON.stringify(streaks) !== JSON.stringify(streakDetail))
+    {
+        console.log('THIS')   
+
+        let streaks = [...streakDetail];
+        const details = streaks.map((detail) => {
+            return { [detail._id] : detail.description };
+        });
+        setDesc({ ...desc ,  ...details})
+        setStreaks([...streaks]);
+    }
     }, [streakDetail])
 
     /**
@@ -48,6 +59,18 @@ function Streak(props) {
         dispatch(updateStreakDetailData({
             description: desc[detail._id]
         }, detail._id, detail.streakId));
+    }
+
+    const checkingStatus = (date) => {
+        let status = '';
+        if(moment(moment(date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD')))
+        status = 'Active';
+        else if(moment(moment(date).format('YYYY-MM-DD')).isBefore(moment(Date.now()).format('YYYY-MM-DD')))
+        status = 'Past';
+        else
+        status = 'Upcoming';
+
+        return status;
     }
 
     return (
@@ -62,8 +85,8 @@ function Streak(props) {
             <div className="streak-details">
                 {/* Streak detail card */}
                 {
-                    streakDetail.map((detail, index) => {
-                        const statusActive = moment(moment(detail.date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD'))
+                    streaks.map((detail, index) => {
+                        const status = checkingStatus(detail.date);
                         return (
                             <div key={detail._id} className="streak-detail-card">
                                 <div className="day-info" style={{ position: 'relative' }}>
@@ -76,7 +99,7 @@ function Streak(props) {
                                     <div className="day">Day {index + 1}</div>
                                 </div>
                                 <div className="streak-info">
-                                    <h4>{moment(detail?.date).format('MMMM Do, YYYY')}</h4>
+                                    <h4>{moment(detail?.date).format('MMMM DD, YYYY')}</h4>
                                     <div className="description-block">
                                         <TextInputElement
                                             placeholder={'Description'}
@@ -85,7 +108,7 @@ function Streak(props) {
                                             }}
                                             value={desc?.[detail._id]}
                                             type={'text'}
-                                            disabled={statusActive ? false : true}
+                                            disabled={status === 'Upcoming' ? true : false}
                                         />
                                         <PrimaryButton
                                             name={'Ok'}
@@ -95,7 +118,7 @@ function Streak(props) {
                                     </div>
 
                                     <div className="status-block">
-                                        <span>{statusActive ? 'Active' : 'Upcoming'}</span>
+                                        <span>{status}</span>
                                     </div>
                                 </div>
                             </div>

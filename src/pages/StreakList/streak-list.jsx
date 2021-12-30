@@ -29,8 +29,11 @@ function Streak(props) {
   const dispatch = useDispatch();
   const [tabOne, setTabOne] = useState(true);
   const [tabTwo, setTabTwo] = useState(false);
+  const [tabThree, setTabThree] = useState(false);
+
   const [running, setRunning] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
+  const [finished, setFinished] = useState([]);
 
   const [streakType, setStreakType] = useState('running');
 
@@ -48,6 +51,14 @@ function Streak(props) {
 
 
   useEffect(() => {
+    const finished = streaks.filter((streak) => {
+      const streakEndDate = moment(streak.date).add(Number(streak.days), 'd').format();
+      if (moment(moment(streakEndDate).format('YYYY-MM-DD')).isBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+        return streak;
+      }
+    });
+
+
     const running = streaks.filter((streak) => {
       if (moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
         return streak;
@@ -59,8 +70,10 @@ function Streak(props) {
         return streak;
       }
     });
+
     setRunning(running);
     setUpcoming(upcoming);
+    setFinished(finished);
   }, [streaks]);
 
   /**
@@ -176,6 +189,7 @@ function Streak(props) {
           onClick={(e) => {
             if (!tabOne) setTabOne(true);
             setTabTwo(false);
+            setTabThree(false);
             setStreakType('running');
           }}
         >
@@ -188,13 +202,29 @@ function Streak(props) {
           onClick={(e) => {
             if (!tabTwo) setTabTwo(true);
             setTabOne(false);
+            setTabThree(false);
             setStreakType('upcoming');
           }}
         >
           <span>{`Upcoming (${upcoming.length})`}</span>
           <div className={tabTwo ? "active-tab" : ""}></div>
         </div>
+
+         <div
+          className="tab-item"
+          onClick={(e) => {
+            if (!tabThree) setTabThree(true);
+            setTabOne(false);
+            setTabTwo(false);
+            setStreakType('finished');
+          }}
+        >
+          <span>{`Finished (${finished.length})`}</span>
+          <div className={tabThree ? "active-tab" : ""}></div>
+        </div>
       </div>
+
+      
 
       {/*List of streak*/}
       <div className="streak-list">
@@ -246,16 +276,19 @@ function Streak(props) {
       </div>
 
       {/* New Streak creating */}
-      <div className="new-streak" onClick={() => dialog('create')}>
-        <Card cardClass="new-streak-card">
-          <div className="content-container">
-            <h2>Create new streak</h2>
-            <IconContext.Provider value={{ className: 'common-icon fire-icon' }}>
-              <AiFillFire />
-            </IconContext.Provider>
-          </div>
-        </Card>
-      </div>
+     {
+       streakType !== 'finished' &&
+        <div className="new-streak" onClick={() => dialog('create')}>
+          <Card cardClass="new-streak-card">
+            <div className="content-container">
+              <h2>Create new streak</h2>
+              <IconContext.Provider value={{ className: 'common-icon fire-icon' }}>
+                <AiFillFire />
+              </IconContext.Provider>
+            </div>
+          </Card>
+        </div>
+      }
     </Frame>
   );
 }

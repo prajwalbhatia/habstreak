@@ -62,9 +62,9 @@ function Streak(props) {
           eleType: "dropdown",
           options: [...dropdownDates]
         },
-        
-      ] 
-      :
+
+      ]
+        :
         [
           {
             // label: "Title",
@@ -104,7 +104,8 @@ function Streak(props) {
     let dateArr = [];
     for (let i = 0; i < +data.days; i++) {
       let date = moment(data?.date).add(i, 'days').format('YYYY-MM-DD');
-      dateArr.push(date);
+      if (moment(moment(date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD')))
+        dateArr.push(date);
     }
     return [...dateArr];
   }
@@ -163,22 +164,31 @@ function Streak(props) {
           <h4>Rewards Earned</h4>
 
           <div className="rewards-list">
-            {/* <Card withLine={true} cardClass="reward-earned-card">
-              <h4>Buy laptop stand</h4>
 
-              <IconContext.Provider
-                value={{
-                  style: {
-                    fontSize: "2rem",
-                    color: "var(--primaryColor)",
-                    marginTop: "-10px",
-                    marginRight: "5px",
-                  },
-                }}
-              >
-                <GiGlassCelebration />
-              </IconContext.Provider>
-            </Card> */}
+            {
+              rewards.map((reward) => {
+                if (reward.rewardEarned) {
+                  return (
+                    <Card key={reward._id} withLine={true} cardClass="reward-earned-card">
+                      <h4>{reward.title}</h4>
+                      <IconContext.Provider
+                        value={{
+                          style: {
+                            fontSize: "2rem",
+                            color: "var(--primaryColor)",
+                            marginTop: "-10px",
+                            marginRight: "5px",
+                          },
+                        }}
+                      >
+                        <GiGlassCelebration />
+                      </IconContext.Provider>
+                    </Card>
+                  );
+                }
+              })
+            }
+
           </div>
         </div>
       </div>
