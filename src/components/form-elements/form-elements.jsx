@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-
-import PropTypes from "prop-types";
+import { Select, MenuItem } from '@material-ui/core';
 
 //CSS
 import "./form-element.css";
@@ -38,29 +36,37 @@ export function TextInputElement({ lable, type, uid, placeholder, ...rest }) {
         placeholder={placeholder ? placeholder : `Enter a ${lable?.toLowerCase()}`}
         {...rest}
       />
-      
+
     </div>
   );
 }
 
-export function Dropdown({ labelName , options , optionSelect }) {
+export function Dropdown({ labelName, options, optionSelect, value }) {
   return (
     <div className="dropdown">
       <FormControl variant="outlined">
         <InputLabel htmlFor="outlined-age-native-simple">{labelName}</InputLabel>
         <Select
-          onChange={(e) => {
-            optionSelect(JSON.parse(e.target.value))
-          }}
           label={labelName}
+          onChange={(e) => {
+            optionSelect(e.target.value)
+          }}
+          displayEmpty={true}
+          renderValue={() => {
+            return value?.title ? value?.title : value
+          }}
         >
-          <option aria-label="None" value="" />
-          {options.map((item , key) => {
+          <MenuItem aria-label="None" value="" />
+          {options.map((item, key) => {
             return (
-              <option key={key} value={JSON.stringify(item)}>{item?.title ? item.title : item}</option>
+              <MenuItem key={key}
+                value={item}
+              >
+                {item?.title ? item.title : item}
+              </MenuItem>
             )
           })}
-       
+
         </Select>
       </FormControl>
     </div>
@@ -72,6 +78,6 @@ InputElement.defaultProps = {
 }
 
 Dropdown.defaultProps = {
-  options : [],
-  optionSelect : noop
+  options: [],
+  optionSelect: noop
 }

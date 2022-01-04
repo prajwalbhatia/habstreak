@@ -10,7 +10,7 @@ import { GET_REWARDS } from '../constants/action-type';
 //Action Creators
 export const createRewardData = (reward) => async (dispatch) => {
   try {
-    const { data } = await createReward(reward);
+    await createReward(reward);
     dispatch(getRewardsData());
   } catch (error) {
     console.log(error);

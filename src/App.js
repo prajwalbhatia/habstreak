@@ -5,10 +5,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
 } from 'react-router-dom';
-import { useDispatch, useSelector  } from "react-redux";
-
 
 //Paged
 import DashboardPage from 'pages/Dashboard/dashboard';
@@ -22,12 +19,7 @@ import Errorpage from 'pages/GoogleResponse/error';
 import './App.css';
 
 function App(props) {
-
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
-
   return (
-    // isAuthenticated
-    // ?
     <Router>
       <div id="modal-container-id"></div>
       <Switch>
@@ -38,18 +30,8 @@ function App(props) {
         <Route path="/success" component={SuccessPage} />
         <Route path="/error" component={Errorpage} />
         <Route path="/" component={LoginPage} />
-        {/* <Route path="/">
-            <Redirect to="/" />
-          </Route> */}
       </Switch>
     </Router>
-    // :
-    // <Router>
-    //   <div id="modal-container-id"></div>
-    //   <Switch>
-    //     <Route path="/" component={LoginPage} />
-    //   </Switch>
-    // </Router>
   );
 }
 

@@ -27,7 +27,6 @@ function Streak(props) {
 
     //Getting the data from the state
     const streakDetail = useSelector((state) => state.streak.streakDetail);
-    console.log('🚀 ~ file: streak.jsx ~ line 28 ~ Streak ~ streakDetail', streakDetail);
     //Getting initial data
     useEffect(() => {
         if (props?.match?.params?.id)
@@ -40,8 +39,6 @@ function Streak(props) {
     useEffect(() => {
     if(streakDetail.length > 0 &&  JSON.stringify(streaks) !== JSON.stringify(streakDetail))
     {
-        console.log('THIS')   
-
         let streaks = [...streakDetail];
         const details = streaks.map((detail) => {
             return { [detail._id] : detail.description };

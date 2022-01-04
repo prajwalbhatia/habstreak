@@ -1,50 +1,82 @@
-.rewards
-{
-    .rewards-area
-    {
+.rewards {
+  .rewards-area {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    .left-portion {
+      flex: 1;
+      margin-right: 2rem;
+    }
+
+    .right-portion {
+      flex: 1;
+    }
+
+    .rewards-list {
+      margin-top: 1rem;
+      .reward-earned-card {
         display: flex;
+        justify-content: space-between;
         flex-direction: row;
-        margin-top: 1rem;
-        .left-portion
-        {
-            flex: 1;
-            margin-right: 2rem;
+      }
+
+      .reward-card {
+        cursor: pointer;
+        padding: 0 0 0 1rem;
+        display: flex;
+        .info-container {
+          padding: 1rem 0;
+          display: flex;
+          flex-direction: column;
+          flex: 8;
+          h4 {
+            margin-top: 0.5rem;
+          }
         }
 
-        .right-portion
-        {
-            flex: 1;
-        }
+        .icons-container {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
 
-        .rewards-list
-        {
-            margin-top: 1rem;
-            .reward-earned-card
-            {
-                display: flex;
-                justify-content: space-between;
-                flex-direction: row;
-            }
-        }
-
-        .new-reward-card
-        {
-            margin-top: 1rem;
+          .icn {
             display: flex;
-            flex-direction: row;
+            flex: 1;
             align-items: center;
             justify-content: center;
-            padding: 0.8rem;
+            cursor: pointer;
+          }
 
-            .content-container
-            {
-                display: flex;
-                cursor: pointer;
-                h5
-                {
-                    margin-right: 10px;
-                }
-            }
+          .icn:hover {
+            background-color: #fff4f4;
+          }
+
+          icon-delete:hover {
+            border-top-right-radius: 0.5rem;
+          }
+
+          icon-edit:hover {
+            border-bottom-right-radius: 0.5rem;
+          }
         }
+      }
+
+      .new-reward-card {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem;
+
+        .content-container {
+          display: flex;
+          cursor: pointer;
+          h5 {
+            margin-right: 10px;
+          }
+        }
+      }
     }
+  }
 }

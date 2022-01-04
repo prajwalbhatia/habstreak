@@ -7,7 +7,7 @@ import { IconContext } from "react-icons"
 import "./header.css";
 
 //REDUX
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 //Actions
 import { logout } from "../../redux/actions/user";

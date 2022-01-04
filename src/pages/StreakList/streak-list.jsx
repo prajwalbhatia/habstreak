@@ -255,9 +255,9 @@ function Streak(props) {
 
                 <div className="image-container"></div>
                 <div className="icons-container">
-                  <div className="icn icon-delete">
+                  <div className="icn icon-delete" onClick={(e) => deleteStreak(e, streak._id)}>
                     <IconContext.Provider value={{ className: 'common-icon' }}>
-                      <AiFillDelete onClick={(e) => deleteStreak(e, streak._id)} />
+                      <AiFillDelete  />
                     </IconContext.Provider>
                   </div>
                   <div

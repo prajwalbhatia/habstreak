@@ -10,6 +10,10 @@ import moment from 'moment';
 import { getRewardsData, createRewardData, updateRewardData, deleteRewardData } from "../../redux/actions/reward";
 import { getStreaksData } from "../../redux/actions/streak";
 
+//Icons
+import { AiFillDelete } from "react-icons/ai";
+import { HiPencil } from "react-icons/hi";
+
 //CSS
 import "./reward.css";
 
@@ -21,11 +25,9 @@ import { IconContext } from "react-icons";
 import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 import Modal from "../../components/modal";
-import { Dropdown } from "../../components/form-elements/form-elements";
 
 function Streak(props) {
   const dispatch = useDispatch();
-  const [dateShow, setDateShow] = useState(false);
   const [dropdownDates, setDropdownDates] = useState([]);
   const rewards = useSelector((state) => state.reward.rewards);
   const streaks = useSelector((state) => state.streak.streaks);
@@ -36,7 +38,8 @@ function Streak(props) {
     dispatch(getRewardsData());
   }, [dispatch]);
 
-  const dialog = (streaks, dropdownDates) => {
+  const dialog = (streaks, dropdownDates, rewardData) => {
+
     Modal.show({
       title: "Create reward",
       icon: <AiFillTrophy />,
@@ -52,7 +55,7 @@ function Streak(props) {
         },
         {
           label: "Streak name",
-          uid: "streak-name",
+          uid: "streakName",
           eleType: "dropdown",
           options: [...streaks]
         },
@@ -75,7 +78,7 @@ function Streak(props) {
           },
           {
             label: "Streak name",
-            uid: "streak-name",
+            uid: "streakName",
             eleType: "dropdown",
             options: [...streaks]
           },
@@ -84,21 +87,98 @@ function Streak(props) {
       btnClickHandler: (data) => {
         if (data.type === "primary") {
           delete data.type
-          const rewardData = { title: data.title, date: data.date, streakId: data?.['streak-name']?._id }
+          const rewardData = { title: data.title, date: data.date, streakId: data?.['streakName']?._id }
           dispatch(createRewardData(rewardData));
         }
-
         Modal.hide();
       },
-      dropdownHandler: (uid, data) => {
-        if (uid === 'streak-name') {
-          const dateArr = arrayOfDates(data);
+      dropdownHandler: (uid, selectedStreak) => {
+        if (uid === 'streakName') {
+          const dateArr = arrayOfDates(selectedStreak);
           setDropdownDates([...dateArr]);
-          dialog(streaks, dateArr);
+          dialog(streaks, dateArr, rewardData);
         }
       }
     });
   };
+
+  const dialogForUpdate = (streaks, dropdownDates, reward = {}, selectedStreak = null, selectedDate = null) => {
+    Modal.show({
+      title: 'Update reward',
+      icon: <AiFillTrophy />,
+      primaryButtonText: 'Update',
+      secondaryButtonText: "Cancel",
+      initialData: {
+        title: reward?.title,
+        streakName: selectedStreak ? selectedStreak : streaks.filter((streak) => streak._id === reward.streakId)[0],
+        date: selectedDate ? selectedDate : moment(reward?.date).format('YYYY-MM-DD')
+      },
+      content:
+        [
+          {
+            // label: "Title",
+            uid: "title",
+            type: "text",
+            placeholder: 'Enter a title',
+            eleType: "input",
+          },
+          {
+            label: "",
+            uid: "streakName",
+            eleType: "dropdown",
+            options: [...streaks]
+          },
+          {
+            label: "",
+            uid: "date",
+            eleType: "dropdown",
+            options: [...dropdownDates]
+          },
+        ],
+      btnClickHandler: (data) => {
+        if (data.type === "primary") {
+          delete data.type
+          const rewardData = { title: data.title, date: data.date, streakId: data?.['streakName']?._id }
+          dispatch(updateRewardData(rewardData, reward._id));
+        }
+        Modal.hide();
+      },
+      dropdownHandler: (uid, selectedStreak) => {
+        if (uid === 'streakName') {
+          const dateArr = arrayOfDates(selectedStreak);
+          setDropdownDates([...dateArr]);
+          dialogForUpdate(streaks, dateArr, reward, selectedStreak, ' ');
+        }
+      }
+    });
+  };
+
+  /**
+ * 
+ * @param {Object} e - event
+ * @param {String} id - Id of streak to delete 
+ */
+  const deleteReward = (e, id) => {
+    e.stopPropagation();
+    dispatch(deleteRewardData(id));
+  }
+
+  /**
+   * 
+   * @param {Object} e - event 
+   * @param {Object} streak - data we want to update  
+   * @param {String} startDate - date in the format of 'yyyy-mm-dd' 
+   */
+  // const updateReward = (e, reward) => {
+  //   e.stopPropagation();
+  //   const data = {
+  //     title: streak.title,
+  //     date: startDate,
+  //     days: streak.days,
+  //     description: streak.description
+  //   }
+  //   dialog('update', data, streak._id);
+  // }
 
   const arrayOfDates = (data) => {
     let dateArr = [];
@@ -131,10 +211,32 @@ function Streak(props) {
 
                 let labelName = labelArr.length > 0 ? labelArr[0].title : '';
                 return (
-                  <Card withLine={true} cardClass="streak-card">
-                    <h4>{reward.title}</h4>
-                    <h5>{labelName}</h5>
-                    <h5>{moment(reward?.date).format('YYYY-MM-DD')}</h5>
+                  <Card key={reward._id} withLine={true} cardClass="reward-card">
+                    <div className="info-container">
+                      <h4>{reward.title}</h4>
+                      <h5>{labelName}</h5>
+                      <h5>{moment(reward?.date).format('YYYY-MM-DD')}</h5>
+                    </div>
+
+                    <div className="icons-container">
+                      <div className="icn icon-delete" onClick={(e) => deleteReward(e, reward._id)}>
+                        <IconContext.Provider value={{ className: 'common-icon' }}>
+                          <AiFillDelete />
+                        </IconContext.Provider>
+                      </div>
+                      <div
+                        className="icn icon-edit"
+                        // onClick={() => dialog(streaks, dropdownDates, reward, 'update')}
+                        onClick={() => {
+                          dialogForUpdate(streaks, dropdownDates, reward)
+                        }
+                        }
+                      >
+                        <IconContext.Provider value={{ className: 'common-icon' }}>
+                          <HiPencil />
+                        </IconContext.Provider>
+                      </div>
+                    </div>
                   </Card>
                 );
               })
@@ -167,6 +269,7 @@ function Streak(props) {
 
             {
               rewards.map((reward) => {
+                console.log('🚀 ~ file: reward.jsx ~ line 190 ~ rewards.map ~ reward', reward);
                 if (reward.rewardEarned) {
                   return (
                     <Card key={reward._id} withLine={true} cardClass="reward-earned-card">

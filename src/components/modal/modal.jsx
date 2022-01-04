@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { React, useState } from "react";
 import { IconContext } from "react-icons"
+import { cloneDeep } from "lodash";
 
 //Components
 import { SecondaryButton, PrimaryButton } from "../button/button";
@@ -12,7 +13,7 @@ function Modal(props) {
     const [formData, setFormData] = useState({});
 
     useEffect(() => {
-        setFormData(props?.initialData || {});
+        setFormData(cloneDeep(props?.initialData) || {});
     }, [props.initialData])
 
     const changeHandler = (e) => {
