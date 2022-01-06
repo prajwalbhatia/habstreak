@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
 import moment from 'moment';
+import { ClipLoader } from "react-spinners";
 
 //Actions
 import { createStreakData, getStreaksData, deleteStreakData, updateStreakData } from "../../redux/actions/streak";
@@ -36,14 +37,14 @@ function Streak(props) {
   const [finished, setFinished] = useState([]);
 
   const [streakType, setStreakType] = useState('running');
-
+  const [emptyStateText, setEmptyStateText] = useState('No Streaks available..Please create some streaks');
   const history = useHistory();
 
   //Getting the data from the state
   const streaks = useSelector((state) => state.streak.streaks);
+  const loading = useSelector((state) => state.streak.loading);
 
-
-  let dataToRender = streakType === 'running' ? running : upcoming;
+  let dataToRender = streakType === 'running' ? running : (streakType === 'upcoming' ? upcoming : finished);
   //Getting initial data
   useEffect(() => {
     dispatch(getStreaksData());
@@ -53,11 +54,10 @@ function Streak(props) {
   useEffect(() => {
     const finished = streaks.filter((streak) => {
       const streakEndDate = moment(streak.date).add(Number(streak.days), 'd').format();
-      if (moment(moment(streakEndDate).format('YYYY-MM-DD')).isBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+      if (moment(moment(streakEndDate).format('YYYY-MM-DD')).isBefore(moment(moment().date()).format('YYYY-MM-DD'))) {
         return streak;
       }
     });
-
 
     const running = streaks.filter((streak) => {
       if (moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
@@ -112,6 +112,7 @@ function Streak(props) {
           uid: "date",
           type: "date",
           eleType: "input",
+          min: moment(new Date()).format('YYYY-MM-DD')
         },
         {
           label: "Description",
@@ -123,18 +124,15 @@ function Streak(props) {
       btnClickHandler: (data) => {
         if (data.type === "primary") {
           delete data.type
-          if (type === 'create')
-          {
+          if (type === 'create') {
             dispatch(createStreakData(data));
             if (moment(moment(data.date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD')
-            ))
-            {
-              setStreakType('upcoming')
-              setTabOne(false)
-              setTabTwo(true)
+            )) {
+              setStreakType('upcoming');
+              setTabOne(false);
+              setTabTwo(true);
             }
-            else
-            {
+            else {
               setStreakType('running')
               setTabOne(true)
               setTabTwo(false)
@@ -148,14 +146,36 @@ function Streak(props) {
     });
   };
 
+  const dialogBeforDeletngStreak = (streak) => {
+    Modal.show({
+      title: 'Delete',
+      icon: <AiFillDelete />,
+      primaryButtonText: 'Delete',
+      primaryButtonColor: '#d7443e',
+      secondaryButtonText: "Cancel",
+      content: [
+        {
+          eleType: 'text',
+          text: `Are you sure you want delete streak ${streak.title} ?`
+        },
+      ],
+      btnClickHandler: (data) => {
+        if (data.type === "primary") {
+          dispatch(deleteStreakData(streak._id));
+        }
+        Modal.hide();
+      },
+    });
+  };
+
   /**
    * 
    * @param {Object} e - event
    * @param {String} id - Id of streak to delete 
    */
-  const deleteStreak = (e, id) => {
+  const deleteStreak = (e, streak) => {
     e.stopPropagation();
-    dispatch(deleteStreakData(id));
+    dialogBeforDeletngStreak(streak)
   }
 
   /**
@@ -182,114 +202,131 @@ function Streak(props) {
       headerTitle="Streaks"
       withSearchBox={false}
     >
-      {/* Tab area */}
-      <div className="tab-container">
-        <div
-          className="tab-item"
-          onClick={(e) => {
-            if (!tabOne) setTabOne(true);
-            setTabTwo(false);
-            setTabThree(false);
-            setStreakType('running');
-          }}
-        >
-          <h4>{`Running (${running.length})`}</h4>
-          <div className={tabOne ? "active-tab" : ""}></div>
-        </div>
-
-        <div
-          className="tab-item"
-          onClick={(e) => {
-            if (!tabTwo) setTabTwo(true);
-            setTabOne(false);
-            setTabThree(false);
-            setStreakType('upcoming');
-          }}
-        >
-          <span>{`Upcoming (${upcoming.length})`}</span>
-          <div className={tabTwo ? "active-tab" : ""}></div>
-        </div>
-
-         <div
-          className="tab-item"
-          onClick={(e) => {
-            if (!tabThree) setTabThree(true);
-            setTabOne(false);
-            setTabTwo(false);
-            setStreakType('finished');
-          }}
-        >
-          <span>{`Finished (${finished.length})`}</span>
-          <div className={tabThree ? "active-tab" : ""}></div>
-        </div>
-      </div>
-
-      
-
-      {/*List of streak*/}
-      <div className="streak-list">
-        {
-          dataToRender.map((streak, index) => {
-            let endDate = moment(streak?.date).add(+streak?.days, 'days').format('YYYY-MM-DD');
-            let startDate = moment(streak?.date).format('YYYY-MM-DD');
-            return (
-              <Card
-                key={index}
-                onClick={() => {
-                  history.push({
-                    pathname: `/streak-list/${streak._id}`,
-                    state: { streakName: streak.title },
-                  });
+      {
+        loading
+          ?
+          <div className="loader-container">
+            <ClipLoader loading size={40} color="var(--primaryColor)" />
+          </div>
+          :
+          <>
+            {/* Tab area */}
+            <div className="tab-container">
+              <div
+                className="tab-item"
+                onClick={(e) => {
+                  if (!tabOne) setTabOne(true);
+                  setTabTwo(false);
+                  setTabThree(false);
+                  setStreakType('running');
+                  setEmptyStateText('No running Streaks available..Please create some streaks');
                 }}
-                withLine={true}
-                cardClass="streak-card"
               >
-                <div className="info-container">
-                  <h3>{streak.title}</h3>
-                  <h4>{`${streak.days} days`}</h4>
-                  <h4>{`${startDate} to ${endDate}`}</h4>
-                  <p className="mt-1">
-                    {streak.description}
-                  </p>
-                </div>
+                <h4>{`Running (${running.length})`}</h4>
+                <div className={tabOne ? "active-tab" : ""}></div>
+              </div>
 
-                <div className="image-container"></div>
-                <div className="icons-container">
-                  <div className="icn icon-delete" onClick={(e) => deleteStreak(e, streak._id)}>
-                    <IconContext.Provider value={{ className: 'common-icon' }}>
-                      <AiFillDelete  />
-                    </IconContext.Provider>
-                  </div>
-                  <div
-                    className="icn icon-edit"
-                    onClick={(e) => updateStreak(e, streak, startDate)}
-                  >
-                    <IconContext.Provider value={{ className: 'common-icon' }}>
-                      <HiPencil />
-                    </IconContext.Provider>
-                  </div>
-                </div>
-              </Card>
-            )
-          })
-        }
-      </div>
+              <div
+                className="tab-item"
+                onClick={(e) => {
+                  if (!tabTwo) setTabTwo(true);
+                  setTabOne(false);
+                  setTabThree(false);
+                  setStreakType('upcoming');
+                  setEmptyStateText('No upcoming streaks available..Please create some streaks');
+                }}
+              >
+                <span>{`Upcoming (${upcoming.length})`}</span>
+                <div className={tabTwo ? "active-tab" : ""}></div>
+              </div>
 
-      {/* New Streak creating */}
-     {
-       streakType !== 'finished' &&
-        <div className="new-streak" onClick={() => dialog('create')}>
-          <Card cardClass="new-streak-card">
-            <div className="content-container">
-              <h2>Create new streak</h2>
-              <IconContext.Provider value={{ className: 'common-icon fire-icon' }}>
-                <AiFillFire />
-              </IconContext.Provider>
+              <div
+                className="tab-item"
+                onClick={(e) => {
+                  if (!tabThree) setTabThree(true);
+                  setTabOne(false);
+                  setTabTwo(false);
+                  setStreakType('finished');
+                  setEmptyStateText('No streak is finished');
+                }}
+              >
+                <span>{`Finished (${finished.length})`}</span>
+                <div className={tabThree ? "active-tab" : ""}></div>
+              </div>
             </div>
-          </Card>
-        </div>
+
+            {/*List of streak*/}
+            <div className="streak-list">
+              {
+                dataToRender.length > 0
+                  ?
+                  dataToRender.map((streak, index) => {
+                    let endDate = moment(streak?.date).add(+streak?.days, 'days').format('YYYY-MM-DD');
+                    let startDate = moment(streak?.date).format('YYYY-MM-DD');
+                    return (
+                      <Card
+                        key={index}
+                        onClick={() => {
+                          history.push({
+                            pathname: `/streak-list/${streak._id}`,
+                            state: { streakName: streak.title },
+                          });
+                        }}
+                        withLine={true}
+                        cardClass="streak-card"
+                      >
+                        <div className="info-container">
+                          <h3>{streak.title}</h3>
+                          <h4>{`${streak.days} days`}</h4>
+                          <h4>{`${startDate} to ${endDate}`}</h4>
+                          <p className="mt-1">
+                            {streak.description}
+                          </p>
+                        </div>
+
+                        <div className="image-container"></div>
+                        <div className="icons-container">
+                          <div className="icn icon-delete" onClick={(e) => deleteStreak(e, streak)}>
+                            <IconContext.Provider value={{ className: 'common-icon' }}>
+                              <AiFillDelete />
+                            </IconContext.Provider>
+                          </div>
+                          <div
+                            className="icn icon-edit"
+                            onClick={(e) => updateStreak(e, streak, startDate)}
+                          >
+                            <IconContext.Provider value={{ className: 'common-icon' }}>
+                              <HiPencil />
+                            </IconContext.Provider>
+                          </div>
+                        </div>
+                      </Card>
+                    )
+                  })
+                  :
+                  <div className="empty-container">
+                    <p>{emptyStateText}</p>
+                  </div>
+              }
+            </div>
+
+            {/* New Streak creating */}
+            {
+              streakType !== 'finished' &&
+              <div className="new-streak" onClick={() => dialog('create')}>
+                <Card cardClass="new-streak-card">
+                  <div className="content-container">
+                    <h2>Create new streak</h2>
+                    <IconContext.Provider value={{ className: 'common-icon fire-icon' }}>
+                      <AiFillFire />
+                    </IconContext.Provider>
+                  </div>
+                </Card>
+              </div>
+            }
+          </>
       }
-    </Frame>
+    </Frame >
   );
 }
 

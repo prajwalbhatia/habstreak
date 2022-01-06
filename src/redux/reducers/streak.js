@@ -1,14 +1,41 @@
-import { GET_STREAK, GET_STREAK_DETAIL } from '../constants/action-type';
+import {
+    GET_STREAK,
+    GET_STREAK_SUCCESS,
+    GET_STREAK_FAIL,
 
+    CREATE_STREAK,
+    CREATE_STREAK_SUCCESS,
+    CREATE_STREAK_FAIL,
+
+    // DELETE_STREAK,
+    // DELETE_STREAK_SUCCESS,
+    // DELETE_STREAK_FAIL,
+
+    // UPDATE_STREAK,
+    // UPDATE_STREAK_SUCCESS,
+    // UPDATE_STREAK_FAIL,
+
+    GET_STREAK_DETAIL
+} from '../constants/action-type';
 const initialState = {
     streaks: [],
-    streakDetail : []
+    streakDetail: [],
+    loading : true,
+    error : ''
 }
 
 const streakReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_STREAK:
-            return { ...state, streaks: [...action.payload] }
+            return { ...state, loading : true }
+        case GET_STREAK_SUCCESS:
+            return { ...state, streaks: [...action.payload] , loading : false }
+        case GET_STREAK_FAIL:
+            return { ...state, error : action.payload , loading : false }
+
+        case CREATE_STREAK_FAIL:
+            return { ...state, error: action.payload, loading: false }
+
         case GET_STREAK_DETAIL:
             return { ...state, streakDetail: [...action.payload] }
         default:

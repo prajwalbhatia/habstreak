@@ -1,13 +1,19 @@
-import { GET_REWARDS } from "../constants/action-type";
+import { GET_REWARDS, GET_REWARDS_FAIL, GET_REWARDS_SUCCESS } from "../constants/action-type";
 
 const initialState = {
-  rewards: []
+  rewards: [],
+  loading: true,
+  error: ''
 }
 
 const rewardReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_REWARDS:
-      return { ...state, rewards : [...action.payload ] }
+      return { ...state, loading : true }
+    case GET_REWARDS_SUCCESS:
+      return { ...state, rewards: [...action.payload], loading: false }
+    case GET_REWARDS_FAIL:
+      return { ...state, error: action.payload, loading: false }
     default:
       return state;
   }

@@ -5,7 +5,11 @@ import {
   updateReward,
 } from '../api';
 
-import { GET_REWARDS } from '../constants/action-type';
+import {
+  GET_REWARDS,
+  GET_REWARDS_SUCCESS,
+  GET_REWARDS_FAIL
+} from '../constants/action-type';
 
 //Action Creators
 export const createRewardData = (reward) => async (dispatch) => {
@@ -36,11 +40,15 @@ export const updateRewardData = (reward, rewardId) => async (dispatch) => {
 }
 
 export const getRewardsData = () => async (dispatch) => {
+  const action = { type: GET_REWARDS }
+  dispatch(action);
   try {
     const rewards = await getRewards();
-    const action = { type: GET_REWARDS, payload: rewards.data }
+    const action = { type: GET_REWARDS_SUCCESS, payload: rewards.data }
     dispatch(action);
   } catch (error) {
     console.log(error);
+    const action = { type: GET_REWARDS_FAIL, error: error }
+    dispatch(action);
   }
 }

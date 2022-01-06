@@ -26,7 +26,12 @@ function Modal(props) {
 
     const content = (dataArr) => {
         return dataArr.map((data) => {
-            if (data.eleType === 'input') {
+            if (data.eleType === 'text') {
+                return (
+                    <p>{data.text}</p>
+                )
+            }
+            else if (data.eleType === 'input') {
                 return (
                     <InputElement
                         lable={data.label}
@@ -35,6 +40,7 @@ function Modal(props) {
                         value={formData?.[data.uid]}
                         onChange={changeHandler}
                         type={data.type}
+                        min={data?.min}
                     />)
             }
             else if (data.eleType === 'textArea') {
@@ -94,11 +100,13 @@ function Modal(props) {
                     <PrimaryButton
                         name={props.primaryButtonText}
                         click={() => handleClick('primary')}
+                        style={props.primaryButtonColor ? {background : props.primaryButtonColor } : {}}
                     />
 
                     <SecondaryButton
                         name={props.secondaryButtonText}
                         click={() => handleClick('secondary')}
+                        style={props.secondaryButtonColor ? { background: props.secondaryButtonColor } : {}}
                     />
                 </div>
             </div>

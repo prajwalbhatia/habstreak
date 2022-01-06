@@ -2,18 +2,22 @@
   .rewards-area {
     display: flex;
     flex-direction: row;
+    height: 77vh;
     margin-top: 1rem;
     .left-portion {
       flex: 1;
-      margin-right: 2rem;
+      margin-right: 1rem;
+      overflow: scroll;
     }
 
     .right-portion {
       flex: 1;
+      overflow: scroll;
     }
 
     .rewards-list {
       margin-top: 1rem;
+      height : calc(100% - 60px);
       .reward-earned-card {
         display: flex;
         justify-content: space-between;
@@ -60,23 +64,26 @@
           }
         }
       }
+    }
+  }
 
-      .new-reward-card {
-        margin-top: 1rem;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        padding: 0.8rem;
+  .new-reward-card {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 
-        .content-container {
-          display: flex;
-          cursor: pointer;
-          h5 {
-            margin-right: 10px;
-          }
-        }
+    .content-container {
+      display: flex;
+      cursor: pointer;
+      h5 {
+        margin-right: 10px;
       }
+    }
+
+    h2 {
+      margin-right: 5px;
     }
   }
 }

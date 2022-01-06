@@ -1,124 +1,100 @@
-.dashboard
-{
- 
-      height: 100vh;
-      margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
-      padding: 0 1rem;
+.dashboard {
+  height: 100vh;
+  margin-left: calc(var(--navigationWidth) + var(--navigationAroundSpace));
+  padding: 0 1rem;
 
-      .notification-card
-      {
-        margin-top: 2.5rem;
+  .notification-card {
+    margin-top: 2.5rem;
+  }
+
+  .progress-streak-container {
+    margin-top: 3rem;
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .streak-list {
+      display: flex;
+      overflow: auto;
+      flex-wrap: wrap;
+      overflow-y: scroll;
+      height: 170px;
+      .streak-card {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 180px;
+        margin-top: 0.5rem;
       }
 
-      .progress-streak-container
-      {
-        margin-top: 3rem;
-
-        .header-container
-        {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .streak-list
-        {
-          display: flex;
-          overflow: auto;
-          flex-wrap: wrap;
-          max-height: 500px;
-          overflow-y: scroll;
-          .streak-card
-          {
-            display: flex;
-            flex-direction: column;
-            flex-basis: 180px;
-            margin-top: 0.5rem;
-          }
-
-          .streak-card:not(:last-child)
-          {
-            margin-right: 1rem;
-          }
-        }
-
+      .streak-card:not(:last-child) {
+        margin-right: 1rem;
       }
+    }
+  }
 
-      .activities-container
-      {
-        margin-top: 3rem;
+  .activities-container {
+    margin-top: 3rem;
 
-        .header-container
-        {
-          display: flex;
-          justify-content: space-between;
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .activities-card {
+      margin-top: 1.5rem;
+      height: 100%;
+
+      .list-items {
+        display: flex;
+        .empty-circle {
+          height: 1.5rem;
+          width: 1.5em;
+          border-radius: 50%;
+          border: 1px solid var(--lightColor);
+          margin-right: 0.5rem;
         }
 
-        .activities-card
-        {
-          margin-top: 1.5rem;
-          height: 100%;
+        .empty-circle::after {
+          content: "";
+          position: relative;
+          display: block;
+          height: 2rem;
+          width: 2px;
+          top: 25px;
+          left: 12px;
+          background-color: var(--lightColor);
+        }
 
-          .list-items
-          {
-            display: flex;
-            .empty-circle
-            {
-                height: 1.5rem;
-                width: 1.5em;
-                border-radius: 50%;
-                border: 1px solid var(--lightColor);
-                margin-right: 0.5rem;
-            }
+        .date-and-time {
+          line-height: 1.5rem;
+          margin-right: 5px;
 
-            .empty-circle::after
-            {
-              content: "";
-              position: relative;
-              display: block;
-              height: 2rem;
-              width: 2px;
-              top: 25px;
-              left: 12px;
-              background-color: var(--lightColor);
-            }
-
-
-            .date-and-time
-            {
-              line-height: 1.5rem;
-              margin-right: 5px;
-
-              span
-              {
-                color: var(--lightColor);
-              }
-            }
-
-            .activity
-            {
-              line-height: 1.5rem;
-            }
+          span {
+            color: var(--lightColor);
           }
+        }
 
-          .list-items:not(:first-child)
-          {
-            margin-top: 2rem;
-          }
-
-          .list-items:last-child
-          {
-            .empty-circle::after
-            {
-              content: "";
-              display: none;
-            }
-          }
+        .activity {
+          line-height: 1.5rem;
         }
       }
 
-      .pad-global
-      {
-        padding: 5px;
+      .list-items:not(:first-child) {
+        margin-top: 2rem;
       }
 
+      .list-items:last-child {
+        .empty-circle::after {
+          content: "";
+          display: none;
+        }
+      }
+    }
+  }
+
+  .pad-global {
+    padding: 5px;
+  }
 }

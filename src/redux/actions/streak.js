@@ -9,7 +9,23 @@ import {
     deleteStreakDetail
 } from '../api';
 
-import { GET_STREAK, GET_STREAK_DETAIL } from '../constants/action-type';
+import {
+    GET_STREAK,
+    GET_STREAK_SUCCESS,
+    GET_STREAK_FAIL,
+
+    CREATE_STREAK_FAIL,
+
+    // DELETE_STREAK,
+    // DELETE_STREAK_SUCCESS,
+    // DELETE_STREAK_FAIL,
+
+    // UPDATE_STREAK,
+    // UPDATE_STREAK_SUCCESS,
+    // UPDATE_STREAK_FAIL,
+
+    GET_STREAK_DETAIL
+} from '../constants/action-type';
 
 //Action Creators
 //STREAKS
@@ -25,7 +41,10 @@ export const createStreakData = (streak) => async (dispatch) => {
         dispatch(getStreaksData());
     } catch (error) {
         console.log(error);
+        const action = { type: CREATE_STREAK_FAIL , payload : error }
+        dispatch(action);
     }
+    
 }
 
 export const deleteStreakData = (streakId) => async (dispatch) => {
@@ -47,12 +66,16 @@ export const updateStreakData = (streak, streakId) => async (dispatch) => {
 }
 
 export const getStreaksData = () => async (dispatch) => {
+    const action = { type: GET_STREAK }
+    dispatch(action);
     try {
         const streaks = await getStreaks();
-        const action = { type: GET_STREAK, payload: streaks.data }
+        const action = { type: GET_STREAK_SUCCESS, payload: streaks.data }
         dispatch(action);
     } catch (error) {
         console.log(error);
+        const action = { type: GET_STREAK_FAIL, error: error }
+        dispatch(action);
     }
 }
 
@@ -75,7 +98,7 @@ export const getStreaksDetailData = (id) => async (dispatch) => {
     }
 }
 
-export const updateStreakDetailData = (streakDetail, id , streakId) => async (dispatch) => {
+export const updateStreakDetailData = (streakDetail, id, streakId) => async (dispatch) => {
     try {
         await updateStreakDetail(streakDetail, id);
         dispatch(getStreaksDetailData(streakId));
