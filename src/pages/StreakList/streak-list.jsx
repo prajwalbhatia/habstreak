@@ -10,7 +10,8 @@ import moment from 'moment';
 import { ClipLoader } from "react-spinners";
 
 //Actions
-import { createStreakData, getStreaksData, deleteStreakData, updateStreakData } from "../../redux/actions/streak";
+import { createStreakData, getStreaksData, deleteStreakData, deleteStreakAndRewardData , updateStreakData } from "../../redux/actions/streak";
+import { deleteRewardBulk } from "../../redux/actions/reward";
 
 //Icons
 import { AiFillDelete, AiFillFire } from "react-icons/ai";
@@ -150,9 +151,16 @@ function Streak(props) {
     Modal.show({
       title: 'Delete',
       icon: <AiFillDelete />,
-      primaryButtonText: 'Delete',
+      primaryButtonText: 'Delete streak',
       primaryButtonColor: '#d7443e',
       secondaryButtonText: "Cancel",
+      extraButtons: [
+        {
+          text: 'Delete streak and rewards assosiated',
+          style: { backgroundColor: '#d80900' },
+          uid: 'delete-streak-and-rewards'
+        }
+      ],
       content: [
         {
           eleType: 'text',
@@ -160,8 +168,13 @@ function Streak(props) {
         },
       ],
       btnClickHandler: (data) => {
-        if (data.type === "primary") {
+      console.log('🚀 ~ file: streak-list.jsx ~ line 171 ~ dialogBeforDeletngStreak ~ data', data);
+        if (data.type === 'delete-streak-and-rewards') {
           dispatch(deleteStreakData(streak._id));
+          dispatch(deleteRewardBulk(streak._id));
+        }
+        else if (data.type === "primary") {
+          dispatch(deleteStreakAndRewardData(streak._id))
         }
         Modal.hide();
       },

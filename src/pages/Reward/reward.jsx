@@ -268,7 +268,7 @@ function Streak(props) {
                             <div className="info-container">
                               <h4>{reward.title}</h4>
                               <h5>{labelName}</h5>
-                              <h5>{moment(reward?.date).format('YYYY-MM-DD')}</h5>
+                              <h5>{reward.date ? moment(reward?.date).format('YYYY-MM-DD') : ''}</h5>
                             </div>
 
                             <div className="icons-container">

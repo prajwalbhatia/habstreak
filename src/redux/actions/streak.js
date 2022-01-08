@@ -2,6 +2,7 @@ import {
     getStreaks,
     createStreak,
     deleteStreak,
+    deleteStreakAndReward,
     updateStreak,
     createStreakDetail,
     getStreaksDetail,
@@ -50,6 +51,15 @@ export const createStreakData = (streak) => async (dispatch) => {
 export const deleteStreakData = (streakId) => async (dispatch) => {
     try {
         await deleteStreak(streakId);
+        dispatch(getStreaksData());
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteStreakAndRewardData = (streakId) => async (dispatch) => {
+    try {
+        await deleteStreakAndReward(streakId);
         dispatch(getStreaksData());
     } catch (error) {
         console.log(error);

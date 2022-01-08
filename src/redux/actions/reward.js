@@ -3,6 +3,7 @@ import {
   createReward,
   deleteReward,
   updateReward,
+  deleteRewardsBulk
 } from '../api';
 
 import {
@@ -25,6 +26,14 @@ export const deleteRewardData = (rewardId) => async (dispatch) => {
   try {
     await deleteReward(rewardId);
     dispatch(getRewardsData());
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const deleteRewardBulk = (streakId) => async (dispatch) => {
+  try {
+    await deleteRewardsBulk(streakId);
   } catch (error) {
     console.log(error);
   }

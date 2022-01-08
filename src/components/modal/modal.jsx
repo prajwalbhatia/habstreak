@@ -80,7 +80,9 @@ function Modal(props) {
         else if (type === 'secondary') {
             props.btnClickHandler({ type });
         }
-
+        else {
+            props.btnClickHandler({type})
+        }
     }
 
     return (
@@ -97,10 +99,22 @@ function Modal(props) {
                     {content(props.content)}
                 </div>
                 <div className="buttons-part">
+                    {
+                        props.extraButtons && props.extraButtons.map((btn) => {
+                            return (
+                                <PrimaryButton
+                                    name={btn.text}
+                                    click={() => handleClick(btn.uid)}
+                                    style={btn.style ? {...btn.style} : {}}
+                                />
+                            );
+                        })
+                    }
+
                     <PrimaryButton
                         name={props.primaryButtonText}
                         click={() => handleClick('primary')}
-                        style={props.primaryButtonColor ? {background : props.primaryButtonColor } : {}}
+                        style={props.primaryButtonColor ? { background: props.primaryButtonColor } : {}}
                     />
 
                     <SecondaryButton
@@ -108,6 +122,7 @@ function Modal(props) {
                         click={() => handleClick('secondary')}
                         style={props.secondaryButtonColor ? { background: props.secondaryButtonColor } : {}}
                     />
+
                 </div>
             </div>
             <div className="wrapper">

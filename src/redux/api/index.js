@@ -12,12 +12,14 @@ API.interceptors.request.use((req) => {
 //REWARDS
 export const getRewards = () => API.get('/reward');
 export const deleteReward = (id) => API.delete(`/reward/${id}`);
+export const deleteRewardsBulk = (streakId) => API.delete(`/reward/${streakId}/bulk`);
 export const updateReward = (reward, id) => API.patch(`/reward/${id}`, reward);
 export const createReward = (reward) => API.post('/reward', reward);
 
 //STREAK
 export const getStreaks = () => API.get('/streak');
 export const deleteStreak = (id) => API.delete(`/streak/${id}`);
+export const deleteStreakAndReward = (id) => API.delete(`/streak/${id}/deleteAndUpdate`);
 export const updateStreak = (streak, id) => API.patch(`/streak/${id}`, streak);
 export const createStreak = (streak) => API.post('/streak', streak);
 
