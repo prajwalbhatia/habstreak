@@ -65,6 +65,7 @@ function Modal(props) {
                             setDropDown(data.uid, value)
                             props.dropdownHandler(data.uid, value)
                         }}
+                        disabled={data?.disabled}
                     />
                 )
             }

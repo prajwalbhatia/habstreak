@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
+import Chip from '@mui/material/Chip';
 
 //Actions
 import { getRewardsData, createRewardData, updateRewardData, deleteRewardData } from "../../redux/actions/reward";
@@ -26,6 +27,7 @@ import { IconContext } from "react-icons";
 import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 import Modal from "../../components/modal";
+import streak from "pages/Streak/streak";
 
 function Streak(props) {
   const dispatch = useDispatch();
@@ -86,12 +88,10 @@ function Streak(props) {
           eleType: "dropdown",
           options: [...dropdownDates]
         },
-
       ]
         :
         [
           {
-            // label: "Title",
             uid: "title",
             type: "text",
             placeholder: 'Enter a title',
@@ -123,7 +123,7 @@ function Streak(props) {
     });
   };
 
-  const dialogForUpdate = (streaks, dropdownDates, reward = {}, selectedStreak = null, selectedDate = null) => {
+  const dialogForUpdate = (streaks, dropdownDates, reward = {}, selectedStreak = null, selectedDate = null, dateDisabilityArg = true) => {
     Modal.show({
       title: 'Update reward',
       icon: <AiFillTrophy />,
@@ -152,7 +152,8 @@ function Streak(props) {
             label: "",
             uid: "date",
             eleType: "dropdown",
-            options: [...dropdownDates]
+            options: [...dropdownDates],
+            disabled: dateDisabilityArg
           },
         ],
       btnClickHandler: (data) => {
@@ -167,7 +168,7 @@ function Streak(props) {
         if (uid === 'streakName') {
           const dateArr = arrayOfDates(selectedStreak);
           setDropdownDates([...dateArr]);
-          dialogForUpdate(streaks, dateArr, reward, selectedStreak, ' ');
+          dialogForUpdate(streaks, dateArr, reward, selectedStreak, ' ', false);
         }
       }
     });
@@ -207,24 +208,12 @@ function Streak(props) {
 
   /**
    * 
-   * @param {Object} e - event 
-   * @param {Object} streak - data we want to update  
-   * @param {String} startDate - date in the format of 'yyyy-mm-dd' 
+   * @param {Object} data - streak object
+   * @returns 
    */
-  // const updateReward = (e, reward) => {
-  //   e.stopPropagation();
-  //   const data = {
-  //     title: streak.title,
-  //     date: startDate,
-  //     days: streak.days,
-  //     description: streak.description
-  //   }
-  //   dialog('update', data, streak._id);
-  // }
-
   const arrayOfDates = (data) => {
     let dateArr = [];
-    for (let i = 0; i < +data.days; i++) {
+    for (let i = 0; i <= +data.days; i++) {
       let date = moment(data?.date).add(i, 'days').format('YYYY-MM-DD');
       if (moment(moment(date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD')))
         dateArr.push(date);
@@ -266,7 +255,16 @@ function Streak(props) {
                         return (
                           <Card key={reward._id} withLine={true} cardClass="reward-card">
                             <div className="info-container">
-                              <h4>{reward.title}</h4>
+                              <div className="d-flex ai-b">
+                                <h4 className="mr-10">{reward.title}</h4>
+                                {
+                                  reward.title && reward.date
+                                    ?
+                                    <Chip color="success" label="Assosiated" size="small" />
+                                    :
+                                    <Chip color="primary" label="Unassosiated" size="small" />
+                                }
+                              </div>
                               <h5>{labelName}</h5>
                               <h5>{reward.date ? moment(reward?.date).format('YYYY-MM-DD') : ''}</h5>
                             </div>
@@ -279,7 +277,6 @@ function Streak(props) {
                               </div>
                               <div
                                 className="icn icon-edit"
-                                // onClick={() => dialog(streaks, dropdownDates, reward, 'update')}
                                 onClick={() => {
                                   dialogForUpdate(streaks, dropdownDates, reward)
                                 }
@@ -311,7 +308,10 @@ function Streak(props) {
                       rewardsEarned.map((reward) => {
                         return (
                           <Card key={reward._id} withLine={true} cardClass="reward-earned-card">
-                            <h4>{reward.title}</h4>
+                            <div className="d-flex">
+                              <h4 className="mr-10">{reward.title}</h4>
+                              <Chip color="success" label="Earned" size="small" />
+                            </div>
                             <IconContext.Provider
                               value={{
                                 style: {

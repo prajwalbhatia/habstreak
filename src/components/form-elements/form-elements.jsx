@@ -41,7 +41,7 @@ export function TextInputElement({ lable, type, uid, placeholder, ...rest }) {
   );
 }
 
-export function Dropdown({ labelName, options, optionSelect, value }) {
+export function Dropdown({ labelName, options, optionSelect, value , ...rest }) {
   return (
     <div className="dropdown">
       <FormControl variant="outlined">
@@ -55,6 +55,7 @@ export function Dropdown({ labelName, options, optionSelect, value }) {
           renderValue={() => {
             return value?.title ? value?.title : value
           }}
+          {...rest}
         >
           <MenuItem aria-label="None" value="" />
           {options.map((item, key) => {
