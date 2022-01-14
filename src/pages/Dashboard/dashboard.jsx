@@ -13,6 +13,10 @@ import { PrimaryButton } from "../../components/button/button";
 
 //Actions
 import { getStreaksData } from "../../redux/actions/streak";
+import { getRecentActivitiesData } from "../../redux/actions/recentActivities";
+
+//Icons
+import { GrRefresh } from "react-icons/gr";
 
 //CSS
 import './dashboard.css';
@@ -27,12 +31,14 @@ function Dashboard(props) {
 
   //Getting the data from the state
   const streaks = useSelector((state) => state.streak.streaks);
+  const activities = useSelector((state) => state.recentActivities.activities);
 
   const loading = useSelector((state) => state.streak.loading);
 
   useEffect(() => {
     if (localStorage.getItem('profile')) {
       dispatch(getStreaksData());
+      dispatch(getRecentActivitiesData());
     }
   }, [localStorage.getItem('profile')])
 
@@ -46,6 +52,26 @@ function Dashboard(props) {
     setTaskCount(running.length);
   }, [streaks]);
 
+  const activityTitle = (type, title) => {
+    switch (type) {
+      case 'create-streak':
+        return `A new streak named as ${title} is created`;
+      case 'delete-streak':
+        return `A streak named as ${title} is deleted`;
+      case 'create-reward':
+        return `A new reward named as ${title} is created`;
+      case 'delete-reward':
+        return `A new reward named as ${title} is deleted`;
+      case 'reward-earned':
+        return `A reward named as ${title} is earned`;
+      default:
+        return 'No type is found'
+    }
+  }
+
+  const refreshClicked = () => {
+    dispatch(getRecentActivitiesData());
+  }
 
   return (
     <Frame
@@ -127,35 +153,31 @@ function Dashboard(props) {
             <div className="activities-container pad-global">
               <diV className="header-container pad-global">
                 <h4>Activities</h4>
-
+                <div onClick={() => { refreshClicked() }}>
+                  <GrRefresh />
+                </div>
               </diV>
 
               <div className="pad-global">
                 <Card cardClass="activities-card">
-                  <div className="list-items">
-                    <div className="empty-circle"></div>
-                    <div className="date-and-time"><span>11 July,2021- </span><span>8 : 00 PM </span></div>
-                    <div className="activity"><span>Completed promises</span></div>
-                  </div>
-
-                  <div className="list-items">
-                    <div className="empty-circle"></div>
-                    <div className="date-and-time"><span>11 July,2021- </span><span>8 : 00 PM </span></div>
-                    <div className="activity"><span>Completed promises</span></div>
-                  </div>
-
-                  <div className="list-items">
-                    <div className="empty-circle"></div>
-                    <div className="date-and-time"><span>11 July,2021- </span><span>8 : 00 PM </span></div>
-                    <div className="activity"><span>Completed promises</span></div>
-                  </div>
+                  {
+                    activities && activities.map((activity, index) => {
+                      if (index <= 4) {
+                        return (
+                          <div key={activity._id} className="list-items">
+                            <div className="empty-circle"></div>
+                            <div className="date-and-time"><span>{moment(activity?.date).format('LLLL')}</span></div>
+                            <div className="activity"><span>{activityTitle(activity.type, activity.title)}</span></div>
+                          </div>
+                        )
+                      }
+                    })
+                  }
                 </Card>
               </div>
             </div>
           </>
       }
-
-
     </Frame>
   );
 }

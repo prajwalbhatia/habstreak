@@ -28,3 +28,6 @@ export const createStreakDetail = (streakDetail) => API.post('/streakDetail', st
 export const getStreaksDetail = (id) => API.get(`/streakDetail/${id}`);
 export const updateStreakDetail = (streakDetail, id) => API.patch(`/streakDetail/${id}`, streakDetail);
 export const deleteStreakDetail = (id) => API.delete(`/streakDetail/${id}`);
+
+//RECENT ACTIVITIES
+export const getRecentActivities = () => API.get(`/recentActivities`);
