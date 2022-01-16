@@ -1,5 +1,7 @@
 import { AiFillFire, AiFillTrophy } from "react-icons/ai";
 import { RiDashboardFill } from "react-icons/ri";
+import { FiActivity } from "react-icons/fi";
+
 
 export const navigationList = [
     {
@@ -20,6 +22,12 @@ export const navigationList = [
         active: false,
         url: "/reward",
     },
+    {
+        _id: "4",
+        name: "Activities",
+        active: false,
+        url: "/recent-activities",
+    },
 ]
 
 export const navigationIcons = [
@@ -34,6 +42,10 @@ export const navigationIcons = [
     {
         _id: "3",
         iconJsx: <AiFillTrophy />,
+    },
+    {
+        _id: "4",
+        iconJsx: <FiActivity />,
     },
 ]
 

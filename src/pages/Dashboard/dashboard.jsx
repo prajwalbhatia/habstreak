@@ -144,18 +144,26 @@ function Dashboard(props) {
                       <p>No Streaks available</p>
                     </div>
                 }
-
-
               </div>
             </div>
 
             {/* Activities */}
             <div className="activities-container pad-global">
               <diV className="header-container pad-global">
-                <h4>Activities</h4>
-                <div onClick={() => { refreshClicked() }}>
-                  <GrRefresh />
+                <div className='d-flex'>
+                  <h4>Activities</h4>
+                  <div onClick={() => { refreshClicked() }}>
+                    <GrRefresh />
+                  </div>
                 </div>
+                <PrimaryButton
+                  name={'View all'}
+                  click={() => {
+                    history.push({
+                      pathname: `/recent-activities`,
+                    });
+                  }}
+                />
               </diV>
 
               <div className="pad-global">
