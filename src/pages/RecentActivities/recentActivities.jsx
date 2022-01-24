@@ -28,6 +28,12 @@ function RecentActivities() {
     dispatch(getRecentActivitiesData());
   }, [])
 
+  /**
+ * 
+ * @param {String} type - type of activity (create-streak , delete-streak etc)
+ * @param {String} title - title of the action
+ * @returns 
+ */
   const activityTitle = (type, title) => {
     switch (type) {
       case 'create-streak':

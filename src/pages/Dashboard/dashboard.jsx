@@ -36,11 +36,9 @@ function Dashboard(props) {
   const loading = useSelector((state) => state.streak.loading);
 
   useEffect(() => {
-    if (localStorage.getItem('profile')) {
-      dispatch(getStreaksData());
-      dispatch(getRecentActivitiesData());
-    }
-  }, [localStorage.getItem('profile')])
+    dispatch(getStreaksData());
+    dispatch(getRecentActivitiesData());
+  }, [])
 
   useEffect(() => {
     const running = streaks.filter((streak) => {
@@ -52,6 +50,12 @@ function Dashboard(props) {
     setTaskCount(running.length);
   }, [streaks]);
 
+  /**
+   * 
+   * @param {String} type - type of activity (create-streak , delete-streak etc)
+   * @param {String} title - title of the action
+   * @returns 
+   */
   const activityTitle = (type, title) => {
     switch (type) {
       case 'create-streak':
@@ -149,10 +153,10 @@ function Dashboard(props) {
 
             {/* Activities */}
             <div className="activities-container pad-global">
-              <diV className="header-container pad-global">
+              <div className="header-container pad-global">
                 <div className='d-flex'>
                   <h4>Activities</h4>
-                  <div onClick={() => { refreshClicked() }}>
+                  <div className='c-pointer' onClick={() => { refreshClicked() }}>
                     <GrRefresh />
                   </div>
                 </div>
@@ -164,7 +168,7 @@ function Dashboard(props) {
                     });
                   }}
                 />
-              </diV>
+              </div>
 
               <div className="pad-global">
                 <Card cardClass="activities-card">

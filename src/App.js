@@ -14,6 +14,7 @@ import Streak from "pages/Streak/streak";
 import RewardPage from "pages/Reward/reward";
 import RecentActivities from 'pages/RecentActivities/recentActivities';
 import LoginPage from 'pages/Login/login';
+import LandingPage from 'pages/LandingPage/landingPage';
 import SuccessPage from 'pages/GoogleResponse/success';
 import Errorpage from 'pages/GoogleResponse/error';
 
