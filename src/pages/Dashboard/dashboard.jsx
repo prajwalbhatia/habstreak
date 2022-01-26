@@ -175,6 +175,8 @@ function Dashboard(props) {
               <div className="pad-global">
                 <Card cardClass="activities-card">
                   {
+                    activities.length > 0
+                    ?
                     activities && activities.map((activity, index) => {
                       if (index <= 4) {
                         return (
@@ -186,6 +188,10 @@ function Dashboard(props) {
                         )
                       }
                     })
+                    :
+                      <div className="empty-container">
+                        <p>No recent activities available.</p>
+                      </div>
                   }
                 </Card>
               </div>

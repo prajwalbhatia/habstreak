@@ -42,16 +42,15 @@ function Streak(props) {
     //then we want to update out description array
     //with the latest data 
     useEffect(() => {
-    if(streakDetail.length > 0 &&  JSON.stringify(streaks) !== JSON.stringify(streakDetail))
-    {
-        let streaks = [...streakDetail];
-        let descDetail = {};
-        streaks.forEach((detail) => {
-            descDetail[detail._id] = detail.description ;
-        });
-        setDesc({ ...desc, ...descDetail})
-        setStreaks([...streaks]);
-    }
+        if (streakDetail.length > 0 && JSON.stringify(streaks) !== JSON.stringify(streakDetail)) {
+            let streaks = [...streakDetail];
+            let descDetail = {};
+            streaks.forEach((detail) => {
+                descDetail[detail._id] = detail.description;
+            });
+            setDesc({ ...desc, ...descDetail })
+            setStreaks([...streaks]);
+        }
     }, [streakDetail])
 
     /**
@@ -66,12 +65,12 @@ function Streak(props) {
 
     const checkingStatus = (date) => {
         let status = '';
-        if(moment(moment(date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD')))
-        status = 'Active';
-        else if(moment(moment(date).format('YYYY-MM-DD')).isBefore(moment(Date.now()).format('YYYY-MM-DD')))
-        status = 'Past';
+        if (moment(moment(date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD')))
+            status = 'Active';
+        else if (moment(moment(date).format('YYYY-MM-DD')).isBefore(moment(Date.now()).format('YYYY-MM-DD')))
+            status = 'Past';
         else
-        status = 'Upcoming';
+            status = 'Upcoming';
 
         return status;
     }
@@ -88,45 +87,51 @@ function Streak(props) {
             <div className="streak-details">
                 {/* Streak detail card */}
                 {
-                    streaks.map((detail, index) => {
-                        const status = checkingStatus(detail.date);
-                        return (
-                            <div key={detail._id} className="streak-detail-card">
-                                <div className="day-info" style={{ position: 'relative' }}>
-                                    {
-                                        detail.reward ?
-                                            <div style={{ position: 'absolute', top: 0 }}>{detail?.rewards?.[0]}</div>
-                                            :
-                                            null
-                                    }
-                                    <div className="day">Day {index + 1}</div>
-                                </div>
-                                <div className="streak-info">
-                                    <h4>{moment(detail?.date).format('MMMM DD, YYYY')}</h4>
-                                    <div className="description-block">
-                                        <TextInputElement
-                                            placeholder={'Description'}
-                                            onChange={(e) => {
-                                                setDesc({ ...desc, [detail._id]: e.target.value })
-                                            }}
-                                            value={desc?.[detail._id]}
-                                            type={'text'}
-                                            disabled={status === 'Upcoming' ? true : false}
-                                        />
-                                        <PrimaryButton
-                                            name={'Ok'}
-                                            click={() => updateStreakDetail(detail)}
-                                            btnContainerClass="ml-10"
-                                        />
+                    streaks.length > 0
+                        ?
+                        streaks.map((detail, index) => {
+                            const status = checkingStatus(detail.date);
+                            return (
+                                <div key={detail._id} className="streak-detail-card">
+                                    <div className="day-info" style={{ position: 'relative' }}>
+                                        {
+                                            detail.reward ?
+                                                <div style={{ position: 'absolute', top: 0 }}>{detail?.rewards?.[0]}</div>
+                                                :
+                                                null
+                                        }
+                                        <div className="day">Day {index + 1}</div>
                                     </div>
+                                    <div className="streak-info">
+                                        <h4>{moment(detail?.date).format('MMMM DD, YYYY')}</h4>
+                                        <div className="description-block">
+                                            <TextInputElement
+                                                placeholder={'Description'}
+                                                onChange={(e) => {
+                                                    setDesc({ ...desc, [detail._id]: e.target.value })
+                                                }}
+                                                value={desc?.[detail._id]}
+                                                type={'text'}
+                                                disabled={status === 'Upcoming' ? true : false}
+                                            />
+                                            <PrimaryButton
+                                                name={'Ok'}
+                                                click={() => updateStreakDetail(detail)}
+                                                btnContainerClass="ml-10"
+                                            />
+                                        </div>
 
-                                    <div className="status-block">
-                                        <span>{status}</span>
+                                        <div className="status-block">
+                                            <span>{status}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    })
+                            )
+                        })
+                        :
+                        <div className="empty-container">
+                            <p>No streak detail available.</p>
+                        </div>
                 }
             </div>
         </Frame>
