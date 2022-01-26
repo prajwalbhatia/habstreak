@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 //Actions
-import { getStreaksDetailData, updateStreakDetailData } from "../../redux/actions/streak";
+import { getStreaksDetailData, updateStreakDetailData, emptyStreaksDetail } from "../../redux/actions/streak";
 
 //CSS
 import "./streak.css";
@@ -31,6 +31,11 @@ function Streak(props) {
     useEffect(() => {
         if (props?.match?.params?.id)
             dispatch(getStreaksDetailData(props.match.params.id));
+
+        return () => {
+            dispatch(emptyStreaksDetail());
+        }
+
     }, []);
 
     //Whenver there is a change in streakDetails
@@ -40,10 +45,11 @@ function Streak(props) {
     if(streakDetail.length > 0 &&  JSON.stringify(streaks) !== JSON.stringify(streakDetail))
     {
         let streaks = [...streakDetail];
-        const details = streaks.map((detail) => {
-            return { [detail._id] : detail.description };
+        let descDetail = {};
+        streaks.forEach((detail) => {
+            descDetail[detail._id] = detail.description ;
         });
-        setDesc({ ...desc ,  ...details})
+        setDesc({ ...desc, ...descDetail})
         setStreaks([...streaks]);
     }
     }, [streakDetail])

@@ -128,7 +128,7 @@ function Dashboard(props) {
                     streaks.length > 0 && streaks.map((streak, index) => {
                       if (index <= 3 && moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
                         return (
-                          <Card withLine={true} cardClass="streak-card">
+                          <Card key={streak._id} withLine={true} cardClass="streak-card">
                             <h4>{streak.title}</h4>
                             <p className="mt-1">{streak.description}</p>
                             <PrimaryButton

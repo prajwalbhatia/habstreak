@@ -9,12 +9,16 @@ import { createLogger } from 'redux-logger';
 import reducers from './redux/reducers';
 import thunk from 'redux-thunk';
 
+let store;
 
 const logger = createLogger({
-  
+
 });
 
-const store = createStore(reducers, compose(applyMiddleware(thunk, logger)));
+if (process.env.REACT_APP_ENV === 'development')
+  store = createStore(reducers, compose(applyMiddleware(thunk, logger)));
+else
+  store = createStore(reducers, compose(applyMiddleware(thunk)));
 
 ReactDOM.render(
   <Provider store={store}>

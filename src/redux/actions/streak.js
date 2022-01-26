@@ -17,6 +17,8 @@ import {
 
     CREATE_STREAK_FAIL,
 
+    EMPTY_STREAK_DETAIL,
+
     // DELETE_STREAK,
     // DELETE_STREAK_SUCCESS,
     // DELETE_STREAK_FAIL,
@@ -28,24 +30,31 @@ import {
     GET_STREAK_DETAIL
 } from '../constants/action-type';
 
+//Libraries
+import moment from 'moment';
+
 //Action Creators
 //STREAKS
 export const createStreakData = (streak) => async (dispatch) => {
     try {
         const { data } = await createStreak(streak);
-        const streadDetailData = {
-            date: data.date,
-            streakId: data._id,
-            rewards: [],
+        //WE HAVE TO CREATE STREAK DETAIL IF
+        //THE STREAK IS OF TODAY'S DATE
+        if (moment(moment(data.date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD'))) {
+            const streadDetailData = {
+                date: data.date,
+                streakId: data._id,
+                rewards: [],
+            }
+            dispatch(createStreakDetailData(streadDetailData));
         }
-        dispatch(createStreakDetailData(streadDetailData));
         dispatch(getStreaksData());
     } catch (error) {
         console.log(error);
-        const action = { type: CREATE_STREAK_FAIL , payload : error }
+        const action = { type: CREATE_STREAK_FAIL, payload: error }
         dispatch(action);
     }
-    
+
 }
 
 export const deleteStreakData = (streakId) => async (dispatch) => {
@@ -90,6 +99,15 @@ export const getStreaksData = () => async (dispatch) => {
 }
 
 //STREAKS DETAIL
+export const emptyStreaksDetail = () => async (dispatch) => {
+    try {
+        const action = { type: EMPTY_STREAK_DETAIL }
+        dispatch(action);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const createStreakDetailData = (streakDetail) => async () => {
     try {
         await createStreakDetail(streakDetail);

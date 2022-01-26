@@ -168,7 +168,6 @@ function Streak(props) {
         },
       ],
       btnClickHandler: (data) => {
-      console.log('🚀 ~ file: streak-list.jsx ~ line 171 ~ dialogBeforDeletngStreak ~ data', data);
         if (data.type === 'delete-streak-and-rewards') {
           dispatch(deleteStreakData(streak._id));
           dispatch(deleteRewardBulk(streak._id));

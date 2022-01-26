@@ -7,6 +7,8 @@ import {
     CREATE_STREAK_SUCCESS,
     CREATE_STREAK_FAIL,
 
+    EMPTY_STREAK_DETAIL,
+
     // DELETE_STREAK,
     // DELETE_STREAK_SUCCESS,
     // DELETE_STREAK_FAIL,
@@ -26,6 +28,8 @@ const initialState = {
 
 const streakReducer = (state = initialState, action) => {
     switch (action.type) {
+        case EMPTY_STREAK_DETAIL:
+            return {...state , streakDetail : []}
         case GET_STREAK:
             return { ...state, loading : true }
         case GET_STREAK_SUCCESS:
