@@ -36,8 +36,10 @@ function Dashboard(props) {
   const loading = useSelector((state) => state.streak.loading);
 
   useEffect(() => {
-    dispatch(getStreaksData());
-    dispatch(getRecentActivitiesData());
+    if (localStorage.getItem('profile')) {
+      dispatch(getStreaksData());
+      dispatch(getRecentActivitiesData());
+    }
   }, [])
 
   useEffect(() => {

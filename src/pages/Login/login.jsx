@@ -15,6 +15,7 @@ function Dashboard(props) {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const authData = useSelector((state) => state.user.authData);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
 
   useEffect(() => {
@@ -24,20 +25,25 @@ function Dashboard(props) {
     // setUser(JSON.parse(localStorage.getItem('profile')))
   }, [])
 
+
+  useEffect(() => {
+    if (authData)
+      history.push('/dashboard');
+  }, [authData]);
+
   const googleSuccess = async (res) => {
     const result = res?.profileObj;
     const token = res?.tokenId;
 
     try {
       dispatch(auth({ result, token }));
-      history.push('/dashboard');
     } catch (error) {
       console.log(error)
     }
   }
 
-  const googleFailure = () => {
-    console.log('GOOGLE FAILURE')
+  const googleFailure = (res) => {
+    console.log('GOOGLE FAILURE', res)
   }
 
   const clientId = process.env.REACT_APP_CLIENT_ID;
