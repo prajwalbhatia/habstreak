@@ -10,7 +10,7 @@ import moment from 'moment';
 import { ClipLoader } from "react-spinners";
 
 //Actions
-import { createStreakData, getStreaksData, deleteStreakData, deleteStreakAndRewardData, updateStreakData } from "../../redux/actions/streak";
+import { createStreakData, getStreaksData, deleteStreakData, deleteStreakAndRewardData, updateStreakData, streakListType } from "../../redux/actions/streak";
 import { deleteRewardBulk } from "../../redux/actions/reward";
 
 //Icons
@@ -29,7 +29,7 @@ import "../../index.css";
 
 //ERROR BOUNDARY
 import { ErrorBoundary } from 'react-error-boundary';
-import Fallback  from 'utilities/fallback/fallback.js';
+import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
 import { errorHandler } from 'utilities';
@@ -50,13 +50,40 @@ function Streak(props) {
 
   //Getting the data from the state
   const streaks = useSelector((state) => state.streak.streaks);
+  const streakListTypeData = useSelector((state) => state.streak.streaksListType);
+
   const loading = useSelector((state) => state.streak.loading);
 
   let dataToRender = streakType === 'running' ? running : (streakType === 'upcoming' ? upcoming : finished);
   //Getting initial data
   useEffect(() => {
     dispatch(getStreaksData());
+    setStreakType(streakListTypeData)
+
+    switch (streakListTypeData) {
+      case 'running':
+        setTabOne(true);
+        setTabTwo(false);
+        setTabThree(false);
+        break;
+      case 'upcoming':
+        setTabOne(false);
+        setTabTwo(true);
+        setTabThree(false);
+        break;
+      case 'finished':
+        setTabOne(false);
+        setTabTwo(false);
+        setTabThree(true);
+        break;  
+      default:
+        break;
+    }
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(streakListType(streakType));
+  }, [dispatch, streakType])
 
 
   useEffect(() => {

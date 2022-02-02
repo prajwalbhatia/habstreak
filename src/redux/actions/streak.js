@@ -15,19 +15,15 @@ import {
     GET_STREAK_SUCCESS,
     GET_STREAK_FAIL,
 
+    GET_STREAK_DETAIL,
+    GET_STREAK_DETAIL_SUCCESS,
+    GET_STREAK_DETAIL_FAIL,
+
     CREATE_STREAK_FAIL,
 
     EMPTY_STREAK_DETAIL,
 
-    // DELETE_STREAK,
-    // DELETE_STREAK_SUCCESS,
-    // DELETE_STREAK_FAIL,
-
-    // UPDATE_STREAK,
-    // UPDATE_STREAK_SUCCESS,
-    // UPDATE_STREAK_FAIL,
-
-    GET_STREAK_DETAIL
+    STREAK_LIST_TYPE,
 } from '../constants/action-type';
 
 //Libraries
@@ -98,6 +94,11 @@ export const getStreaksData = () => async (dispatch) => {
     }
 }
 
+export const streakListType = (type) => async (dispatch) => {
+    const action = { type: STREAK_LIST_TYPE , payload : type }
+    dispatch(action);
+}
+
 //STREAKS DETAIL
 export const emptyStreaksDetail = () => async (dispatch) => {
     try {
@@ -117,12 +118,16 @@ export const createStreakDetailData = (streakDetail) => async () => {
 }
 
 export const getStreaksDetailData = (id) => async (dispatch) => {
+    const action = { type: GET_STREAK_DETAIL }
+    dispatch(action);
     try {
         const streakDetail = await getStreaksDetail(id);
-        const action = { type: GET_STREAK_DETAIL, payload: streakDetail.data }
+        const action = { type: GET_STREAK_DETAIL_SUCCESS, payload: streakDetail.data }
         dispatch(action);
     } catch (error) {
         console.log(error);
+        const action = { type: GET_STREAK_DETAIL_FAIL, error: error }
+        dispatch(action);
     }
 }
 
