@@ -22,12 +22,20 @@ import { GrRefresh } from "react-icons/gr";
 import './dashboard.css';
 import "../../index.css";
 
+//ERROR BOUNDARY
+import { ErrorBoundary } from 'react-error-boundary';
+import Fallback  from 'utilities/fallback/fallback.js';
+
+//UTILITIES
+import { errorHandler } from 'utilities';
+
 function Dashboard(props) {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [taskCount, setTaskCount] = useState(0);
+
 
   //Getting the data from the state
   const streaks = useSelector((state) => state.streak.streaks);
@@ -40,13 +48,15 @@ function Dashboard(props) {
       dispatch(getStreaksData());
       dispatch(getRecentActivitiesData());
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const running = streaks.filter((streak) => {
       if (moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
         return streak;
       }
+      else
+        return null;
     });
 
     setTaskCount(running.length);
@@ -86,118 +96,125 @@ function Dashboard(props) {
       withSearchBox={false}
       containerClass="dashboard"
     >
-      {
-        loading
-          ?
-          <div className="loader-container">
-            <ClipLoader loading size={40} color="var(--primaryColor)" />
-          </div>
-          :
-          <>
-            {/* Notification Card */}
-            <div className="pad-global">
-              <Card cardClass="notification-card">
-                <h2>Welcome, {user?.result?.name}!</h2>
-                <h4 className="mt-1">You have {taskCount} task to complete today</h4>
-                <PrimaryButton
-                  name={'Check now'}
-                  btnContainerClass={'mt-1'}
-                  click={() => { history.push('/streak-list') }}
-                />
-              </Card>
+      <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
+        {
+          loading
+            ?
+            <div className="loader-container">
+              <ClipLoader loading size={40} color="var(--primaryColor)" />
             </div>
-
-            {/* Progress streak */}
-            <div className="progress-streak-container pad-global">
-              <div className="header-container pad-global">
-                <h4>Streak in Progress</h4>
-                <PrimaryButton
-                  name={'View all'}
-                  click={() => {
-                    history.push({
-                      pathname: `/streak-list`,
-                    });
-                  }}
-                />
-              </div>
-
-              <div className="streak-list pad-global">
-                {
-                  streaks.length > 0
-                    ?
-                    streaks.length > 0 && streaks.map((streak, index) => {
-                      if (index <= 3 && moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
-                        return (
-                          <Card key={streak._id} withLine={true} cardClass="streak-card">
-                            <h4>{streak.title}</h4>
-                            <p className="mt-1">{streak.description}</p>
-                            <PrimaryButton
-                              name={'Check now'}
-                              btnContainerClass={'mt-1'}
-                              click={() => {
-                                history.push({
-                                  pathname: `/streak-list/${streak._id}`,
-                                  state: { streakName: streak.title },
-                                });
-                              }}
-                            />
-                          </Card>
-                        )
-                      }
-                    })
-                    :
-                    <div className="empty-container">
-                      <p>No Streaks available</p>
-                    </div>
-                }
-              </div>
-            </div>
-
-            {/* Activities */}
-            <div className="activities-container pad-global">
-              <div className="header-container pad-global">
-                <div className='d-flex'>
-                  <h4>Activities</h4>
-                  <div className='c-pointer' onClick={() => { refreshClicked() }}>
-                    <GrRefresh />
-                  </div>
-                </div>
-                <PrimaryButton
-                  name={'View all'}
-                  click={() => {
-                    history.push({
-                      pathname: `/recent-activities`,
-                    });
-                  }}
-                />
-              </div>
-
+            :
+            <>
+              {/* Notification Card */}
               <div className="pad-global">
-                <Card cardClass="activities-card">
-                  {
-                    activities.length > 0
-                    ?
-                    activities && activities.map((activity, index) => {
-                      if (index <= 4) {
-                        return (
-                          <div key={activity._id} className="list-items">
-                            <div className="empty-circle"></div>
-                            <div className="date-and-time"><span>{moment(activity?.date).format('LLLL')}</span></div>
-                            <div className="activity"><span>{activityTitle(activity.type, activity.title)}</span></div>
-                          </div>
-                        )
-                      }
-                    })
-                    :
-                      <div className="empty-container">
-                        <p>No recent activities available.</p>
-                      </div>
-                  }
+                <Card cardClass="notification-card">
+                  <h2>Welcome, {user?.result?.name}!</h2>
+                  <h4 className="mt-1">You have {taskCount} task to complete today</h4>
+                  <PrimaryButton
+                    name={'Check now'}
+                    btnContainerClass={'mt-1'}
+                    click={() => { history.push('/streak-list') }}
+                  />
                 </Card>
               </div>
-            </div>
-          </>
-      }
+
+              {/* Progress streak */}
+              <div className="progress-streak-container pad-global">
+                <div className="header-container pad-global">
+                  <h4>Streak in Progress</h4>
+                  <PrimaryButton
+                    name={'View all'}
+                    click={() => {
+                      history.push({
+                        pathname: `/streak-list`,
+                      });
+                    }}
+                  />
+                </div>
+
+                <div className="streak-list pad-global">
+                  {
+                    streaks.length > 0
+                      ?
+                      streaks.length > 0 && streaks.map((streak, index) => {
+                        if (index <= 3 && moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+                          return (
+                            <Card key={streak._id} withLine={true} cardClass="streak-card">
+                              <h4>{streak.title}</h4>
+                              <p className="mt-1">{streak.description}</p>
+                              <PrimaryButton
+                                name={'Check now'}
+                                btnContainerClass={'mt-1'}
+                                click={() => {
+                                  history.push({
+                                    pathname: `/streak-list/${streak._id}`,
+                                    state: { streakName: streak.title },
+                                  });
+                                }}
+                              />
+                            </Card>
+                          )
+                        }
+                        return null
+                      })
+                      :
+                      <div className="empty-container">
+                        <p>No Streaks available</p>
+                      </div>
+                  }
+                </div>
+              </div>
+
+              {/* Activities */}
+              <div className="activities-container pad-global">
+                <div className="header-container pad-global">
+                  <div className='d-flex'>
+                    <h4>Activities</h4>
+                    <div className='c-pointer' onClick={() => {
+                      refreshClicked()
+                    }}>
+                      <GrRefresh />
+                    </div>
+                  </div>
+                  <PrimaryButton
+                    name={'View all'}
+                    click={() => {
+                      history.push({
+                        pathname: `/recent-activities`,
+                      });
+                    }}
+                  />
+                </div>
+
+                <div className="pad-global">
+                  <Card cardClass="activities-card">
+                    {
+                      activities.length > 0
+                        ?
+                        activities && activities.map((activity, index) => {
+                          if (index <= 4) {
+                            return (
+                              <div key={activity._id} className="list-items">
+                                <div className="empty-circle"></div>
+                                <div className="date-and-time"><span>{moment(activity?.date).format('LLLL')}</span></div>
+                                <div className="activity"><span>{activityTitle(activity.type, activity.title)}</span></div>
+                              </div>
+                            )
+                          }
+                          else
+                            return null;
+                        })
+                        :
+                        <div className="empty-container">
+                          <p>No recent activities available.</p>
+                        </div>
+                    }
+                  </Card>
+                </div>
+              </div>
+            </>
+        }
+      </ErrorBoundary>
     </Frame>
   );
 }

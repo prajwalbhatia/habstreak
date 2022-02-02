@@ -1,5 +1,3 @@
-import react from "react";
-
 //css
 import "./search.css";
 

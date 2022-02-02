@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
@@ -16,6 +16,13 @@ import { getRecentActivitiesData } from "../../redux/actions/recentActivities";
 import './recentActivities.css';
 import "../../index.css";
 
+//ERROR BOUNDARY
+import { ErrorBoundary } from 'react-error-boundary';
+import Fallback  from 'utilities/fallback/fallback.js';
+
+//UTILITIES
+import { errorHandler } from 'utilities';
+
 function RecentActivities() {
   const dispatch = useDispatch();
 
@@ -26,7 +33,7 @@ function RecentActivities() {
 
   useEffect(() => {
     dispatch(getRecentActivitiesData());
-  }, [])
+  }, [dispatch])
 
   /**
  * 
@@ -58,31 +65,33 @@ function RecentActivities() {
       withSearchBox={false}
       containerClass="recent-activities"
     >
-      {
-        loading
-          ?
-          <div className="loader-container">
-            <ClipLoader loading size={40} color="var(--primaryColor)" />
-          </div>
-          :
-          <div className="activities-container pad-global">
-            <div className="pad-global">
-              <Card cardClass="activities-card">
-                {
-                  activities && activities.map((activity, index) => {
-                    return (
-                      <div key={activity._id} className="list-items">
-                        <div className="empty-circle"></div>
-                        <div className="date-and-time"><span>{moment(activity?.date).format('LLLL')}</span></div>
-                        <div className="activity"><span>{activityTitle(activity.type, activity.title)}</span></div>
-                      </div>
-                    )
-                  })
-                }
-              </Card>
+      <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
+        {
+          loading
+            ?
+            <div className="loader-container">
+              <ClipLoader loading size={40} color="var(--primaryColor)" />
             </div>
-          </div>
-      }
+            :
+            <div className="activities-container pad-global">
+              <div className="pad-global">
+                <Card cardClass="activities-card">
+                  {
+                    activities && activities.map((activity, index) => {
+                      return (
+                        <div key={activity._id} className="list-items">
+                          <div className="empty-circle"></div>
+                          <div className="date-and-time"><span>{moment(activity?.date).format('LLLL')}</span></div>
+                          <div className="activity"><span>{activityTitle(activity.type, activity.title)}</span></div>
+                        </div>
+                      )
+                    })
+                  }
+                </Card>
+              </div>
+            </div>
+        }
+      </ErrorBoundary>
     </Frame>
   )
 }

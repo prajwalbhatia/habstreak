@@ -51,6 +51,8 @@ function Navigation(props) {
       {
         return icon
       }
+      else
+      return null;
     })
 
     return icon[0].iconJsx;
@@ -99,7 +101,7 @@ function Navigation(props) {
                     >
                       {iconDisplay(list)}
                     </IconContext.Provider>
-                    <a href="" onClick={(e) => { e.preventDefault() }}>{list.name}</a>
+                    <p onClick={(e) => { e.preventDefault() }}>{list.name}</p>
                   </div>
                 </li>
               );

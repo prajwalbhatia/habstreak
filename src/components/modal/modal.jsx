@@ -69,7 +69,8 @@ function Modal(props) {
                     />
                 )
             }
-
+            else
+                return null;
         })
     }
 

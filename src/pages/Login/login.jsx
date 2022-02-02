@@ -16,20 +16,19 @@ function Dashboard(props) {
   const history = useHistory();
 
   const authData = useSelector((state) => state.user.authData);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  const [user] = useState(JSON.parse(localStorage.getItem('profile')));
 
   useEffect(() => {
     const token = user?.token;
     if (token)
       history.push('/dashboard');
-    // setUser(JSON.parse(localStorage.getItem('profile')))
-  }, [])
+  }, [history , user?.token])
 
 
   useEffect(() => {
     if (authData)
       history.push('/dashboard');
-  }, [authData]);
+  }, [authData , history]);
 
   const googleSuccess = async (res) => {
     const result = res?.profileObj;

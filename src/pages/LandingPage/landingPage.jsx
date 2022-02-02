@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin } from 'react-google-login';
 
-//COMPONENTS
-import { PrimaryButton } from "components/button/button";
-
 //CSS
 import './landingPage.css';
 import "../../index.css";
@@ -20,31 +17,29 @@ import { auth } from "../../redux/actions/user";
 import { ReactComponent as AssignSvg } from './img/assign.svg';
 import { ReactComponent as ConnectedSvg } from './img/connected.svg';
 import { ReactComponent as DataSvg } from './img/data.svg';
-import { ReactComponent as FacebookSvg } from './img/facebook.svg';
+// import { ReactComponent as FacebookSvg } from './img/facebook.svg';
 import { ReactComponent as MailSvg } from './img/mail.svg';
 import { ReactComponent as HabstreakSvg } from './img/habstreak.svg';
 import { ReactComponent as MessagingSvg } from './img/messaging.svg';
 import { ReactComponent as SearchSvg } from './img/search.svg';
 import { ReactComponent as SecuritySvg } from './img/security.svg';
-import { ReactComponent as TextSvg } from './img/text.svg';
-import { ReactComponent as TwitterSvg } from './img/twitter.svg';
+// import { ReactComponent as TwitterSvg } from './img/twitter.svg';
 import { ReactComponent as VaultSvg } from './img/vault.svg';
-import { ReactComponent as YoutubeSvg } from './img/youtube.svg';
+// import { ReactComponent as YoutubeSvg } from './img/youtube.svg';
 
 function LandingPage() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  const [user] = useState(JSON.parse(localStorage.getItem('profile')));
 
 
   useEffect(() => {
     const token = user?.token;
     if (token)
       history.push('/dashboard');
-    // setUser(JSON.parse(localStorage.getItem('profile')))
-  }, [])
+  }, [history , user?.token])
 
   const googleSuccess = async (res) => {
     const result = res?.profileObj;
@@ -172,9 +167,9 @@ function LandingPage() {
             </div>
             <div className="grid-column mt2 span-half align--right align--center-on-mobile">
               <ul className="no-bullets list--inline">
-                <li className="mr1"><a href="" className="link"><YoutubeSvg /></a></li>
+                {/* <li className="mr1"><a href="" className="link"><YoutubeSvg /></a></li>
                 <li className="mr1"><a href="" className="link"><TwitterSvg /></a></li>
-                <li><a href="" className="link"><FacebookSvg /></a></li>
+                <li><a href="" className="link"><FacebookSvg /></a></li> */}
               </ul>
             </div>
           </div>

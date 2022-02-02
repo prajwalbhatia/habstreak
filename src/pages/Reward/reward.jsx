@@ -19,6 +19,13 @@ import { HiPencil } from "react-icons/hi";
 //CSS
 import "./reward.css";
 
+//ERROR BOUNDARY
+import { ErrorBoundary } from 'react-error-boundary';
+import Fallback  from 'utilities/fallback/fallback.js';
+
+//UTILITIES
+import { errorHandler } from 'utilities';
+
 import { AiFillTrophy } from "react-icons/ai";
 import { GiGlassCelebration } from "react-icons/gi";
 import { IconContext } from "react-icons";
@@ -27,7 +34,6 @@ import { IconContext } from "react-icons";
 import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 import Modal from "../../components/modal";
-import streak from "pages/Streak/streak";
 
 function Streak(props) {
   const dispatch = useDispatch();
@@ -228,137 +234,141 @@ function Streak(props) {
       headerTitle="Rewards"
       containerClass="rewards"
     >
-      {
-        loading
-          ?
-          <div className="loader-container">
-            <ClipLoader loading size={40} color="var(--primaryColor)" />
-          </div>
-          :
-          <div >
-            <div className="rewards-area">
-              <div className="left-portion">
-                <h4>TO BUY</h4>
+      <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
+        {
+          loading
+            ?
+            <div className="loader-container">
+              <ClipLoader loading size={40} color="var(--primaryColor)" />
+            </div>
+            :
+            <div >
+              <div className="rewards-area">
+                <div className="left-portion">
+                  <h4>TO BUY</h4>
 
-                <div className="rewards-list">
-                  {
-                    rewardsToBuy.length > 0
-                      ?
-                      rewardsToBuy.map((reward, index) => {
+                  <div className="rewards-list">
+                    {
+                      rewardsToBuy.length > 0
+                        ?
+                        rewardsToBuy.map((reward, index) => {
 
-                        let labelArr = streaks.filter((streak) => {
-                          if (streak._id === reward.streakId)
-                            return streak
-                        });
+                          let labelArr = streaks.filter((streak) => {
+                            if (streak._id === reward.streakId)
+                              return streak;
+                            else
+                              return null;
+                          });
 
-                        let labelName = labelArr.length > 0 ? labelArr[0].title : '';
-                        return (
-                          <Card key={reward._id} withLine={true} cardClass="reward-card">
-                            <div className="info-container">
-                              <div className="d-flex ai-b">
+                          let labelName = labelArr.length > 0 ? labelArr[0].title : '';
+                          return (
+                            <Card key={reward._id} withLine={true} cardClass="reward-card">
+                              <div className="info-container">
+                                <div className="d-flex ai-b">
+                                  <h4 className="mr-10">{reward.title}</h4>
+                                  {
+                                    reward.title && reward.date
+                                      ?
+                                      <Chip color="success" label="Assosiated" size="small" />
+                                      :
+                                      <Chip color="primary" label="Unassosiated" size="small" />
+                                  }
+                                </div>
+                                <h5>{labelName}</h5>
+                                <h5>{reward.date ? moment(reward?.date).format('YYYY-MM-DD') : ''}</h5>
+                              </div>
+
+                              <div className="icons-container">
+                                <div className="icn icon-delete" onClick={(e) => deleteReward(e, reward)}>
+                                  <IconContext.Provider value={{ className: 'common-icon' }}>
+                                    <AiFillDelete />
+                                  </IconContext.Provider>
+                                </div>
+                                <div
+                                  className="icn icon-edit"
+                                  onClick={() => {
+                                    dialogForUpdate(streaks, dropdownDates, reward)
+                                  }
+                                  }
+                                >
+                                  <IconContext.Provider value={{ className: 'common-icon' }}>
+                                    <HiPencil />
+                                  </IconContext.Provider>
+                                </div>
+                              </div>
+                            </Card>
+                          );
+                        })
+                        :
+                        <div className="empty-container">
+                          <p>You have nothing to buy</p>
+                        </div>
+                    }
+                  </div>
+                </div>
+                <div className="right-portion">
+                  <h4>Rewards Earned</h4>
+
+                  <div className="rewards-list">
+
+                    {
+                      rewardsEarned.length > 0
+                        ?
+                        rewardsEarned.map((reward) => {
+                          return (
+                            <Card key={reward._id} withLine={true} cardClass="reward-earned-card">
+                              <div className="d-flex">
                                 <h4 className="mr-10">{reward.title}</h4>
-                                {
-                                  reward.title && reward.date
-                                    ?
-                                    <Chip color="success" label="Assosiated" size="small" />
-                                    :
-                                    <Chip color="primary" label="Unassosiated" size="small" />
-                                }
+                                <Chip color="success" label="Earned" size="small" />
                               </div>
-                              <h5>{labelName}</h5>
-                              <h5>{reward.date ? moment(reward?.date).format('YYYY-MM-DD') : ''}</h5>
-                            </div>
-
-                            <div className="icons-container">
-                              <div className="icn icon-delete" onClick={(e) => deleteReward(e, reward)}>
-                                <IconContext.Provider value={{ className: 'common-icon' }}>
-                                  <AiFillDelete />
-                                </IconContext.Provider>
-                              </div>
-                              <div
-                                className="icn icon-edit"
-                                onClick={() => {
-                                  dialogForUpdate(streaks, dropdownDates, reward)
-                                }
-                                }
+                              <IconContext.Provider
+                                value={{
+                                  style: {
+                                    fontSize: "2rem",
+                                    color: "var(--primaryColor)",
+                                    marginTop: "-10px",
+                                    marginRight: "5px",
+                                  },
+                                }}
                               >
-                                <IconContext.Provider value={{ className: 'common-icon' }}>
-                                  <HiPencil />
-                                </IconContext.Provider>
-                              </div>
-                            </div>
-                          </Card>
-                        );
-                      })
-                      :
-                      <div className="empty-container">
-                        <p>You have nothing to buy</p>
-                      </div>
-                  }
+                                <GiGlassCelebration />
+                              </IconContext.Provider>
+                            </Card>
+                          );
+                        })
+                        :
+                        <div className="empty-container">
+                          <p>You have not earned anything</p>
+                        </div>
+                    }
+
+                  </div>
                 </div>
-              </div>
-              <div className="right-portion">
-                <h4>Rewards Earned</h4>
 
-                <div className="rewards-list">
 
-                  {
-                    rewardsEarned.length > 0
-                      ?
-                      rewardsEarned.map((reward) => {
-                        return (
-                          <Card key={reward._id} withLine={true} cardClass="reward-earned-card">
-                            <div className="d-flex">
-                              <h4 className="mr-10">{reward.title}</h4>
-                              <Chip color="success" label="Earned" size="small" />
-                            </div>
-                            <IconContext.Provider
-                              value={{
-                                style: {
-                                  fontSize: "2rem",
-                                  color: "var(--primaryColor)",
-                                  marginTop: "-10px",
-                                  marginRight: "5px",
-                                },
-                              }}
-                            >
-                              <GiGlassCelebration />
-                            </IconContext.Provider>
-                          </Card>
-                        );
-                      })
-                      :
-                      <div className="empty-container">
-                        <p>You have not earned anything</p>
-                      </div>
-                  }
-
-                </div>
               </div>
 
-
+              <Card cardClass="new-reward-card" onClick={() => dialog(streaks, dropdownDates)}>
+                <div className="content-container">
+                  <h2>Create new reward</h2>
+                  <IconContext.Provider
+                    value={{
+                      style: {
+                        fontSize: "1.5rem",
+                        color: "var(--primaryColor)",
+                        marginTop: "3px",
+                        marginRight: "5px",
+                      },
+                    }}
+                  >
+                    <AiFillTrophy />
+                  </IconContext.Provider>
+                </div>
+              </Card>
             </div>
 
-            <Card cardClass="new-reward-card" onClick={() => dialog(streaks, dropdownDates)}>
-              <div className="content-container">
-                <h2>Create new reward</h2>
-                <IconContext.Provider
-                  value={{
-                    style: {
-                      fontSize: "1.5rem",
-                      color: "var(--primaryColor)",
-                      marginTop: "3px",
-                      marginRight: "5px",
-                    },
-                  }}
-                >
-                  <AiFillTrophy />
-                </IconContext.Provider>
-              </div>
-            </Card>
-          </div>
-
-      }
+        }
+      </ErrorBoundary>
     </Frame>
   );
 }
