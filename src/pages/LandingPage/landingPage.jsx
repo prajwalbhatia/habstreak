@@ -1,181 +1,102 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin } from 'react-google-login';
 
+//Component 
+import { PrimaryButton } from "components/button/button";
+
 //CSS
-import './landingPage.css';
 import "../../index.css";
+import './landingPage.css';
 
 //Redux
 import { useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom';
 
-//Actions
-import { auth } from "../../redux/actions/user";
-
 
 //IMAGES
-import { ReactComponent as AssignSvg } from './img/assign.svg';
-import { ReactComponent as ConnectedSvg } from './img/connected.svg';
-import { ReactComponent as DataSvg } from './img/data.svg';
-// import { ReactComponent as FacebookSvg } from './img/facebook.svg';
-import { ReactComponent as MailSvg } from './img/mail.svg';
-import { ReactComponent as HabstreakSvg } from './img/habstreak.svg';
-import { ReactComponent as MessagingSvg } from './img/messaging.svg';
-import { ReactComponent as SearchSvg } from './img/search.svg';
-import { ReactComponent as SecuritySvg } from './img/security.svg';
-// import { ReactComponent as TwitterSvg } from './img/twitter.svg';
-import { ReactComponent as VaultSvg } from './img/vault.svg';
-// import { ReactComponent as YoutubeSvg } from './img/youtube.svg';
+import { ReactComponent as Logo } from './img/Logo.svg';
 
 function LandingPage() {
-  const clientId = process.env.REACT_APP_CLIENT_ID;
-  const history = useHistory();
-  const dispatch = useDispatch();
+  //STATES
+  const [selectedNav, setSelectedNav] = useState('home');
 
-  const [user] = useState(JSON.parse(localStorage.getItem('profile')));
-
-
-  useEffect(() => {
-    const token = user?.token;
-    if (token)
-      history.push('/dashboard');
-  }, [history , user?.token])
-
-  const googleSuccess = async (res) => {
-    const result = res?.profileObj;
-    const token = res?.tokenId;
-
-    try {
-      dispatch(auth({ result, token }));
-      history.push('/dashboard');
-    } catch (error) {
-      console.log(error)
-    }
+  //FUNCTIONS
+  const handleLinkClick = (e) => {
+    console.log('🚀 ~ file: landingPage.jsx ~ line 27 ~ handleLinkClick ~ e', e.target.getAttribute('data-value'));
+    if (e.target.getAttribute('data-value'))
+      setSelectedNav('home');
+    else
+      setSelectedNav(e.target.getAttribute('data-value'));
   }
-
-  const googleFailure = () => {
-    console.log('GOOGLE FAILURE')
-  }
-
 
   return (
     <div className='landing-page'>
-      {/* Navigation */}
-      <div className='main-navigation'>
-        <nav className='landing-navigation'>
-          <div className='login-btn-container'>
-            <GoogleLogin
-              clientId={clientId}
-              buttonText="Login with google"
-              onSuccess={googleSuccess}
-              onFailure={googleFailure}
-              cookiePolicy={'single_host_origin'}
-            />
-          </div>
-        </nav>
-      </div>
-
-
       {/* Header */}
-      <header className="align--center pt3">
-        <div className="container--lg border--bottom pb3 ">
-          <HabstreakSvg />
-          <h1 className="mb2">Complete your task and reward yourself.</h1>
+      <header className="landing-page-header d-flex">
+        {/* LOGO */}
+        <div className='logo-container'>
+          <Logo />
+        </div>
+
+        {/* Navigation */}
+        <div className='main-navigation'>
+          <nav className='landing-navigation'>
+            <ol
+              className='d-flex'
+              onClick={handleLinkClick}
+            >
+              <li className={selectedNav === 'home' ? 'list-active' : ''} data-value='home'>Home</li>
+              <li className={selectedNav === 'feature' ? 'list-active' : ''} data-value='feature'>Feature</li>
+              <li className={selectedNav === 'guide' ? 'list-active' : ''} data-value='guide'>Guide</li>
+              <li className={selectedNav === 'pricing' ? 'list-active' : ''} data-value='pricing'>Pricing</li>
+            </ol>
+          </nav>
+        </div>
+
+        {/* BUTTONS CONTAINER */}
+        <div className='buttons-container'>
+          <PrimaryButton
+            name={'Login'}
+            click={() => { }}
+            btnContainerClass="ml-10"
+            btnClass='header-btn landing-login-btn'
+          />
+
+          <PrimaryButton
+            name={'Get Started'}
+            click={() => { }}
+            btnContainerClass="ml-10"
+            btnClass='header-btn landing-get-started'
+          />
         </div>
       </header>
 
       <main>
+        <section className='hero-section'>
 
-        {/* Feature list */}
-        <div className="container pt3 mt2 text--gray align--center">
-          <h2 className="mb3">-FEATURES-</h2>
-          <div className="grid-row">
-            <div className="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
-              <AssignSvg />
-              <p>Assign to others</p>
-            </div>
-            <div className="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
-              <ConnectedSvg />
-              <p>Stay connected</p>
-            </div>
-            <div className="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
-              <SearchSvg />
-              <p>Powerful search</p>
-            </div>
-            <div className="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
-              <VaultSvg />
-              <p>Put in a vault</p>
-            </div>
-            <div className="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
-              <MessagingSvg />
-              <p>Fast messaging</p>
-            </div>
-            <div className="grid-column span-one-third mb3 reveal-on-scroll is-revealing">
-              <MailSvg />
-              <p>Share with others</p>
-            </div>
-          </div>
-        </div>
+        </section>
 
-        {/* Focus */}
-        <div className="container--lg pt1 pb1">
+        <section className='features-section'>
+          <header></header>
+        </section>
 
-          <div className="grid-row grid-row--center">
-            <div className="grid-column mt3 mb2 order-2">
-              <div className="border--bottom pb2 mb2">
-                <h2>Usage data</h2>
-                <p>Quis istud possit, inquit, negare? Videamus animi partes, quarum est conspectus illustrior; Illa sunt similia: hebes acies est cuipiam oculorum, corpore alius senescit; Non enim, si omnia non&nbsp;sequebatur.</p>
-              </div>
-              <p className="italic text--gray mb1">Quae quo sunt excelsiores, eo dant clariora indicia naturae. Causa autem fuit huc veniendi ut quosdam&nbsp;hinc.</p>
-              <p className="bold">Carry Andersen, COO at&nbsp;Stripe</p>
-            </div>
-            <div className="grid-column span-1"></div>
-            <div className="grid-column mt3 mb2 order-1 reveal-on-scroll is-revealing">
-              <DataSvg />
-            </div>
-          </div>
+        <section className='guide-section'>
+          <header></header>
+        </section>
 
-          <div className="grid-row grid-row--center">
-            <div className="grid-column mt3 mb2 reveal-on-scroll is-revealing">
-              <SecuritySvg />
-            </div>
-            <div className="grid-column span-1"></div>
-            <div className="grid-column mt3 mb2">
-              <div className="border--bottom pb2 mb2">
-                <h2>Absolute security</h2>
-                <p>Itaque his sapiens semper vacabit. Qualis ista philosophia est, quae non interitum afferat pravitatis, sed sit contenta mediocritate vitiorum? Quid de Platone aut de Democrito loquar? Quis istud possit, inquit&nbsp;negare?</p>
-              </div>
-              <p className="italic text--gray mb1">Estne, quaeso, inquam, sitienti in bibendo voluptas? Duo Reges: constructio&nbsp;interrete.</p>
-              <p className="bold">Josh Blenton, Product Manager at&nbsp;Blinkist</p>
-            </div>
-          </div>
+        <section className='pricing-section'>
+          <header></header>
+        </section>
 
-        </div>
-
-
+        <section className='contact-section'>
+          <header></header>
+        </section>
       </main>
 
       {/* Footer */}
       <footer className="pt1 pb3 align--center-on-mobile">
-        <div className="container">
-          <div className="grid-row">
-            <div className="grid-column mt2 span-half">
-              <div className="mb1">
 
-              </div>
-              <p className="small">Design by <a href="https://www.papayatemplates.com" className="link link--text">Papaya</a>. Illustrations from&nbsp;<a href="https://undraw.co/" className="link link--text">Undraw</a>.</p>
-            </div>
-            <div className="grid-column mt2 span-half align--right align--center-on-mobile">
-              <ul className="no-bullets list--inline">
-                {/* <li className="mr1"><a href="" className="link"><YoutubeSvg /></a></li>
-                <li className="mr1"><a href="" className="link"><TwitterSvg /></a></li>
-                <li><a href="" className="link"><FacebookSvg /></a></li> */}
-              </ul>
-            </div>
-          </div>
-        </div>
       </footer>
-
     </div>
   )
 }

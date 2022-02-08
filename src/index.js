@@ -1,3 +1,7 @@
+//FONTS
+import './fonts/Roboto-Regular.ttf';
+import './fonts/Roboto-Bold.ttf';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
