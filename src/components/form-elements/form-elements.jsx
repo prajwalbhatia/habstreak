@@ -8,9 +8,9 @@ import "./form-element.css";
 import { noop } from 'lodash';
 
 
-export function InputElement({ lable, type, uid, placeholder, ...rest }) {
+export function InputElement({ lable, type, uid, placeholder, containerClass, ...rest }) {
   return (
-    <div key={uid} className="element input-container">
+    <div key={uid} className={`element input-container ${containerClass}`}>
       <label for={uid}>{lable}</label>
       <input
         className="input-element"
@@ -24,9 +24,9 @@ export function InputElement({ lable, type, uid, placeholder, ...rest }) {
   );
 }
 
-export function TextInputElement({ lable, type, uid, placeholder, ...rest }) {
+export function TextInputElement({ lable, type, uid, placeholder, containerClass , ...rest }) {
   return (
-    <div key={uid} className="element textArea-input-container">
+    <div key={uid} className={`element textArea-input-container ${containerClass}`}>
       <label for={uid}>{lable}</label>
       <textarea
         className="textArea-input-element"

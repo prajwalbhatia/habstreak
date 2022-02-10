@@ -1,8 +1,13 @@
+.element {}
+
 .input-container {
   .input-element {
     width: 100%;
-    border: none;
-    border-bottom: 1px solid var(--lightColor);
+    outline: none;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #E8EEF2;
+    background: #fff
   }
 
   .input-element:focus {
@@ -12,31 +17,31 @@
 }
 
 .textArea-input-container {
+
   .textArea-input-element,
   .textArea-input-element:focus {
     width: 100%;
-    border: none;
     outline: none;
-    border-bottom: 1px solid var(--lightColor);
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #E8EEF2;
+    background: #fff
   }
 }
 
-.dropdown
-{
+.dropdown {
   margin: 10px 0;
-  .MuiOutlinedInput-root
-  {
+
+  .MuiOutlinedInput-root {
     height: 30px;
     min-width: 180px;
   }
 
-  .MuiInputLabel-outlined
-  {
+  .MuiInputLabel-outlined {
     transform: translate(14px, 7px) scale(1);
   }
-  
-  .MuiOutlinedInput-input
-  {
+
+  .MuiOutlinedInput-input {
     padding: 10px;
   }
 }

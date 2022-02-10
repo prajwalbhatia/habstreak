@@ -1,9 +1,13 @@
 .landing-page {
-  margin-left: 100px;
-  margin-right: 100px;
-  margin-top: 30px;
+  // margin-left: 100px;
+  // margin-right: 100px;
+  // margin-top: 30px;
 
   .landing-page-header {
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 30px;
+
     .main-navigation {
       display: flex;
       align-items: flex-end;
@@ -30,40 +34,296 @@
     }
 
     .buttons-container {
-      // align-self: flex-end;
       display: flex;
       align-self: flex-end;
 
-      .header-btn {
-        height: 50px;
+    }
+  }
+
+  .hero-section {
+    display: flex;
+    height: 872px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 145px;
+
+    .buttons {
+      margin-top: 50px;
+    }
+
+    .left-section {
+      flex: 1;
+      max-width: 557px;
+    }
+
+    .right-section {
+      display: flex;
+      flex: 1.5;
+      justify-content: flex-end;
+    }
+  }
+
+  .features-section {
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 50px;
+    height: 1076px;
+    display: flex;
+    flex-direction: column;
+
+    .section-container {
+      height: inherit;
+      display: flex;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    .left-section {
+      display: flex;
+      flex: 1;
+
+      .feature-card {
+        height: 200px;
+        width: 200px;
         border-radius: 25px;
-        font-size: 18px;
-        transition: all 0.5s;
-      }
-
-      .landing-login-btn {
-        font-family: RobotoBold;
-        background: white;
-        width: 95px;
-        color: var(--primaryColor);
-        border: 1px solid var(--primaryColor);
-        margin-right: 30px;
-        transition: all 0.5s;
-      }
-
-      .header-btn:hover {
-        box-shadow: 0 3px 3px #00000029;
-        color: var(--primaryColor);
-      }
-
-      .landing-get-started {
-        width: 142px;
-      }
-
-      .landing-get-started:hover
-      {
-        color: #ffffff;
+        background-color: #ffffff;
       }
     }
+
+    .right-section {
+      flex: 1;
+      max-width: 557px;
+    }
+  }
+
+  .guide-section {
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 50px;
+    height: 1062px;
+    display: flex;
+    flex-direction: column;
+
+    .left-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      max-width: 557px;
+    }
+
+    .right-section {
+      display: flex;
+      flex: 1.5;
+      justify-content: flex-end;
+    }
+  }
+
+  .contact-section {
+    height: 500px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 150px;
+
+    hr {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top: 1px solid #E8EEF2;
+    }
+
+    .container {
+      margin-top: 60px;
+    }
+
+
+    .container {
+      display: flex;
+
+      .left-section {
+        flex: 1;
+
+        p {
+          width: 250px;
+        }
+
+        .socials {
+          display: flex;
+
+          .contact-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: #E8EEF2;
+            border-radius: 20px;
+            cursor: pointer;
+          }
+
+          .contact-icon:hover {
+            background: transparent linear-gradient(90deg, #FFCB47B3 0%, #F96E46B3 100%) 0% 0% no-repeat padding-box;
+            box-shadow: 0px 3px 6px #F96E4629;
+            color: #ffffff;
+          }
+        }
+
+      }
+
+      .middle-section {
+        display: flex;
+        flex: 2;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .right-section {
+        flex: 1;
+
+        .write-ur-text {
+          letter-spacing: var(--unnamed-character-spacing-0);
+          text-align: left;
+          font: normal normal normal 21px/25px Josefin Sans;
+          letter-spacing: 0px;
+        }
+
+        .send-btn {
+          margin-right: 0;
+          width: 100px;
+          height: 40px;
+        }
+      }
+    }
+  }
+
+  .footer {
+    height: 60px;
+    min-width: 840px;
+    background: transparent linear-gradient(90deg, #F96E46 0%, #FFCB47 100%) 0% 0% no-repeat padding-box;
+    border-radius: 31px;
+    opacity: 0.8;
+    padding: 18px 40px 18px 40px;
+    margin-bottom: 50px;
+
+    .footer-navigation {
+      display: flex;
+      flex: 1;
+
+      li:not(:first-of-type) {
+        margin-left: 30px;
+      }
+
+    }
+  }
+
+  //COMMON LESS
+  .feature-heading,
+  .guide-heading {
+    font-size: 60px;
+    font-family: RobotoBold;
+    text-align: center;
+  }
+
+  .hero-background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  }
+
+  .hero-background {
+    background-image: url('./img/hero.png');
+    background-size: cover;
+  }
+
+  .feature-background {
+    background-image: url('./img/feature.png');
+    background-size: cover;
+  }
+
+  .guide-background {
+    background-image: url('./img/guide.png');
+    background-size: cover;
+  }
+
+  .contact-background {
+    background-image: url('./img/contact.png');
+    // background-size: cover;
+  }
+
+  .h1-50,
+  .h1-40 {
+    font-size: 50px;
+    font-family: RobotoBold;
+  }
+
+  .p-18 {
+    font-size: 18px;
+    font-family: RobotoRegular;
+    margin-top: 20px;
+  }
+
+  .h1-40 {
+    font-size: 40px;
+  }
+
+
+  .header-btn {
+    height: 50px;
+    border-radius: 25px;
+    font-size: 18px;
+    transition: all 0.5s;
+  }
+
+  .landing-login-btn {
+    font-family: RobotoBold;
+    background: white;
+    width: 95px;
+    color: var(--globalBlack);
+    border: 1px solid var(--primaryColor);
+    margin-right: 30px;
+    transition: all 0.5s;
+  }
+
+  .header-btn:hover {
+    box-shadow: 0 3px 3px #00000029;
+    color: var(--primaryColor);
+  }
+
+  .landing-get-started {
+    width: 142px;
+  }
+
+  .landing-get-started:hover {
+    color: #ffffff;
+  }
+}
+
+
+//MEDIA QUERIES
+@media only screen and (max-width: 1024px) {
+
+  /* Styles */
+  .landing-page {
+    .landing-page-header {
+
+      .main-navigation,
+      .buttons-container {
+        display: none;
+      }
+    }
+  }
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width : 320px) {
+  .landing-page {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 3px;
   }
 }
