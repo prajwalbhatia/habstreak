@@ -1,11 +1,5 @@
 .landing-page {
-  // margin-left: 100px;
-  // margin-right: 100px;
-  // margin-top: 30px;
-
   .landing-page-header {
-    padding-left: 100px;
-    padding-right: 100px;
     padding-top: 30px;
 
     .main-navigation {
@@ -41,18 +35,14 @@
   }
 
   .hero-section {
-    display: flex;
-    height: 872px;
-    padding-left: 100px;
-    padding-right: 100px;
+    height: 980px;
     padding-top: 145px;
 
     .buttons {
       margin-top: 50px;
     }
 
-    .left-section {
-      flex: 1;
+    .hero-container {
       max-width: 557px;
     }
 
@@ -64,8 +54,6 @@
   }
 
   .features-section {
-    padding-left: 100px;
-    padding-right: 100px;
     padding-top: 50px;
     height: 1076px;
     display: flex;
@@ -74,31 +62,52 @@
     .section-container {
       height: inherit;
       display: flex;
-      align-items: center;
+      // align-items: center;
       margin-top: 40px;
     }
 
     .left-section {
       display: flex;
       flex: 1;
+      flex-direction: column;
+      padding-top: 120px;
+      padding-left: 150px;
+
+      .top-row,
+      .bottom-row {
+        display: flex;
+      }
+
 
       .feature-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
         height: 200px;
         width: 200px;
         border-radius: 25px;
         background-color: #ffffff;
+        margin: 20px;
+
+        p {
+          text-align: center;
+          margin-top: 5px;
+        }
       }
     }
 
     .right-section {
+      display: flex;
       flex: 1;
       max-width: 557px;
+      flex-direction: column;
+      margin-top: 145px;
+      // justify-content: center;
     }
   }
 
   .guide-section {
-    padding-left: 100px;
-    padding-right: 100px;
     padding-top: 50px;
     height: 1062px;
     display: flex;
@@ -121,16 +130,7 @@
 
   .contact-section {
     height: 500px;
-    padding-left: 100px;
-    padding-right: 100px;
     padding-top: 150px;
-
-    hr {
-      position: absolute;
-      left: 0;
-      right: 0;
-      border-top: 1px solid #E8EEF2;
-    }
 
     .container {
       margin-top: 60px;
@@ -198,7 +198,7 @@
 
   .footer {
     height: 60px;
-    min-width: 840px;
+    width: 840px;
     background: transparent linear-gradient(90deg, #F96E46 0%, #FFCB47 100%) 0% 0% no-repeat padding-box;
     border-radius: 31px;
     opacity: 0.8;
@@ -217,22 +217,16 @@
   }
 
   //COMMON LESS
+  .padding-global {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
   .feature-heading,
   .guide-heading {
     font-size: 60px;
     font-family: RobotoBold;
     text-align: center;
-  }
-
-  .hero-background {
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
   }
 
   .hero-background {
@@ -309,6 +303,8 @@
 
   /* Styles */
   .landing-page {
+    overflow: hidden;
+
     .landing-page-header {
 
       .main-navigation,
@@ -320,10 +316,94 @@
 }
 
 /* Smartphones (portrait and landscape) ----------- */
-@media only screen and (max-width : 320px) {
+@media only screen and (max-width : 450px) {
   .landing-page {
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 3px;
+    .padding-global {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    .hero-section {
+      padding-top: 60px;
+      height: 660px;
+    }
+
+
+    .features-section {
+      padding-top: 50px;
+      height: auto;
+
+      .section-container {
+        margin-top: 40px;
+        flex-direction: column;
+      }
+
+      .left-section {
+        flex-direction: column;
+        padding-top: 0px;
+        padding-left: 0;
+        align-items: center;
+
+        .top-row,
+        .bottom-row {
+          flex-direction: column;
+        }
+      }
+
+      .right-section {
+        margin-top: 45px;
+        // justify-content: center;
+
+        h1 {
+          text-align: center;
+        }
+
+        p {
+          text-align: center;
+        }
+
+        .buttons {
+          justify-content: center;
+        }
+      }
+    }
+
+    .guide-section {
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-section {
+      height: auto;
+      padding-top: 150px;
+
+      .container {
+        flex-direction: column;
+
+        .left-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          p {
+            width: 100%;
+            text-align: center;
+          }
+        }
+
+        .right-section {
+          margin-top: 50px;
+
+          .write-ur-text {
+            text-align: center;
+          }
+
+          .button-container {
+            justify-content: center;
+          }
+        }
+      }
+    }
   }
 }

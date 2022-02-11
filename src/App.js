@@ -13,11 +13,12 @@ import StreakListPage from 'pages/StreakList/streak-list';
 import Streak from "pages/Streak/streak";
 import RewardPage from "pages/Reward/reward";
 import RecentActivities from 'pages/RecentActivities/recentActivities';
-import LoginPage from 'pages/Login/login';
-// import LandingPage from 'pages/LandingPage/landingPage';
+import AccountPage from 'pages/Login/login';
+import LandingPage from 'pages/LandingPage/landingPage';
 import SuccessPage from 'pages/GoogleResponse/success';
 import Errorpage from 'pages/GoogleResponse/error';
 
+import "./fontello/css/habstreak.css"
 import './App.css';
 
 function App(props) {
@@ -32,7 +33,8 @@ function App(props) {
         <Route path="/reward" component={RewardPage} />
         <Route path="/success" component={SuccessPage} />
         <Route path="/error" component={Errorpage} />
-        <Route path="/" component={LoginPage} />
+        <Route path="/account" component={AccountPage} />
+        <Route path="/" component={LandingPage} />
       </Switch>
     </Router>
   );
