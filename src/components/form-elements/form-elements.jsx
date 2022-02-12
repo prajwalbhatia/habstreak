@@ -8,10 +8,15 @@ import "./form-element.css";
 import { noop } from 'lodash';
 
 
-export function InputElement({ lable, type, uid, placeholder, containerClass, ...rest }) {
+export function InputElement({ lable, type, uid, placeholder, containerClass, icon, errMsg, successMsg, ...rest }) {
   return (
     <div key={uid} className={`element input-container ${containerClass}`}>
-      <label for={uid}>{lable}</label>
+      <div className='d-flex justify-space-between'>
+        <label className='label' for={uid}>{lable}</label>
+        <label className='label' style={errMsg ? { color: '#FF0000' } : { color: '#267A08' }}>
+          {errMsg ? errMsg : (successMsg ? successMsg : '')}
+        </label>
+      </div>
       <input
         className="input-element"
         type={type}
@@ -20,11 +25,14 @@ export function InputElement({ lable, type, uid, placeholder, containerClass, ..
         placeholder={placeholder ? placeholder : `Enter a ${lable?.toLowerCase()}`}
         {...rest}
       />
+      <div className='icon-container'>
+        {icon ? icon : ''}
+      </div>
     </div>
   );
 }
 
-export function TextInputElement({ lable, type, uid, placeholder, containerClass , ...rest }) {
+export function TextInputElement({ lable, type, uid, placeholder, containerClass, ...rest }) {
   return (
     <div key={uid} className={`element textArea-input-container ${containerClass}`}>
       <label for={uid}>{lable}</label>
@@ -41,7 +49,7 @@ export function TextInputElement({ lable, type, uid, placeholder, containerClass
   );
 }
 
-export function Dropdown({ labelName, options, optionSelect, value , ...rest }) {
+export function Dropdown({ labelName, options, optionSelect, value, ...rest }) {
   return (
     <div className="dropdown">
       <FormControl variant="outlined">
@@ -75,7 +83,7 @@ export function Dropdown({ labelName, options, optionSelect, value , ...rest }) 
 }
 
 InputElement.defaultProps = {
-  type: 'text'
+  type: 'text',
 }
 
 Dropdown.defaultProps = {

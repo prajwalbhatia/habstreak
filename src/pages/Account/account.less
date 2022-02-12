@@ -1,0 +1,147 @@
+.login-container {
+  display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // height: 100vh;
+  // flex-direction: column;
+
+  .title {
+    margin-bottom: 20px;
+  }
+
+
+  .left-container {
+    flex: 1;
+
+    p {
+      opacity: 0.6;
+      margin-top: 25px;
+      margin-bottom: 70px;
+      width: 430px;
+    }
+  }
+
+  .right-container {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    padding: 50px 80px 0 80px;
+
+    h1 {
+      font: normal normal normal 36px/43px JosefinSansRegular;
+      letter-spacing: 0px;
+      margin-top: 20px;
+    }
+
+    .already-member {
+      font-family: RobotoBold;
+      font-size: 12px;
+      color: #8F8F8F;
+      margin-top: 15px;
+
+      span {
+        font-size: 12px;
+        color: var(--primaryColor);
+        margin-left: 2px;
+      }
+    }
+
+    .create-account-btn {
+      height: 50px;
+      font-size: 14px;
+    }
+
+    .in-valid
+    {
+      opacity: 0.7;
+    }
+
+    .socials {
+      margin-top: 23px;
+      position: relative;
+      width: fit-content;
+      .icon-container {
+        height: 50px;
+        width: 50px;
+        border-radius: 10px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: 1px solid #E8EEF2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        i {
+          font-size: 24px;
+          color: var(--primaryColor);
+        }
+      }
+
+
+      .google-btn {
+        position: absolute;
+        top: 0px;
+        height: 50px;
+        width: 50px;
+        opacity: 0;
+      }
+
+      .google-btn:hover {
+        opacity: 0 !important;
+      }
+
+    }
+
+    .socials:hover>.icon-container {
+      background: transparent linear-gradient(90deg, #FFCB47B3 0%, #F96E46B3 100%) 0% 0% no-repeat padding-box;
+      box-shadow: 0px 3px 6px #F96E4629;
+
+      i {
+        color: #fff;
+      }
+    }
+
+    .t-and-c {
+      margin-top: 60px;
+      font-size: 12px;
+      color: #8F8F8F;
+      text-align: center;
+
+      span {
+        font-size: 12px;
+        color: var(--primaryColor);
+      }
+    }
+  }
+
+  .padding-global {
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 60px;
+  }
+}
+
+
+
+//MEDIA QUERIES
+@media only screen and (max-width: 1360px) {
+
+  /* Styles */
+  .login-container {
+      .left-container
+      {
+        display: none;
+      }
+  }
+}
+
+
+@media only screen and (max-width: 520px) {
+
+  /* Styles */
+  .login-container {
+    .right-container {
+      padding: 50px 40px 0 40px;
+    }
+  }
+}

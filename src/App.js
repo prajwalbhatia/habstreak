@@ -13,7 +13,7 @@ import StreakListPage from 'pages/StreakList/streak-list';
 import Streak from "pages/Streak/streak";
 import RewardPage from "pages/Reward/reward";
 import RecentActivities from 'pages/RecentActivities/recentActivities';
-import AccountPage from 'pages/Login/login';
+import AccountPage from 'pages/Account/account';
 import LandingPage from 'pages/LandingPage/landingPage';
 import SuccessPage from 'pages/GoogleResponse/success';
 import Errorpage from 'pages/GoogleResponse/error';

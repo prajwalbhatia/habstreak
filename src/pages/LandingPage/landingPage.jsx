@@ -14,9 +14,6 @@ import { useHistory } from 'react-router-dom';
 
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
-import { ReactComponent as HeroImage } from './img/hero.svg';
-import { ReactComponent as VideoImage } from './img/video.svg';
-import { ReactComponent as Footer } from './img/footer.svg';
 import { useEffect } from 'react';
 
 function LandingPage() {

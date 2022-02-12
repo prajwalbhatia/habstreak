@@ -1,6 +1,9 @@
 //FONTS
 import './fonts/Roboto-Regular.ttf';
 import './fonts/Roboto-Bold.ttf';
+import './fonts/Roboto-Medium.ttf';
+import './fonts/JosefinSans-Regular.ttf';
+
 
 import React from 'react';
 import ReactDOM from 'react-dom';
