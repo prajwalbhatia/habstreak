@@ -111,14 +111,14 @@ function LandingPage() {
                 <PrimaryButton
                   name={'Get Started'}
                   click={() => { jumpToAccount('signup') }}
-                  btnContainerClass=""
+                  btnContainerClass="fit-content"
                   btnClass='header-btn landing-get-started'
                 />
 
                 <PrimaryButton
                   name={'Login'}
                   click={() => { jumpToAccount('login') }}
-                  btnContainerClass="ml-30"
+                  btnContainerClass="ml-30 fit-content"
                   btnClass='header-btn landing-login-btn'
                 />
               </div>

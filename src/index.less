@@ -72,14 +72,10 @@ a:visited,
 a:active {
   text-decoration: none;
 }
-
 //CORE
 
 //LESS
-.d-flex {
-  display: flex;
-}
-
+//MARGINS
 .mt-1 {
   margin-top: 1rem;
 }
@@ -99,11 +95,6 @@ a:active {
 .mr-0
 {
   margin-right: 0 !important;
-}
-
-.h-1
-{
-  height: 1px;
 }
 
 .mt-20 {
@@ -138,7 +129,44 @@ a:active {
 {
   margin-top: 35px;
 }
+//MARGINS
 
+//FLEXBOX
+.d-flex {
+  display: flex;
+}
+
+.center-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-dir-col {
+  flex-direction: column;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.flex-1 {
+  flex: 1
+}
+
+//FLEXBOX
+
+.h-1 {
+  height: 1px;
+}
 
 .size-16-8f
 {
@@ -164,10 +192,7 @@ a:active {
   cursor: pointer;
 }
 
-.flex-1
-{
-  flex : 1
-}
+
 
 .color-fff
 {
@@ -175,28 +200,9 @@ a:active {
 }
 
 
-.center-items {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-dir-col {
-  flex-direction: column;
-}
-
-.justify-end
+.fit-content
 {
-  justify-content: flex-end;
-}
-
-.justify-space-between
-{
-  justify-content: space-between;
-}
-
-.justify-center {
-  justify-content: center;
+  width: fit-content !important;
 }
 
 .loader-container {

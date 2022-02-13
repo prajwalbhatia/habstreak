@@ -6,7 +6,6 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { InputElement } from "../../components/form-elements/form-elements";
 import { PrimaryButton } from "components/button/button";
 
-
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,40 +32,60 @@ const initialState = {
 }
 
 function Dashboard(props) {
+  //HOOKS
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-
   const authData = useSelector((state) => state.user.authData);
+  //HOOKS
+
+  //STATES
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState(initialState);
-  const [errMsg, setErrMsg] = useState({email : ''});
+  const [errMsg, setErrMsg] = useState({ email: '' });
   const [successMsg, setSuccessMsg] = useState({});
   const [isValid, setIsValid] = useState(false);
+  //STATES
 
-  console.log('🚀 ~ file: account.jsx ~ line 45 ~ Dashboard ~ formData', formData);
+  //USE EFFECTS
   useEffect(() => {
     const token = user?.token;
     if (token)
       history.push('/dashboard');
   }, [history, user?.token])
 
-
   useEffect(() => {
     if (location?.state?.jumpTo === 'signup')
       setIsSignup(true)
-    else
+    else {
       setIsSignup(false);
+    }
   }, [location])
-
 
   useEffect(() => {
     if (authData)
       history.push('/dashboard');
   }, [authData, history]);
 
+  useEffect(() => {
+    if (isSignup)
+      setIsValid(false);
+    // else
+    //   setIsValid(true);
+  }, [isSignup]);
+
+
+  useEffect(() => {
+    if (!isSignup) {
+      if (Object.keys(errMsg).length === 0 && formData['email'].length > 0 && formData['password'].length > 0)
+        setIsValid(true);
+    }
+  }, [formData]);
+  //USE EFFECTS
+
+  //FUNCTIONS
   const googleSuccess = async (res) => {
     const result = res?.profileObj;
     const token = res?.tokenId;
@@ -95,10 +114,7 @@ function Dashboard(props) {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-    console.log('formData', formData)
   }
-
-  // const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
   const switchMode = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup);
@@ -109,7 +125,6 @@ function Dashboard(props) {
   }
 
   const validation = (e) => {
-    console.log('VALIDATION', e.target.name)
     //FULL NAME
     if (e.target.name === 'fullName') {
       if (!formData[e.target.name]) {
@@ -189,15 +204,11 @@ function Dashboard(props) {
       }
     }
 
-
-
     //VALIDATION
-    console.log('ERROR MESSAGE', errMsg)
     if (Object.keys(errMsg).length === 0)
       setIsValid(true);
-
   }
-
+  //FUNCTIONS
 
   const clientId = process.env.REACT_APP_CLIENT_ID;
   return (
@@ -268,9 +279,9 @@ function Dashboard(props) {
             containerClass={'mt-25'}
             value={formData['password']}
             onChange={handleChange}
-            onBlur={validation}
-            errMsg={errMsg['password']}
-            successMsg={successMsg['password']}
+            onBlur={isSignup ? validation : null}
+            errMsg={isSignup ? errMsg['password'] : null}
+            successMsg={isSignup ? successMsg['password'] : null}
             icon={<i className="demo-icon icon-lock size-16-8f" />}
           />
 
@@ -314,7 +325,6 @@ function Dashboard(props) {
               onFailure={googleFailure}
               cookiePolicy={'single_host_origin'}
               className='google-btn'
-              style={{}}
             />
           </div>
 
