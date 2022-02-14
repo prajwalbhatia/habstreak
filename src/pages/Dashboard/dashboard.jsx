@@ -92,8 +92,9 @@ function Dashboard(props) {
   return (
     <Frame
       withHeader={true}
-      headerTitle={'DASHBOARD'}
-      withSearchBox={false}
+      withDate={true}
+      headerTitle={'Dashboard'}
+      withSearchBox={true}
       containerClass="dashboard"
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>

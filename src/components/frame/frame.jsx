@@ -17,6 +17,7 @@ export default function Frame(props) {
         children,
         withBackIcon,
         withNavigation = true,
+        withDate
     } = props;
     return (
         <>
@@ -31,6 +32,7 @@ export default function Frame(props) {
                         headerText={headerTitle}
                         withSearchBox={withSearchBox}
                         withBackIcon={withBackIcon}
+                        withDate={withDate}
                     />
                 }
                 <div className="frame-children">
@@ -47,7 +49,8 @@ Frame.propTypes =
     withHeader: PropTypes.bool,
     headerTitle: PropTypes.string,
     withSearchBox: PropTypes.bool,
-    headerIcon: PropTypes.element
+    headerIcon: PropTypes.element,
+    withDate: PropTypes.bool
 }
 
 Frame.defaultProps = {

@@ -1,27 +1,59 @@
-.button-container
-{
+.button-container {
     width: 100%;
-    .btn
-    {
+
+    .btn {
         width: fit-content;
         padding: 0.5rem;
         font-family: RobotoMedium;
         border: none;
-        border-radius: 10px;
+        border-radius: 6px;
         cursor: pointer;
         width: 100%;
     }
-    
-    
-    .primary-btn
-    {
+
+
+    .primary-btn {
         color: white;
         background-color: var(--primaryColor);
     }
 
-    .secondary-btn
-    {
+    .primary-btn:hover {
+        background-color: #fff;
+        color: var(--primaryColor);
+        border: 1px solid var(--primaryColor);
+        box-shadow: 0px 3px 6px var(--boxShadow);
+    }
+
+    .outline-primary-btn {
+        border: 1px solid var(--primaryColor);
+        background: #FFFFFF;
+        color: var(--primaryColor);
+    }
+
+    .outline-primary-btn:hover {
+        box-shadow: 0px 3px 6px var(--boxShadow)
+    }
+
+    .secondary-btn {
         background-color: var(--secondaryBtnColor);
         color: black;
     }
+}
+
+.icon-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    background-color: #E8EEF2;
+    border-radius: 6px;
+
+    i {
+        font-size: 18px;
+    }
+}
+
+.icon-button-container:hover {
+    box-shadow: 0px 3px 6px #00000029;
 }

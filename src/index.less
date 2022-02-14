@@ -34,17 +34,21 @@
 }
 
 :root {
-  --navigationWidth: 18rem;
+  --navigationWidth: 300px;
   --navigationAroundSpace: 1.5rem;
-  --primaryColor: #F96E46;
   --secondaryColor: #FAFF00;
   --lightColor: #C4C4C4;
   --superLight: #DFDADA;
   --primaryBtnColor: #18A0FB;
   --secondaryBtnColor: #FFFFFF;
   --modalFooter: #FFDCDC;
-
+  
   --globaBlack: #212121;
+  --primaryColor: #F96E46;
+  --boxShadow : #00000029;
+  --greyText : #8F8F8F;
+  --pagesPaddingHorizontal : 50px;
+
 }
 
 h1,
@@ -95,6 +99,10 @@ a:active {
 .mr-0
 {
   margin-right: 0 !important;
+}
+
+.mr-30 {
+  margin-right: 30px !important;
 }
 
 .mt-20 {
@@ -171,12 +179,12 @@ a:active {
 .size-16-8f
 {
   font-size: 16px;
-  color: #8F8F8F;
+  color: var(--greyText);
 }
 
 .size-10-8f {
   font-size: 10px;
-  color: #8F8F8F;
+  color: var(--greyText);
 }
 
 .ai-b {
@@ -204,6 +212,12 @@ a:active {
 {
   width: fit-content !important;
 }
+
+.pos-relative
+{
+  position: relative;
+}
+
 
 .loader-container {
   height: 87vh;

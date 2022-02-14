@@ -18,7 +18,7 @@ export function InputElement({ lable, type, uid, placeholder, containerClass, ic
         </label>
       </div>
       <input
-        className="input-element"
+        className={lable?.length > 0 ? 'input-element mt-5' : 'input-element'}
         type={type}
         name={uid}
         id={lable}
@@ -37,7 +37,7 @@ export function TextInputElement({ lable, type, uid, placeholder, containerClass
     <div key={uid} className={`element textArea-input-container ${containerClass}`}>
       <label for={uid}>{lable}</label>
       <textarea
-        className="textArea-input-element"
+        className={lable?.length > 0 ? 'textArea-input-element mt-5' : 'textArea-input-element'}
         type={type}
         name={uid}
         id={lable}

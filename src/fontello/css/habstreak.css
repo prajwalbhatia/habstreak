@@ -1,22 +1,21 @@
 @font-face {
   font-family: 'habstreak';
-  src: url('../font/habstreak.eot?93029065');
-  src: url('../font/habstreak.eot?93029065#iefix') format('embedded-opentype'),
-    url('../font/habstreak.woff2?93029065') format('woff2'),
-    url('../font/habstreak.woff?93029065') format('woff'),
-    url('../font/habstreak.ttf?93029065') format('truetype'),
-    url('../font/habstreak.svg?93029065#habstreak') format('svg');
+  src: url('../font/habstreak.eot?88890515');
+  src: url('../font/habstreak.eot?88890515#iefix') format('embedded-opentype'),
+       url('../font/habstreak.woff2?88890515') format('woff2'),
+       url('../font/habstreak.woff?88890515') format('woff'),
+       url('../font/habstreak.ttf?88890515') format('truetype'),
+       url('../font/habstreak.svg?88890515#habstreak') format('svg');
   font-weight: normal;
   font-style: normal;
 }
-
 /* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
 /* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'habstreak';
-    src: url('../font/habstreak.svg?93029065#habstreak') format('svg');
+    src: url('../font/habstreak.svg?88890515#habstreak') format('svg');
   }
 }
 */
@@ -55,53 +54,37 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-check-circle:before {
-  content: '\e800';
-}
-
-/* '' */
-.icon-email:before {
-  content: '\e801';
-}
-
-/* '' */
-.icon-facebook:before {
-  content: '\e802';
-}
-
-/* '' */
-.icon-google:before {
-  content: '\e803';
-}
-
-/* '' */
-.icon-person:before {
-  content: '\e804';
-}
-
-/* '' */
-.icon-twitter:before {
-  content: '\e805';
-}
-
-/* '' */
-.icon-instagram:before {
-  content: '\e806';
-}
-
-/* '' */
-.icon-lock:before {
-  content: '\e807';
-}
-
-/* '' */
-.icon-linkedin:before {
-  content: '\e808';
-}
-
-/* '' */
-.icon-language:before {
-  content: '\e809';
-}
-
-/* '' */
+.icon-check-circle:before { content: '\e800'; } /* '' */
+.icon-email:before { content: '\e801'; } /* '' */
+.icon-facebook:before { content: '\e802'; } /* '' */
+.icon-google:before { content: '\e803'; } /* '' */
+.icon-person:before { content: '\e804'; } /* '' */
+.icon-twitter:before { content: '\e805'; } /* '' */
+.icon-instagram:before { content: '\e806'; } /* '' */
+.icon-lock:before { content: '\e807'; } /* '' */
+.icon-linkedin:before { content: '\e808'; } /* '' */
+.icon-language:before { content: '\e809'; } /* '' */
+.icon-paragliding:before { content: '\e80a'; } /* '' */
+.icon-reward:before { content: '\e80b'; } /* '' */
+.icon-scuba-diving:before { content: '\e80c'; } /* '' */
+.icon-search:before { content: '\e80d'; } /* '' */
+.icon-skiing:before { content: '\e80e'; } /* '' */
+.icon-streak:before { content: '\e80f'; } /* '' */
+.icon-surfing:before { content: '\e810'; } /* '' */
+.icon-back:before { content: '\e812'; } /* '' */
+.icon-calendar:before { content: '\e813'; } /* '' */
+.icon-close:before { content: '\e814'; } /* '' */
+.icon-delete:before { content: '\e815'; } /* '' */
+.icon-edit:before { content: '\e816'; } /* '' */
+.icon-expand-less:before { content: '\e817'; } /* '' */
+.icon-expand-more:before { content: '\e818'; } /* '' */
+.icon-filter:before { content: '\e819'; } /* '' */
+.icon-flag:before { content: '\e81a'; } /* '' */
+.icon-going-in:before { content: '\e81b'; } /* '' */
+.icon-grid-view:before { content: '\e81c'; } /* '' */
+.icon-home:before { content: '\e81d'; } /* '' */
+.icon-kayaking:before { content: '\e81e'; } /* '' */
+.icon-list-view:before { content: '\e81f'; } /* '' */
+.icon-notifications:before { content: '\e821'; } /* '' */
+.icon-activity:before { content: '\e822'; } /* '' */
+.icon-logout:before { content: '\e823'; } /* '' */

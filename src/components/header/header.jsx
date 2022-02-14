@@ -9,12 +9,16 @@ import "./header.css";
 //REDUX
 import { useDispatch } from "react-redux";
 
+//LIBRARIES
+import moment from 'moment';
+
 //Actions
 import { logout } from "../../redux/actions/user";
 
 //Component 
 import Search from "../search/search";
-import { PrimaryButton } from "../../components/button/button";
+import { OutlinedPrimaryButton } from "components/button/button";
+import { IconButton } from "components/button/button";
 
 
 function Header(props) {
@@ -35,26 +39,45 @@ function Header(props) {
                             history.goBack();
                         }}
                     /> </IconContext.Provider>}
-                <h1>{props.headerText}</h1>
+                <h1 className="heading">{props.headerText}</h1>
+                {props.withDate ? <h5 className="date">{moment().format('dddd, Do MMMM YYYY')}</h5> : null}
             </div>
-            {
-                props?.withSearchBox
-                    ?
-                    <Search
-                        data={(searchText) => {
 
-                        }}
+            <div className="d-flex">
+                {
+                    props?.withSearchBox
+                        ?
+                        <Search
+                            data={(searchText) => {
+
+                            }}
+                            containerClass={'mr-30'}
+                        />
+                        :
+                        null
+                }
+
+                <div className="pos-relative">
+                    <IconButton
+                        click={() => { }}
+                        icon={<i className="demo-icon icon-notifications" />}
+                        btnContainerClass={'mr-30'}
                     />
-                    :
-                    null
-            }
 
-            <div>
-                <PrimaryButton
-                    name={'Logout'}
+                    {/* <div className='notification-dropdown-container' style={{ height: 'calc(3 * 40px )' }}>
+                        <ol>
+                            <div className="d-flex"><li>Streak 1 dsadsdsa</li>  <span className="pointer ml-10"></span></div>
+                            <li>Streak 1</li>
+                            <li>Streak 1</li>
+                        </ol>
+                    </div> */}
+                </div>
+
+                <OutlinedPrimaryButton
+                    name={'Add New Streak'}
                     click={() => logoutFun()}
-                    btnContainerClass="ml-10"
-                    btnClass='logout-btn'
+                    btnContainerClass=""
+                    btnClass='add-btn'
                 />
             </div>
 

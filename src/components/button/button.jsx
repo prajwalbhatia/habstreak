@@ -20,7 +20,6 @@ export function PrimaryButton(props) {
         </div>
     );
 }
-
 export function SecondaryButton(props) {
     const { btnContainerClass, btnClass, click, ...rest } = props;
     return (
@@ -37,6 +36,47 @@ export function SecondaryButton(props) {
     );
 }
 
+export function OutlinedPrimaryButton(props) {
+    const { btnContainerClass, btnClass, click, ...rest } = props;
+    return (
+        <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
+            <button
+                className={btnClass ? `btn outline-primary-btn ${btnClass}` : `btn outline-primary-btn`}
+                onClick={() => click()}
+                type="button"
+                {...rest}
+            >
+                {props.name}
+            </button>
+        </div>
+    );
+}
+
+
+export function IconButton(props) {
+    const { btnContainerClass, btnClass, click } = props;
+    return (
+        <div
+            className={
+                btnContainerClass
+                    ?
+                    `icon-button-container ${btnContainerClass}`
+                    :
+                    `icon-button-container`
+            }
+            onClick={() => click()}
+        >
+            {props.icon}
+            {/* <button
+                className={btnClass ? `btn outline-primary-btn ${btnClass}` : `btn outline-primary-btn`}
+                onClick={() => click()}
+                type="button"
+                {...rest}
+            >
+            </button> */}
+        </div>
+    );
+}
 PrimaryButton.prototype = {
     click: PropTypes.func,
     btnContainerClass: PropTypes.string,

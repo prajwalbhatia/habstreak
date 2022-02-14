@@ -33,19 +33,19 @@ export const navigationList = [
 export const navigationIcons = [
     {
         _id: "1",
-        iconJsx: <RiDashboardFill />,
+        iconClass: 'icon-home',
     },
     {
         _id: "2",
-        iconJsx: <AiFillFire />,
+        iconClass: 'icon-streak',
     },
     {
         _id: "3",
-        iconJsx: <AiFillTrophy />,
+        iconClass: 'icon-reward',
     },
     {
         _id: "4",
-        iconJsx: <FiActivity />,
+        iconClass: 'icon-activity',
     },
 ]
 

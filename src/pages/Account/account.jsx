@@ -3,7 +3,7 @@ import { GoogleLogin } from 'react-google-login';
 import { useHistory, useLocation } from 'react-router-dom'
 
 //COMPONENTS
-import { InputElement } from "../../components/form-elements/form-elements";
+import { InputElement } from "components/form-elements/form-elements";
 import { PrimaryButton } from "components/button/button";
 
 //Redux
