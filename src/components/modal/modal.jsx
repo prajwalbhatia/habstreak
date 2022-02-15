@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import { React, useState } from "react";
-import { IconContext } from "react-icons"
+
+//LIBRARIES
 import { cloneDeep } from "lodash";
+import Calendar from 'react-calendar';
 
 //Components
 import { SecondaryButton, PrimaryButton } from "../button/button";
 import { InputElement, TextInputElement, Dropdown } from "../form-elements/form-elements";
 
 import "./modal.css";
+import { OutlinedPrimaryButton } from "components/button/button";
 
 function Modal(props) {
     const [formData, setFormData] = useState({});
@@ -34,13 +37,14 @@ function Modal(props) {
             else if (data.eleType === 'input') {
                 return (
                     <InputElement
-                        lable={data.label}
+                        lable={data?.label}
                         uid={data.uid}
                         placeholder={data?.placeholder}
                         value={formData?.[data.uid]}
                         onChange={changeHandler}
                         type={data.type}
                         min={data?.min}
+                        icon={data.icon ? <i className={`{demo-icon ${data.icon} size-16-8f}`} /> : null}
                     />)
             }
             else if (data.eleType === 'textArea') {
@@ -69,6 +73,30 @@ function Modal(props) {
                     />
                 )
             }
+            else if (data.group) {
+                return (
+                    <div className="d-flex">
+                        {
+                            data?.items.map((data, index) => {
+                                return (
+                                    <InputElement
+                                        lable={data?.label}
+                                        uid={data.uid}
+                                        placeholder={data?.placeholder}
+                                        containerClass={index === 0 ? 'mr-10' : ''}
+                                        value={formData?.[data.uid]}
+                                        onChange={changeHandler}
+                                        type={data.type}
+                                        min={data?.min}
+                                        icon={data.icon ? <i className={`{demo-icon ${data.icon} size-16-8f}`} /> : null}
+                                    />
+                                )
+                            })
+
+                        }
+                    </div>
+                )
+            }
             else
                 return null;
         })
@@ -83,7 +111,7 @@ function Modal(props) {
             props.btnClickHandler({ type });
         }
         else {
-            props.btnClickHandler({type})
+            props.btnClickHandler({ type })
         }
     }
 
@@ -91,14 +119,23 @@ function Modal(props) {
         <div className="modal-container">
             <div className="modal">
                 <div className="header-part">
-                    <h4>{props.title}</h4>
-                    <IconContext.Provider
-                        value={{ style: { fontSize: '1.4rem', marginTop: "1px", marginRight: "5px" } }}>
-                        {props.icon}
-                    </IconContext.Provider>
+                    <div className="header-content-part">
+                        <div className="d-flex">
+                            <h2>{props.title}</h2>
+                            <i className="demo-icon icon-streak streak-icon" />
+                        </div>
+                        <i
+                            className="demo-icon icon-close size-16-8f close-icon"
+                            onClick={() => handleClick('secondary')}
+                        />
+                    </div>
                 </div>
                 <div className="content-part">
                     {content(props.content)}
+                    
+                    {/* <div>
+                        <Calendar  />
+                    </div> */}
                 </div>
                 <div className="buttons-part">
                     {
@@ -107,22 +144,22 @@ function Modal(props) {
                                 <PrimaryButton
                                     name={btn.text}
                                     click={() => handleClick(btn.uid)}
-                                    style={btn.style ? {...btn.style} : {}}
+                                    style={btn.style ? { ...btn.style } : {}}
                                 />
                             );
                         })
                     }
 
-                    <PrimaryButton
+                    <OutlinedPrimaryButton
                         name={props.primaryButtonText}
                         click={() => handleClick('primary')}
-                        style={props.primaryButtonColor ? { background: props.primaryButtonColor } : {}}
+                        btnClass={'primary-btn'}
                     />
 
                     <SecondaryButton
                         name={props.secondaryButtonText}
                         click={() => handleClick('secondary')}
-                        style={props.secondaryButtonColor ? { background: props.secondaryButtonColor } : {}}
+                        btnClass={'secondary-btn'}
                     />
 
                 </div>

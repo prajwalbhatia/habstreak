@@ -13,22 +13,83 @@ import { useDispatch } from "react-redux";
 import moment from 'moment';
 
 //Actions
-import { logout } from "../../redux/actions/user";
+import { createStreakData } from "redux/actions/streak";
 
 //Component 
 import Search from "../search/search";
 import { OutlinedPrimaryButton } from "components/button/button";
 import { IconButton } from "components/button/button";
+import Modal from "components/modal";
 
 
 function Header(props) {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const logoutFun = () => {
-        dispatch(logout());
-        history.replace('/');
-    }
+    //FUNCTIONS
+    /**
+  * 
+  * @param {String} type - type of action we want to take ('create' or 'update')
+  * @param {Object} data - Pre loaded data in case of update
+  * @param {String} streakId - In case of update id of streak we want to update
+  */
+    const dialog = (type, data, streakId) => {
+        Modal.show({
+            title: 'New Streak',
+            // icon: <AiFillFire />,
+            primaryButtonText: 'ADD',
+            secondaryButtonText: "Cancel",
+            content: [
+                {
+                    uid: "title",
+                    type: "text",
+                    eleType: "input",
+                    placeholder: 'STREAK NAME'
+                },
+                // {
+                //     label: "Days",
+                //     uid: "days",
+                //     type: "text",
+                //     eleType: "input",
+                // },
+                {
+                    group: true,
+                    items: [{
+                        uid: "date-from",
+                        type: "text",
+                        eleType: "input",
+                        min: moment(new Date()).format('YYYY-MM-DD'),
+                        placeholder: 'FROM',
+                        icon: 'icon-calendar'
+                    },
+                    {
+                        uid: "date-to",
+                        type: "text",
+                        eleType: "input",
+                        min: moment(new Date()).format('YYYY-MM-DD'),
+                        placeholder: 'TO',
+                        icon: 'icon-calendar'
+                    }
+                    ]
+                },
+                // {
+                //     label: "Description",
+                //     uid: "description",
+                //     type: "text",
+                //     eleType: "textArea",
+                // },
+            ],
+            btnClickHandler: (data) => {
+                if (data.type === "primary") {
+                    delete data.type
+                    dispatch(createStreakData(data));
+                }
+                Modal.hide();
+            },
+        });
+    };
+
+    //FUNCTIONS
 
     return (
         <header className="header">
@@ -75,7 +136,7 @@ function Header(props) {
 
                 <OutlinedPrimaryButton
                     name={'Add New Streak'}
-                    click={() => logoutFun()}
+                    click={() => dialog('create')}
                     btnContainerClass=""
                     btnClass='add-btn'
                 />
