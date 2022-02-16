@@ -16,7 +16,7 @@ import { createLogger } from 'redux-logger';
 import reducers from './redux/reducers';
 import thunk from 'redux-thunk';
 
-let store;
+export let store;
 
 const logger = createLogger({
 

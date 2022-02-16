@@ -122,7 +122,7 @@ function Modal(props) {
                     <div className="header-content-part">
                         <div className="d-flex">
                             <h2>{props.title}</h2>
-                            <i className="demo-icon icon-streak streak-icon" />
+                            <i className={`demo-icon ${props.icon}`}/>
                         </div>
                         <i
                             className="demo-icon icon-close size-16-8f close-icon"

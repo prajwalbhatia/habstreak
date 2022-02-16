@@ -41,12 +41,13 @@
   --superLight: #DFDADA;
   --primaryBtnColor: #18A0FB;
   --modalFooter: #FFDCDC;
-  
+
   --globaBlack: #212121;
   --primaryColor: #F96E46;
-  --boxShadow : #00000029;
-  --greyText : #8F8F8F;
-  --pagesPaddingHorizontal : 50px;
+  --boxShadow: #00000029;
+  --greyText: #8F8F8F;
+  --pagesPaddingHorizontal: 50px;
+  --headerHeight: 60px;
   --secondaryBtnColor: #F6F8F9;
 
 }
@@ -56,12 +57,13 @@ h2,
 h3,
 h4,
 h5,
+h6,
 p,
 span,
 a,
 li {
   font-family: RobotoRegular;
-  color : var(--globaBlack);
+  color: var(--globaBlack);
   cursor: pointer;
 }
 
@@ -76,6 +78,7 @@ a:visited,
 a:active {
   text-decoration: none;
 }
+
 //CORE
 
 //LESS
@@ -96,8 +99,7 @@ a:active {
   margin-top: 10px;
 }
 
-.mr-0
-{
+.mr-0 {
   margin-right: 0 !important;
 }
 
@@ -133,10 +135,10 @@ a:active {
   margin-left: 30px;
 }
 
-.mt-35
-{
+.mt-35 {
   margin-top: 35px;
 }
+
 //MARGINS
 
 //FLEXBOX
@@ -151,6 +153,7 @@ a:active {
 }
 
 .flex-dir-col {
+  display: flex;
   flex-direction: column;
 }
 
@@ -176,8 +179,11 @@ a:active {
   height: 1px;
 }
 
-.size-16-8f
-{
+.h-40 {
+  height: 40px;
+}
+
+.size-16-8f {
   font-size: 16px;
   color: var(--greyText);
 }
@@ -191,8 +197,7 @@ a:active {
   align-items: baseline;
 }
 
-.roboto-medium
-{
+.roboto-medium {
   font-family: RobotoMedium;
 }
 
@@ -200,21 +205,20 @@ a:active {
   cursor: pointer;
 }
 
+.color-primary {
+  color: var(--primaryColor)
+}
 
-
-.color-fff
-{
+.color-fff {
   color: #fff;
 }
 
 
-.fit-content
-{
+.fit-content {
   width: fit-content !important;
 }
 
-.pos-relative
-{
+.pos-relative {
   position: relative;
 }
 
