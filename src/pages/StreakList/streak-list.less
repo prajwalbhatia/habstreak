@@ -1,102 +1,194 @@
-.container-streak-list {
-  .tab-container {
-    margin-top: 1rem;
-    display: flex;
-    .tab-item {
-      width: max-content;
-      cursor: pointer;
-    }
+.streak-list-inner-container {
+  height: calc(100vh - (60px + 50px + 50px + 30px + 60px));
+  margin-top: 30px;
 
-    .tab-item:not(:last-child) {
-      margin-right: 0.5rem;
-    }
-
-    .active-tab {
-      width: 100%;
-      background-color: var(--secondaryColor);
-      height: 5px;
-    }
+  .s-12-rr {
+    font-size: 12px;
+    font-family: RobotoRegular;
   }
 
-  .common-icon {
-    font-size: 1.5rem;
+  .s-14-rm-pr,
+  .s-14-rm-grey {
+    font-size: 14px;
+    font-family: RobotoMedium;
     color: var(--primaryColor);
   }
 
-  .fire-icon {
-    margin-top: 1px;
-    margin-right: 5px;
+  .s-14-rm-grey {
+    color: var(--greyText);
   }
 
-  .streak-list {
-    margin-top: 1rem;
-    overflow: scroll;
-    height: 70vh;
+  .bor-16-right {
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
 
-    .streak-card {
-      cursor: pointer;
-      padding: 0 0 0 1rem;
-      display: flex;
-      .info-container {
-        padding: 1rem 0;
-        display: flex;
-        flex-direction: column;
-        flex: 8;
-        h4 {
-          margin-top: 0.5rem;
-        }
+  .bor-16-left {
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+  }
+
+
+  .table-head-data,
+  .table-data {
+    height: 60px;
+    flex: 4;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .table-head,
+  .table-body {
+    width: 100%;
+
+    .table-row {
+      margin: 0 30px;
+      border-radius: 16px;
+    }
+  }
+
+  .first-head,
+  .first-data {
+    flex: 1;
+  }
+
+
+
+  .tab-area {
+    height: 60px;
+    background-color: #FBFBFB;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom: 1px solid #E8EEF2;
+    padding: 30px 30px 10px 30px;
+    display: flex;
+
+    .tab-item {
+      margin-right: 20px;
+
+      .active-tab {
+        width: 24px;
+        background-color: var(--primaryColor);
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        height: 5px;
+        margin-top: 5px;
       }
+    }
+  }
 
-      .image-container {
-        display: flex;
-        flex: 5;
-        background: url("./undraw_By_the_road_re_vvs7.svg");
-        background-size: cover;
-      }
+  .table-container {
+    background-color: #FBFBFB;
+    height: inherit;
+    overflow: auto;
 
-      .icons-container {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
+    .table-body {
 
-        .icn {
-          display: flex;
-          flex: 1;
+      .table-row {
+
+        border-radius: 16px;
+        margin-top: 10px;
+
+        .table-data {
           align-items: center;
-          justify-content: center;
-          cursor: pointer;
+          background-color: #FFFFFF;
+
+          .ver-line {
+            height: 32px;
+            width: 6px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            background-color: #235DDF;
+          }
         }
 
-        .icn:hover {
-          background-color: #fff4f4;
+        .table-btns-container {
+
+          .delete-btn,
+          .edit-btn {
+            height: 28px;
+            width: 28px;
+            border-radius: 4px;
+
+            i {
+              font-size: 16px;
+            }
+          }
+
+          .delete-btn {
+            margin-right: 5px;
+          }
+
+          .delete-btn:hover {
+            box-shadow: 0px 3px 6px var(--boxShadow);
+
+            i {
+              color: #D63E3E
+            }
+          }
+
+
+          .edit-btn:hover {
+            box-shadow: 0px 3px 6px var(--boxShadow);
+            color: #235DDF;
+          }
+
         }
 
-        icon-delete:hover {
-          border-top-right-radius: 0.5rem;
-        }
-
-        icon-edit:hover {
-          border-bottom-right-radius: 0.5rem;
+        .first-data {
+          justify-content: flex-start
         }
       }
+
+      .table-row:hover {
+        box-shadow: 0px 3px 6px var(--boxShadow);
+      }
+
     }
   }
+}
 
-  .new-streak {
-    margin-top: 2rem;
-    .new-streak-card {
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
+
+//MEDIA QUERIES
+@media only screen and (max-width: 1020px) {
+
+  .streak-list-inner-container {
+  .table-head-data {
+    align-items: center;
+  }
+}
+
+  .table-head,
+  .table-body {
+    width: 100%;
+
+    .table-row {
+      display: block;
+    }
+
+    .first-head,
+    .first-data {
+      display: none;
+    }
+
+  }
+
+
+  .streak-list-inner-container {
+    .tab-area
+    {
       align-items: center;
-      .content-container {
-        width: max-content;
-        display: flex;
-
-        h2 {
-          margin-right: 5px;
-        }
-      }
+      height: auto;
+      flex-direction: column;
     }
-  }
+
+    .tab-item
+    {
+      margin-bottom: 10px;
+      margin-right: 0;
+    }
+  } 
+
 }

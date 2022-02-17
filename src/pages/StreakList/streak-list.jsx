@@ -75,7 +75,7 @@ function Streak(props) {
         setTabOne(false);
         setTabTwo(false);
         setTabThree(true);
-        break;  
+        break;
       default:
         break;
     }
@@ -252,7 +252,7 @@ function Streak(props) {
       containerClass="container-streak-list"
       withHeader={true}
       headerTitle="Streaks"
-      withSearchBox={false}
+      withSearchBox={true}
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
         {
@@ -262,9 +262,9 @@ function Streak(props) {
               <ClipLoader loading size={40} color="var(--primaryColor)" />
             </div>
             :
-            <>
-              {/* Tab area */}
-              <div className="tab-container">
+            <div className="streak-list-inner-container">
+
+              <div className="tab-area">
                 <div
                   className="tab-item"
                   onClick={(e) => {
@@ -275,8 +275,10 @@ function Streak(props) {
                     setEmptyStateText('No running Streaks available..Please create some streaks');
                   }}
                 >
-                  <h4>{`Running (${running.length})`}</h4>
-                  <div className={tabOne ? "active-tab" : ""}></div>
+                  <h4 className="font-rob-med">{`Running (${running.length})`}</h4>
+                  <div className="center-items">
+                    <div className={tabOne ? "active-tab" : ""}></div>
+                  </div>
                 </div>
 
                 <div
@@ -289,8 +291,10 @@ function Streak(props) {
                     setEmptyStateText('No upcoming streaks available..Please create some streaks');
                   }}
                 >
-                  <span>{`Upcoming (${upcoming.length})`}</span>
-                  <div className={tabTwo ? "active-tab" : ""}></div>
+                  <h4 className="font-rob-med">{`Upcoming (${upcoming.length})`}</h4>
+                  <div className="center-items">
+                    <div className={tabTwo ? "active-tab" : ""}></div>
+                  </div>
                 </div>
 
                 <div
@@ -303,81 +307,92 @@ function Streak(props) {
                     setEmptyStateText('No streak is finished');
                   }}
                 >
-                  <span>{`Finished (${finished.length})`}</span>
-                  <div className={tabThree ? "active-tab" : ""}></div>
+                  <h4 className="font-rob-med">{`Finished (${finished.length})`}</h4>
+                  <div className="center-items">
+                    <div className={tabThree ? "active-tab" : ""}></div>
+                  </div>
                 </div>
               </div>
+              <div className="flex-dir-col table-container">
 
-              {/*List of streak*/}
-              <div className="streak-list">
-                {
-                  dataToRender.length > 0
-                    ?
-                    dataToRender.map((streak, index) => {
-                      let endDate = moment(streak?.date).add(+streak?.days, 'days').format('YYYY-MM-DD');
-                      let startDate = moment(streak?.date).format('YYYY-MM-DD');
-                      return (
-                        <Card
-                          key={index}
-                          onClick={() => {
-                            history.push({
-                              pathname: `/streak-list/${streak._id}`,
-                              state: { streakName: streak.title },
-                            });
-                          }}
-                          withLine={true}
-                          cardClass="streak-card"
-                        >
-                          <div className="info-container">
-                            <h3>{streak.title}</h3>
-                            <h4>{`${streak.days} days`}</h4>
-                            <h4>{`${startDate} to ${endDate}`}</h4>
-                            <p className="mt-1">
-                              {streak.description}
-                            </p>
-                          </div>
-
-                          <div className="image-container"></div>
-                          <div className="icons-container">
-                            <div className="icn icon-delete" onClick={(e) => deleteStreak(e, streak)}>
-                              <IconContext.Provider value={{ className: 'common-icon' }}>
-                                <AiFillDelete />
-                              </IconContext.Provider>
-                            </div>
-                            <div
-                              className="icn icon-edit"
-                              onClick={(e) => updateStreak(e, streak, startDate)}
-                            >
-                              <IconContext.Provider value={{ className: 'common-icon' }}>
-                                <HiPencil />
-                              </IconContext.Provider>
-                            </div>
-                          </div>
-                        </Card>
-                      )
-                    })
-                    :
-                    <div className="empty-container">
-                      <p>{emptyStateText}</p>
-                    </div>
-                }
-              </div>
-
-              {/* New Streak creating */}
-              {
-                streakType !== 'finished' &&
-                <div className="new-streak" onClick={() => dialog('create')}>
-                  <Card cardClass="new-streak-card">
-                    <div className="content-container">
-                      <h2>Create new streak</h2>
-                      <IconContext.Provider value={{ className: 'common-icon fire-icon' }}>
-                        <AiFillFire />
-                      </IconContext.Provider>
-                    </div>
-                  </Card>
+                <div className="flex-dir-col table-head">
+                  <div className="d-flex table-row">
+                    <div className="table-head-data first-head"></div>
+                    <div className="table-head-data"><span className="s-12-rr">STREAK NAME</span></div>
+                    <div className="table-head-data"><span className="s-12-rr">START DATE </span></div>
+                    <div className="table-head-data"><span className="s-12-rr">END DATE   </span></div>
+                    <div className="table-head-data"><span className="s-12-rr">RUNNING    </span></div>
+                    <div className="table-head-data"><span className="s-12-rr">REWARD     </span></div>
+                    <div className="table-head-data"><span className="s-12-rr">ACTION     </span></div>
+                  </div>
                 </div>
-              }
-            </>
+
+                <div className="flex-dir-col table-body">
+                  <div className="d-flex table-row">
+                    <div className="table-data bor-16-left first-data">
+                      <div className="ver-line"></div>
+                    </div>
+                    <div className="s-14-rm-pr table-data">Streak name</div>
+                    <div className="s-14-rm-grey table-data">29/01/12</div>
+                    <div className="s-14-rm-grey table-data">21/02/2022</div>
+                    <div className="s-14-rm-grey table-data">12 Days</div>
+                    <div className="s-14-rm-grey table-data">Yes</div>
+                    <div className="s-14-rm-grey bor-16-right table-data">
+                      <div className="d-flex table-btns-container">
+                        <div className="center-items delete-btn">
+                          <i className="demo-icon icon-delete" />
+                        </div>
+                        <div className="center-items edit-btn">
+                          <i className="demo-icon icon-edit" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="d-flex table-row">
+                    <div className="table-data bor-16-left first-data">
+                      <div className="ver-line"></div>
+                    </div>
+                    <div className="s-14-rm-pr table-data">Streak name</div>
+                    <div className="s-14-rm-grey table-data">29/01/12</div>
+                    <div className="s-14-rm-grey table-data">21/02/2022</div>
+                    <div className="s-14-rm-grey table-data">12 Days</div>
+                    <div className="s-14-rm-grey table-data">Yes</div>
+                    <div className="s-14-rm-grey bor-16-right table-data">
+                      <div className="d-flex table-btns-container">
+                        <div className="center-items delete-btn">
+                          <i className="demo-icon icon-delete" />
+                        </div>
+                        <div className="center-items edit-btn">
+                          <i className="demo-icon icon-edit" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="d-flex table-row">
+                    <div className="table-data bor-16-left first-data">
+                      <div className="ver-line"></div>
+                    </div>
+                    <div className="s-14-rm-pr table-data">Streak name</div>
+                    <div className="s-14-rm-grey table-data">29/01/12</div>
+                    <div className="s-14-rm-grey table-data">21/02/2022</div>
+                    <div className="s-14-rm-grey table-data">12 Days</div>
+                    <div className="s-14-rm-grey table-data">Yes</div>
+                    <div className="s-14-rm-grey bor-16-left table-data">
+                      <div className="d-flex table-btns-container">
+                        <div className="center-items delete-btn">
+                          <i className="demo-icon icon-delete" />
+                        </div>
+                        <div className="center-items edit-btn">
+                          <i className="demo-icon icon-edit" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         }
       </ErrorBoundary>
     </Frame >

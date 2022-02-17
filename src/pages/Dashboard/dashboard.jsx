@@ -124,7 +124,7 @@ function Dashboard(props) {
 
                     <div className='d-flex streaks'>
                       <div className='flex-dir-col streak-card'>
-                        <div className='card-icon'>
+                        <div className='center-items card-icon'>
                           <i className="demo-icon icon-kayaking" />
                         </div>
                         <h4>Streak name one</h4>
@@ -150,7 +150,7 @@ function Dashboard(props) {
                       </div>
 
                       <div className='flex-dir-col streak-card'>
-                        <div className='card-icon'>
+                        <div className='center-items card-icon'>
                           <i className="demo-icon icon-kayaking" />
                         </div>
                         <h4>Streak name one</h4>
@@ -163,7 +163,7 @@ function Dashboard(props) {
                       </div>
 
                       <div className='flex-dir-col streak-card'>
-                        <div className='card-icon'>
+                        <div className='center-items card-icon'>
                           <i className="demo-icon icon-kayaking" />
                         </div>
                         <h4>Streak name one</h4>
