@@ -145,7 +145,7 @@ function Dashboard(props) {
       )
   }
 
-  const recentACtivityCardJsx = () => {
+  const recentActivityCardJsx = () => {
     const isEmpty = _size(groupedActivities) === 0;
 
     if (!isEmpty) {
@@ -285,7 +285,7 @@ function Dashboard(props) {
                 </div>
                 <div className='flex-dir-col right-container'>
                   <h3 className='right-container-title'>Calendar</h3>
-                  {recentACtivityCardJsx()}
+                  {recentActivityCardJsx()}
 
                   <div className='see-all-container center-items mt-50'>
                     <span className='see-all'>SEE ALL</span>

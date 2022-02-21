@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
+import { groupBy as _groupBy, size as _size, map as _map } from "lodash";
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
@@ -18,13 +19,17 @@ import "../../index.css";
 
 //ERROR BOUNDARY
 import { ErrorBoundary } from 'react-error-boundary';
-import Fallback  from 'utilities/fallback/fallback.js';
+import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
 import { errorHandler } from 'utilities';
 
+//CONSTANTS
+import { theme } from "constants/index";
+
 function RecentActivities() {
   const dispatch = useDispatch();
+  const [groupedActivities, setGroupedActivities] = useState({});
 
   //Getting the data from the state
   const activities = useSelector((state) => state.recentActivities.activities);
@@ -34,6 +39,22 @@ function RecentActivities() {
   useEffect(() => {
     dispatch(getRecentActivitiesData());
   }, [dispatch])
+
+
+  useEffect(() => {
+    let activitiesClone = [...activities];
+    const modifiedActivities = activitiesClone.map((activity) => {
+      const dateFromApi = activity.date;
+      const modifiedDate = moment(dateFromApi).format('ll');
+      const modifiedTime = moment(dateFromApi).format('LT')
+      delete activity.date;
+      activity.date = modifiedDate;
+      activity.time = modifiedTime;
+      return activity;
+    })
+    const groupedByDate = _groupBy(modifiedActivities, 'date');
+    setGroupedActivities(groupedByDate);
+  }, [activities]);
 
   /**
  * 
@@ -47,14 +68,106 @@ function RecentActivities() {
         return `A new streak named as ${title} is created`;
       case 'delete-streak':
         return `A streak named as ${title} is deleted`;
+      case 'update-streak':
+        return `A streak named as ${title} is updated`;
       case 'create-reward':
         return `A new reward named as ${title} is created`;
       case 'delete-reward':
         return `A new reward named as ${title} is deleted`;
       case 'reward-earned':
         return `A reward named as ${title} is earned`;
+      case 'update-reward':
+        return `A reward named as ${title} is updated`;
       default:
         return 'No type is found'
+    }
+  }
+
+  /**
+ * 
+ * @param {String} type - type of activity (create-streak , delete-streak etc)
+ * @returns 
+ */
+  const iconType = (type) => {
+    switch (type) {
+      case 'create-streak':
+        return (
+          <i
+            className="demo-icon icon-streak"
+            style={{ color: '#F96E46' }}
+          />
+        );
+      case 'delete-streak':
+        return (
+          <i
+            className="demo-icon icon-delete"
+            style={{ color: '#D63E3E' }}
+          />
+        );
+      case 'update-streak':
+      case 'update-reward':
+        return (
+          <i
+            className="demo-icon icon-edit"
+            style={{ color: '#689669' }}
+          />
+        );
+      case 'create-reward':
+        return (
+          <i
+            className="demo-icon icon-reward"
+            style={{ color: '#F96E46' }}
+          />
+        );
+      case 'delete-reward':
+        return (
+          <i
+            className="demo-icon icon-delete"
+            style={{ color: '#D63E3E' }}
+          />
+        );
+      case 'reward-earned':
+        return (
+          <i
+            className="demo-icon icon-reward"
+            style={{ color: '#FFCB47' }}
+          />
+        );
+      default:
+        return 'No type is found'
+    }
+  }
+
+  const recentActivityCardJsx = () => {
+    const isEmpty = _size(groupedActivities) === 0;
+
+    if (!isEmpty) {
+      return (
+        _map(groupedActivities, (value, key) => {
+          return (
+            <div key={value._id} className='date-data'>
+              <span className='date-content'>{key}</span>
+              {
+                _map(value, (val, index) => {
+                  return (
+                    <div key={index} className='info-container'>
+                      <div className='icon-container center-items'>
+                        {iconType(val.type)}
+                        {index < _size(value) - 1 ? <div className='line'></div> : null}
+                      </div>
+
+                      <div className='flex-dir-col action-info'>
+                        <h4 className='action'>{`${activityTitle(val.type, val.title)}`}</h4>
+                        <h4 className='time'>{val.time}</h4>
+                      </div>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          )
+        })
+      );
     }
   }
 
@@ -73,22 +186,11 @@ function RecentActivities() {
               <ClipLoader loading size={40} color="var(--primaryColor)" />
             </div>
             :
-            <div className="activities-container pad-global">
-              <div className="pad-global">
-                <Card cardClass="activities-card">
-                  {
-                    activities && activities.map((activity, index) => {
-                      return (
-                        <div key={activity._id} className="list-items">
-                          <div className="empty-circle"></div>
-                          <div className="date-and-time"><span>{moment(activity?.date).format('LLLL')}</span></div>
-                          <div className="activity"><span>{activityTitle(activity.type, activity.title)}</span></div>
-                        </div>
-                      )
-                    })
-                  }
-                </Card>
+            <div className='activities-container'>
+              <div className='sort-btn-container'>
+
               </div>
+              {recentActivityCardJsx()}
             </div>
         }
       </ErrorBoundary>
