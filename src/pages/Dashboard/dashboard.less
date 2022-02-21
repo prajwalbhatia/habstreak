@@ -6,11 +6,13 @@
   .left-container {
     margin-right: 30px;
     margin-top: 30px;
+    flex: 2;
 
     .task-container {
       background-color: #FFF7F5;
       border-radius: 20px;
       padding: 30px;
+      min-height: calc((100vh - (60px + 50px + 50px + 30px + 60px)) / 2);
 
       .summary {
         flex: 1;
@@ -37,10 +39,12 @@
         flex-wrap: wrap;
 
         .streak-card {
-          min-width: 195px;
+          min-width: 210px;
+          // max-width: 195px;
+          min-height: 250px;
+          max-height: 250px;
           background-color: #fff;
           height: 80%;
-          min-height: 250px;
           border-radius: 25px;
           margin-right: 20px;
           position: relative;
@@ -300,6 +304,7 @@
     border-radius: 20px;
     min-width: 275px;
     padding: 30px;
+    
 
     .right-container-title {
       font-family: JosefinSansRegular;
@@ -322,6 +327,7 @@
         .time {
           font-family: JosefinSansRegular;
           font-size: 18px;
+          min-width: 80px;
         }
 
         .hr-line {

@@ -28,6 +28,7 @@ import {
 
 //Libraries
 import moment from 'moment';
+import { getRecentActivitiesData } from './recentActivities';
 
 //Action Creators
 //STREAKS
@@ -45,6 +46,7 @@ export const createStreakData = (streak) => async (dispatch) => {
             dispatch(createStreakDetailData(streadDetailData));
         }
         dispatch(getStreaksData());
+        dispatch(getRecentActivitiesData());
     } catch (error) {
         console.log(error);
         const action = { type: CREATE_STREAK_FAIL, payload: error }

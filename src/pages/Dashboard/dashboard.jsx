@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
+import { groupBy as _groupBy, size as _size, map as _map } from "lodash";
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 import { PrimaryButton } from "../../components/button/button";
 import { OutlinedPrimaryButton } from "components/button/button";
-import { dialogCreateStreak } from "utilities";
+import { dialogForCreateAndUpdateStreak } from "utilities";
 
 //Actions
 import { getStreaksData } from "../../redux/actions/streak";
@@ -31,13 +32,16 @@ import Fallback from 'utilities/fallback/fallback.js';
 //UTILITIES
 import { errorHandler } from 'utilities';
 
+//CONSTANTS
+import { icons, theme } from "constants/index";
+
 function Dashboard(props) {
   const dispatch = useDispatch();
   const history = useHistory();
 
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [taskCount, setTaskCount] = useState(0);
-
+  const [groupedActivities, setGroupedActivities] = useState({});
 
   //Getting the data from the state
   const streaks = useSelector((state) => state.streak.streaks);
@@ -54,7 +58,7 @@ function Dashboard(props) {
 
   useEffect(() => {
     const running = streaks.filter((streak) => {
-      if (moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+      if (moment(moment(streak.dateFrom).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
         return streak;
       }
       else
@@ -64,24 +68,39 @@ function Dashboard(props) {
     setTaskCount(running.length);
   }, [streaks]);
 
+
+  useEffect(() => {
+    let activitiesClone = [...activities];
+    const modifiedActivities = activitiesClone.map((activity) => {
+      const dateFromApi = activity.date;
+      const modifiedDate = moment(dateFromApi).format('ll');
+      const modifiedTime = moment(dateFromApi).format('LT')
+      delete activity.date;
+      activity.date = modifiedDate;
+      activity.time = modifiedTime;
+      return activity;
+    })
+    const groupedByDate = _groupBy(modifiedActivities, 'date');
+    setGroupedActivities(groupedByDate);
+  }, [activities, streaks]);
+
   /**
    * 
    * @param {String} type - type of activity (create-streak , delete-streak etc)
-   * @param {String} title - title of the action
    * @returns 
    */
-  const activityTitle = (type, title) => {
+  const activityTitle = (type) => {
     switch (type) {
       case 'create-streak':
-        return `A new streak named as ${title} is created`;
+        return `Streak Created`;
       case 'delete-streak':
-        return `A streak named as ${title} is deleted`;
+        return `Streak Deleted`;
       case 'create-reward':
-        return `A new reward named as ${title} is created`;
+        return `Reward Created`;
       case 'delete-reward':
-        return `A new reward named as ${title} is deleted`;
+        return `Reward Deleted`;
       case 'reward-earned':
-        return `A reward named as ${title} is earned`;
+        return `Reward Earned`;
       default:
         return 'No type is found'
     }
@@ -91,12 +110,80 @@ function Dashboard(props) {
     dispatch(getRecentActivitiesData());
   }
 
+  const streakCardJsx = () => {
+    if (streaks.length > 0) {
+      return (
+        streaks.map((streak, index) => {
+          if (index <= 3 && moment(moment(streak.dateFrom).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+            return (
+              <div key={streak._id} className='flex-dir-col streak-card'>
+                <div
+                  className='center-items card-icon'
+                  style={{ background: theme[index] }}
+                >
+                  <i className={`demo-icon ${icons[index]}`} />
+                </div>
+                <h4>{streak.title}</h4>
+                <h6 className='mt-10'>Task completed</h6>
+                <h1 style={{ color: theme[index] }} >82%</h1>
+                <span>{`${streak.days} day to go`}</span>
+                <div
+                  className='d-flex go-btn'
+                  style={{ background: theme[index] }}
+                >
+                  <i className="demo-icon icon-going-in" />
+                </div>
+              </div>
+            )
+          }
+        })
+      )
+    }
+    else
+      return (
+        <h2>No Streaks</h2>
+      )
+  }
+
+  const recentACtivityCardJsx = () => {
+    const isEmpty = _size(groupedActivities) === 0;
+
+    if (!isEmpty) {
+      return (
+        _map(groupedActivities, (value, key) => {
+          return (
+            <div key={value._id} className='date-data'>
+              <span className='date-content'>{key}</span>
+              {
+                _map(value, (val) => {
+                  return (
+                    <div className='info-container'>
+                      <h3 className='time'>{val.time}</h3>
+                      <div 
+                      className='hr-line'
+                        style={{ background: theme[Math.ceil(Math.random() * 10)]}}
+                      ></div>
+                      <div className='flex-dir-col action-info'>
+                        <span className='name'>{val.title}</span>
+                        <span className='action'>{`Action: ${activityTitle(val.type)}`}</span>
+                      </div>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          )
+        })
+      );
+    }
+  }
+
   return (
     <Frame
       withHeader={true}
       withDate={true}
       headerTitle={'Dashboard'}
-      withSearchBox={true}
+      withSearchBox={false}
       containerClass="dashboard"
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
@@ -113,67 +200,20 @@ function Dashboard(props) {
                   <div className='d-flex task-container'>
                     <div className='flex-dir-col summary'>
                       <h2>Tasks for today</h2>
-                      <h4>You have <span className='color-primary'>2</span> task to complete today and <span className='color-primary'>3</span> task in progress</h4>
+                      <h4>You have <span className='color-primary'>{taskCount}</span> task to complete today
+                        {/* and <span className='color-primary'>3</span> task in progress */}
+                      </h4>
                       <OutlinedPrimaryButton
                         name={'Add New Streak'}
-                        click={() => dialogCreateStreak()}
+                        click={() => dialogForCreateAndUpdateStreak()}
                         btnContainerClass="add-btn"
                         btnClass='h-40'
                       />
                     </div>
 
-                    <div className='d-flex streaks'>
-                      <div className='flex-dir-col streak-card'>
-                        <div className='center-items card-icon'>
-                          <i className="demo-icon icon-kayaking" />
-                        </div>
-                        <h4>Streak name one</h4>
-                        <h6 className='mt-10'>Task completed</h6>
-                        <h1 >82%</h1>
-                        <span>1 day to go</span>
-                        <div className='go-btn'>
-                          <i className="demo-icon icon-going-in" />
-                        </div>
-                      </div>
+                    <div className={taskCount === 0 ? 'd-flex streaks center-items' : 'd-flex streaks'}>
+                      {streakCardJsx()}
 
-                      <div className='flex-dir-col streak-card'>
-                        <div className='center-items card-icon'>
-                          <i className="demo-icon icon-kayaking" />
-                        </div>
-                        <h4>Streak name one</h4>
-                        <h6 className='mt-10'>Task completed</h6>
-                        <h1 >82%</h1>
-                        <span>1 day to go</span>
-                        <div className='d-flex go-btn'>
-                          <i className="demo-icon icon-going-in" />
-                        </div>
-                      </div>
-
-                      <div className='flex-dir-col streak-card'>
-                        <div className='center-items card-icon'>
-                          <i className="demo-icon icon-kayaking" />
-                        </div>
-                        <h4>Streak name one</h4>
-                        <h6 className='mt-10'>Task completed</h6>
-                        <h1 >82%</h1>
-                        <span>1 day to go</span>
-                        <div className='go-btn'>
-                          <i className="demo-icon icon-going-in" />
-                        </div>
-                      </div>
-
-                      <div className='flex-dir-col streak-card'>
-                        <div className='center-items card-icon'>
-                          <i className="demo-icon icon-kayaking" />
-                        </div>
-                        <h4>Streak name one</h4>
-                        <h6 className='mt-10'>Task completed</h6>
-                        <h1 >82%</h1>
-                        <span>1 day to go</span>
-                        <div className='go-btn'>
-                          <i className="demo-icon icon-going-in" />
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <div className='flex-dir-col data-container'>
@@ -245,99 +285,8 @@ function Dashboard(props) {
                 </div>
                 <div className='flex-dir-col right-container'>
                   <h3 className='right-container-title'>Calendar</h3>
-                  <div className='date-data'>
-                    <span className='date-content'>Feb 08, 2022</span>
+                  {recentACtivityCardJsx()}
 
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='date-data'>
-                    <span className='date-content'>Feb 08, 2022</span>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='flex-dir-col action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div className='date-data'>
-                    <span className='date-content'>Feb 08, 2022</span>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-
-                    <div className='info-container'>
-                      <h3 className='time'>10:00</h3>
-                      <div className='hr-line'></div>
-                      <div className='action-info'>
-                        <span className='name'>Streak Name</span>
-                        <span className='action'>Action: Streak Deleted</span>
-                      </div>
-                    </div>
-                  </div>
                   <div className='see-all-container center-items mt-50'>
                     <span className='see-all'>SEE ALL</span>
                     <span className='see-all-btn center-items'>

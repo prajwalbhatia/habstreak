@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import './button.css';
 
 export function PrimaryButton(props) {
-    const { btnContainerClass, btnClass, click, ...rest } = props;
+    const { btnContainerClass, btnClass, click, tooltip, tooltipData, ...rest } = props;
     return (
         <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
             <button
@@ -16,12 +16,21 @@ export function PrimaryButton(props) {
                 {...rest}
             >
                 {props.name}
+                {
+                    tooltip
+                        ?
+                        <div>
+                            <span class="tooltip" data-tooltip={tooltipData}></span>
+                        </div >
+                        :
+                        null
+                }
             </button>
         </div>
     );
 }
 export function SecondaryButton(props) {
-    const { btnContainerClass, btnClass, click, ...rest } = props;
+    const { btnContainerClass, btnClass, click, tooltip, tooltipData, ...rest } = props;
     return (
         <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
             <button
@@ -31,13 +40,22 @@ export function SecondaryButton(props) {
                 {...rest}
             >
                 {props.name}
+                {
+                    tooltip
+                        ?
+                        <div>
+                            <span class="tooltip" data-tooltip={tooltipData}></span>
+                        </div >
+                        :
+                        null
+                }
             </button>
         </div>
     );
 }
 
 export function OutlinedPrimaryButton(props) {
-    const { btnContainerClass, btnClass, click, ...rest } = props;
+    const { btnContainerClass, btnClass, click, tooltip, tooltipData, ...rest } = props;
     return (
         <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
             <button
@@ -47,6 +65,16 @@ export function OutlinedPrimaryButton(props) {
                 {...rest}
             >
                 {props.name}
+
+                {
+                    tooltip
+                        ?
+                        <div>
+                            <span class="tooltip" data-tooltip={tooltipData}></span>
+                        </div >
+                        :
+                        null
+                }
             </button>
         </div>
     );
@@ -54,7 +82,7 @@ export function OutlinedPrimaryButton(props) {
 
 
 export function IconButton(props) {
-    const { btnContainerClass, btnClass, click } = props;
+    const { btnContainerClass, btnClass, tooltip, tooltipData, click } = props;
     return (
         <div
             className={
@@ -67,13 +95,15 @@ export function IconButton(props) {
             onClick={() => click()}
         >
             {props.icon}
-            {/* <button
-                className={btnClass ? `btn outline-primary-btn ${btnClass}` : `btn outline-primary-btn`}
-                onClick={() => click()}
-                type="button"
-                {...rest}
-            >
-            </button> */}
+            {
+                tooltip
+                    ?
+                    <div>
+                        <span class="tooltip" data-tooltip={tooltipData}></span>
+                    </div >
+                    :
+                    null
+            }
         </div>
     );
 }

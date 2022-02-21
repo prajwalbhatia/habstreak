@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useEffect } from "react";
@@ -15,13 +16,11 @@ import { deleteRewardBulk } from "../../redux/actions/reward";
 
 //Icons
 import { AiFillDelete, AiFillFire } from "react-icons/ai";
-import { HiPencil } from "react-icons/hi";
-import { IconContext } from "react-icons";
 
 //COMPONENTS
-import Frame from "../../components/frame/frame";
-import Card from "../../components/card/card";
-import Modal from "../../components/modal";
+import Frame from "components/frame/frame";
+import Modal from "components/modal";
+import Table from "components/table/table.jsx"
 
 //CSS
 import "./streak-list.css";
@@ -32,13 +31,38 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler } from 'utilities';
+import { errorHandler, dialogForCreateAndUpdateStreak} from 'utilities';
+
+//CONSTANTS
+import { streakListTableHeadings } from "constants/index";
+import { cloneDeep as _cloneDeep } from "lodash";
 
 function Streak(props) {
   const dispatch = useDispatch();
-  const [tabOne, setTabOne] = useState(true);
-  const [tabTwo, setTabTwo] = useState(false);
-  const [tabThree, setTabThree] = useState(false);
+
+  const [tabData, setTabData] = useState(
+    [
+      {
+        title: 'Running',
+        count: 11,
+        active: true
+      },
+      {
+        title: 'Upcoming',
+        count: 13,
+        active: false
+      },
+      {
+        title: 'Finished',
+        count: 27,
+        active: false
+      }
+    ]
+  );
+
+  const [currentTab, setCurrentTab] = useState('Running');
+  console.log('🚀 ~ file: streak-list.jsx ~ line 63 ~ Streak ~ currentTab', currentTab);
+  const [tableData, setTableData] = useState([]);
 
   const [running, setRunning] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
@@ -54,42 +78,16 @@ function Streak(props) {
 
   const loading = useSelector((state) => state.streak.loading);
 
-  let dataToRender = streakType === 'running' ? running : (streakType === 'upcoming' ? upcoming : finished);
-  //Getting initial data
-  useEffect(() => {
-    dispatch(getStreaksData());
-    setStreakType(streakListTypeData)
-
-    switch (streakListTypeData) {
-      case 'running':
-        setTabOne(true);
-        setTabTwo(false);
-        setTabThree(false);
-        break;
-      case 'upcoming':
-        setTabOne(false);
-        setTabTwo(true);
-        setTabThree(false);
-        break;
-      case 'finished':
-        setTabOne(false);
-        setTabTwo(false);
-        setTabThree(true);
-        break;
-      default:
-        break;
-    }
-  }, [dispatch]);
-
   useEffect(() => {
     dispatch(streakListType(streakType));
   }, [dispatch, streakType])
 
 
   useEffect(() => {
+    const currentDate = moment().format();
     const finished = streaks.filter((streak) => {
-      const streakEndDate = moment(streak.date).add(Number(streak.days), 'd').format();
-      if (moment(moment(streakEndDate).format('YYYY-MM-DD')).isBefore(moment(moment().date()).format('YYYY-MM-DD'))) {
+      const streakEndDate = moment(streak.dateTo).format();
+      if (moment(moment(streakEndDate).format('YYYY-MM-DD')).isBefore(moment(currentDate).format('YYYY-MM-DD'))) {
         return streak;
       }
       else
@@ -97,7 +95,11 @@ function Streak(props) {
     });
 
     const running = streaks.filter((streak) => {
-      if (moment(moment(streak.date).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+      if (
+        moment(moment(streak.dateFrom).format('YYYY-MM-DD')).isSameOrBefore(moment(currentDate).format('YYYY-MM-DD'))
+        &&
+        moment(moment(streak.dateTo).format('YYYY-MM-DD')).isSameOrAfter(moment(currentDate).format('YYYY-MM-DD'))
+      ) {
         return streak;
       }
       else
@@ -105,100 +107,83 @@ function Streak(props) {
     });
 
     const upcoming = streaks.filter((streak) => {
-      if (moment(moment(streak.date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD'))) {
+      if (moment(moment(streak.dateFrom).format('YYYY-MM-DD')).isAfter(moment(currentDate).format('YYYY-MM-DD'))) {
         return streak;
       }
       else
         return null;
     });
 
-    setRunning(running);
-    setUpcoming(upcoming);
-    setFinished(finished);
+    setRunning([...running]);
+    setUpcoming([...upcoming]);
+    setFinished([...finished]);
+
+    const dataOfTabs = [...tabData];
+    dataOfTabs[0].count = running.length;
+    dataOfTabs[1].count = upcoming.length;
+    dataOfTabs[2].count = finished.length;
+    setTabData([...dataOfTabs]);
+
+    updateTableData();
+
   }, [streaks]);
 
-  /**
-   * 
-   * @param {String} type - type of action we want to take ('create' or 'update')
-   * @param {Object} data - Pre loaded data in case of update
-   * @param {String} streakId - In case of update id of streak we want to update
-   */
-  const dialog = (type, data, streakId) => {
-    Modal.show({
-      title: type === 'create' ? "Create Streak" : 'Update Streak',
-      icon: <AiFillFire />,
-      initialData: {
-        title: data?.title,
-        days: data?.days,
-        date: data?.date,
-        description: data?.description
-      },
-      primaryButtonText: type === 'create' ? "Create" : 'Update',
-      secondaryButtonText: "Cancel",
-      content: [
-        {
-          label: "Title",
-          uid: "title",
-          type: "text",
-          eleType: "input",
-        },
-        {
-          label: "Days",
-          uid: "days",
-          type: "text",
-          eleType: "input",
-        },
-        {
-          label: "Start date",
-          uid: "date",
-          type: "date",
-          eleType: "input",
-          min: moment(new Date()).format('YYYY-MM-DD')
-        },
-        {
-          label: "Description",
-          uid: "description",
-          type: "text",
-          eleType: "textArea",
-        },
-      ],
-      btnClickHandler: (data) => {
-        if (data.type === "primary") {
-          delete data.type
-          if (type === 'create') {
-            dispatch(createStreakData(data));
-            if (moment(moment(data.date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD')
-            )) {
-              setStreakType('upcoming');
-              setTabOne(false);
-              setTabTwo(true);
-            }
-            else {
-              setStreakType('running')
-              setTabOne(true)
-              setTabTwo(false)
-            }
-          }
-          else
-            dispatch(updateStreakData(data, streakId));
-        }
-        Modal.hide();
-      },
+
+  useEffect(() => {
+    updateTableData();
+  }, [tabData])
+
+
+
+  const modifyStreaks = (streaks) => {
+    const streakData = _cloneDeep(streaks);
+
+    const modified = streakData.map((streak) => {
+      let streakObj = {};
+      streakObj._id = streak._id;
+      streakObj.title = streak.title;
+      streakObj.startDate = moment(streak.dateFrom).format('L');;
+      streakObj.endDate = moment(streak.dateTo).format('L');;
+      streakObj.running = currentTab === 'Upcoming' ? '--' : `${streak.days} days`;
+      streakObj.reward = 'Yes';
+      streakObj.description = streak.description;
+
+      return streakObj;
     });
-  };
+
+    return modified
+  }
+
+
+  const updateTableData = () => {
+    let selectedData = [];
+    if (currentTab === 'Running')
+      selectedData = [...running];
+    else if (currentTab === 'Upcoming')
+      selectedData = [...upcoming];
+    else
+      selectedData = [...finished];
+
+    const modifiedData = modifyStreaks([...selectedData]);
+    setTableData([...modifiedData]);
+  }
+
 
   const dialogBeforDeletngStreak = (streak) => {
     Modal.show({
-      title: 'Delete',
-      icon: <AiFillDelete />,
+      type: 'delete',
+      title: 'Delete Streak',
+      icon: 'icon-delete',
       primaryButtonText: 'Delete streak',
       primaryButtonColor: '#d7443e',
       secondaryButtonText: "Cancel",
       extraButtons: [
         {
-          text: 'Delete streak and rewards assosiated',
-          style: { backgroundColor: '#d80900' },
-          uid: 'delete-streak-and-rewards'
+          text: 'Special Delete',
+          btnClass : 'special-btn',
+          uid: 'delete-streak-and-rewards',
+          tooltip : true,
+          tooltipData : 'Delete streak and rewards assosiated with it'
         }
       ],
       content: [
@@ -225,26 +210,68 @@ function Streak(props) {
    * @param {Object} e - event
    * @param {String} id - Id of streak to delete 
    */
-  const deleteStreak = (e, streak) => {
-    e.stopPropagation();
+  const deleteStreak = (streak) => {
     dialogBeforDeletngStreak(streak)
   }
 
   /**
    * 
-   * @param {Object} e - event 
    * @param {Object} streak - data we want to update  
-   * @param {String} startDate - date in the format of 'yyyy-mm-dd' 
    */
-  const updateStreak = (e, streak, startDate) => {
-    e.stopPropagation();
-    const data = {
-      title: streak.title,
-      date: startDate,
-      days: streak.days,
-      description: streak.description
+  const updateStreak = (streak) => {
+    dialogForCreateAndUpdateStreak('update', streak, streak._id);
+  }
+
+  /**
+   * 
+   * @param {Object} actionObj
+   */
+  const tableAction = (actionObj) => {
+    if (actionObj.actionType === 'tabClicked') {
+      if (actionObj.data === 'Running') {
+        const tab = [...tabData];
+        tab[0].active = true;
+        tab[1].active = false;
+        tab[2].active = false;
+        setTabData([...tab]);
+
+        const modifiedData = modifyStreaks([...running]);
+        setTableData([...modifiedData]);
+        setCurrentTab('Running');
+      }
+      else if (actionObj.data === 'Upcoming') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = true;
+        tab[2].active = false;
+        setTabData([...tab]);
+
+
+        const modifiedData = modifyStreaks([...upcoming]);
+        setTableData([...modifiedData]);
+        setCurrentTab('Upcoming');
+
+      }
+      else if (actionObj.data === 'Finished') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = false;
+        tab[2].active = true;
+        setTabData([...tab]);
+
+        const modifiedData = modifyStreaks([...finished]);
+        setTableData([...modifiedData]);
+        setCurrentTab('Finished');
+
+      }
     }
-    dialog('update', data, streak._id);
+    else if (actionObj.actionType === 'deleteRow') {
+      deleteStreak(actionObj.data);
+    }
+
+    else if (actionObj.actionType === 'editRow') {
+      updateStreak(actionObj.data);
+    }
   }
 
   return (
@@ -263,135 +290,14 @@ function Streak(props) {
             </div>
             :
             <div className="streak-list-inner-container">
+              <Table
+                tableHead={streakListTableHeadings}
+                tabData={[...tabData]}
+                tableData={[...tableData]}
 
-              <div className="tab-area">
-                <div
-                  className="tab-item"
-                  onClick={(e) => {
-                    if (!tabOne) setTabOne(true);
-                    setTabTwo(false);
-                    setTabThree(false);
-                    setStreakType('running');
-                    setEmptyStateText('No running Streaks available..Please create some streaks');
-                  }}
-                >
-                  <h4 className="font-rob-med">{`Running (${running.length})`}</h4>
-                  <div className="center-items">
-                    <div className={tabOne ? "active-tab" : ""}></div>
-                  </div>
-                </div>
+                action={tableAction}
+              />
 
-                <div
-                  className="tab-item"
-                  onClick={(e) => {
-                    if (!tabTwo) setTabTwo(true);
-                    setTabOne(false);
-                    setTabThree(false);
-                    setStreakType('upcoming');
-                    setEmptyStateText('No upcoming streaks available..Please create some streaks');
-                  }}
-                >
-                  <h4 className="font-rob-med">{`Upcoming (${upcoming.length})`}</h4>
-                  <div className="center-items">
-                    <div className={tabTwo ? "active-tab" : ""}></div>
-                  </div>
-                </div>
-
-                <div
-                  className="tab-item"
-                  onClick={(e) => {
-                    if (!tabThree) setTabThree(true);
-                    setTabOne(false);
-                    setTabTwo(false);
-                    setStreakType('finished');
-                    setEmptyStateText('No streak is finished');
-                  }}
-                >
-                  <h4 className="font-rob-med">{`Finished (${finished.length})`}</h4>
-                  <div className="center-items">
-                    <div className={tabThree ? "active-tab" : ""}></div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex-dir-col table-container">
-
-                <div className="flex-dir-col table-head">
-                  <div className="d-flex table-row">
-                    <div className="table-head-data first-head"></div>
-                    <div className="table-head-data"><span className="s-12-rr">STREAK NAME</span></div>
-                    <div className="table-head-data"><span className="s-12-rr">START DATE </span></div>
-                    <div className="table-head-data"><span className="s-12-rr">END DATE   </span></div>
-                    <div className="table-head-data"><span className="s-12-rr">RUNNING    </span></div>
-                    <div className="table-head-data"><span className="s-12-rr">REWARD     </span></div>
-                    <div className="table-head-data"><span className="s-12-rr">ACTION     </span></div>
-                  </div>
-                </div>
-
-                <div className="flex-dir-col table-body">
-                  <div className="d-flex table-row">
-                    <div className="table-data bor-16-left first-data">
-                      <div className="ver-line"></div>
-                    </div>
-                    <div className="s-14-rm-pr table-data">Streak name</div>
-                    <div className="s-14-rm-grey table-data">29/01/12</div>
-                    <div className="s-14-rm-grey table-data">21/02/2022</div>
-                    <div className="s-14-rm-grey table-data">12 Days</div>
-                    <div className="s-14-rm-grey table-data">Yes</div>
-                    <div className="s-14-rm-grey bor-16-right table-data">
-                      <div className="d-flex table-btns-container">
-                        <div className="center-items delete-btn">
-                          <i className="demo-icon icon-delete" />
-                        </div>
-                        <div className="center-items edit-btn">
-                          <i className="demo-icon icon-edit" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="d-flex table-row">
-                    <div className="table-data bor-16-left first-data">
-                      <div className="ver-line"></div>
-                    </div>
-                    <div className="s-14-rm-pr table-data">Streak name</div>
-                    <div className="s-14-rm-grey table-data">29/01/12</div>
-                    <div className="s-14-rm-grey table-data">21/02/2022</div>
-                    <div className="s-14-rm-grey table-data">12 Days</div>
-                    <div className="s-14-rm-grey table-data">Yes</div>
-                    <div className="s-14-rm-grey bor-16-right table-data">
-                      <div className="d-flex table-btns-container">
-                        <div className="center-items delete-btn">
-                          <i className="demo-icon icon-delete" />
-                        </div>
-                        <div className="center-items edit-btn">
-                          <i className="demo-icon icon-edit" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="d-flex table-row">
-                    <div className="table-data bor-16-left first-data">
-                      <div className="ver-line"></div>
-                    </div>
-                    <div className="s-14-rm-pr table-data">Streak name</div>
-                    <div className="s-14-rm-grey table-data">29/01/12</div>
-                    <div className="s-14-rm-grey table-data">21/02/2022</div>
-                    <div className="s-14-rm-grey table-data">12 Days</div>
-                    <div className="s-14-rm-grey table-data">Yes</div>
-                    <div className="s-14-rm-grey bor-16-left table-data">
-                      <div className="d-flex table-btns-container">
-                        <div className="center-items delete-btn">
-                          <i className="demo-icon icon-delete" />
-                        </div>
-                        <div className="center-items edit-btn">
-                          <i className="demo-icon icon-edit" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
         }
       </ErrorBoundary>

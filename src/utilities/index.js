@@ -1,56 +1,131 @@
 import Modal from "components/modal";
-import {store}  from 'index.js';
+import { store } from 'index.js';
 
 //LIBRARIES
 import moment from 'moment';
 
 
 //Actions
-import { createStreakData } from "redux/actions/streak";
+import { createStreakData, updateStreakData } from "redux/actions/streak";
 
 //FUNCTIONS
 export const errorHandler = (error, errorInfo) => {
   console.log('LOGGING', error, errorInfo)
 }
 
-export const dialogCreateStreak = () => {
+// export const dialogCreateStreak = () => {
+//   Modal.show({
+//     type: 'create',
+//     title: 'New Streak',
+//     icon: 'icon-streak',
+//     primaryButtonText: 'ADD',
+//     secondaryButtonText: "Cancel",
+//     content: [
+//       {
+//         uid: "title",
+//         type: "text",
+//         eleType: "input",
+//         placeholder: 'STREAK NAME',
+//         autoFocus: true
+//       },
+//       {
+//         group: true,
+//         items: [{
+//           uid: "dateFrom",
+//           type: "text",
+//           eleType: "input",
+//           placeholder: 'FROM',
+//           icon: 'icon-calendar'
+//         },
+//         {
+//           uid: "dateTo",
+//           type: "text",
+//           eleType: "input",
+//           placeholder: 'TO',
+//           icon: 'icon-calendar'
+//         }
+//         ]
+//       },
+//       {
+//         uid: "description",
+//         type: "text",
+//         eleType: "textArea",
+//         placeholder: 'DETAILS ABOUT STREAK'
+//       },
+//     ],
+//     btnClickHandler: (data) => {
+//       if (data.type === "primary") {
+//         delete data.type
+//         store.dispatch(createStreakData(data));
+//       }
+//       Modal.hide();
+//     },
+//   });
+// };
+
+
+
+
+/**
+ * 
+ * @param {String} type - type of action we want to take ('create' or 'update')
+ * @param {Object} data - Pre loaded data in case of update
+ * @param {String} streakId - In case of update id of streak we want to update
+ */
+export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) => {
   Modal.show({
-    title: 'New Streak',
+    title: type === 'create' ? "Create Streak" : 'Update Streak',
     icon: 'icon-streak',
-    primaryButtonText: 'ADD',
+    initialData: type === 'create' ? {} : {
+      title: data?.title,
+      dateFrom: moment(data?.startDate).format().split('T')[0],
+      dateTo: moment(data?.endDate).format().split('T')[0],
+      description: data?.description
+    },
+    primaryButtonText: type === 'create' ? "Create" : 'Update',
     secondaryButtonText: "Cancel",
+
     content: [
       {
         uid: "title",
         type: "text",
         eleType: "input",
-        placeholder: 'STREAK NAME'
+        placeholder: 'STREAK NAME',
+        autoFocus: true
       },
       {
         group: true,
         items: [{
-          uid: "date-from",
+          uid: "dateFrom",
           type: "text",
           eleType: "input",
-          min: moment(new Date()).format('YYYY-MM-DD'),
           placeholder: 'FROM',
           icon: 'icon-calendar'
         },
         {
-          uid: "date-to",
+          uid: "dateTo",
           type: "text",
           eleType: "input",
-          min: moment(new Date()).format('YYYY-MM-DD'),
           placeholder: 'TO',
           icon: 'icon-calendar'
         }
         ]
       },
+      {
+        uid: "description",
+        type: "text",
+        eleType: "textArea",
+        placeholder: 'DETAILS ABOUT STREAK'
+      },
     ],
     btnClickHandler: (data) => {
       if (data.type === "primary") {
         delete data.type
-        store.dispatch(createStreakData(data));
+        if (type === 'create') {
+          store.dispatch(createStreakData(data));
+        }
+        else
+          store.dispatch(updateStreakData(data, streakId));
       }
       Modal.hide();
     },

@@ -14,7 +14,7 @@ import Search from "../search/search";
 import { OutlinedPrimaryButton } from "components/button/button";
 import { IconButton } from "components/button/button";
 
-import { dialogCreateStreak } from "utilities";
+import { dialogForCreateAndUpdateStreak } from "utilities";
 
 function Header(props) {
     const history = useHistory();
@@ -64,7 +64,7 @@ function Header(props) {
 
                 <OutlinedPrimaryButton
                     name={'Add New Streak'}
-                    click={() => dialogCreateStreak()}
+                    click={() => dialogForCreateAndUpdateStreak()}
                     btnContainerClass=""
                     btnClass='h-40'
                 />
