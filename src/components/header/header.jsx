@@ -18,17 +18,18 @@ import { dialogForCreateAndUpdateStreak } from "utilities";
 
 function Header(props) {
     const history = useHistory();
-
+    const { internalNavigation } = props;
     return (
         <header className="header">
             <div className="header-text-container">
-                {props.withBackIcon && <IconContext.Provider
-                    value={{ style: { fontSize: '2rem', marginTop: '4px', marginRight: '5px', cursor: 'pointer' } }}>  <IoArrowBackCircleOutline
-                        onClick={() => {
-                            history.goBack();
-                        }}
-                    /> </IconContext.Provider>}
                 <h1 className="heading">{props.headerText}</h1>
+                {props.withInternalNavigation
+                    &&
+                    <div onClick={() => history.goBack()} className="d-flex header-nav-container">
+                        <i className="demo-icon icon-back" />
+                        <h5>{internalNavigation}</h5>
+                    </div>
+                }
                 {props.withDate ? <h5 className="date">{moment().format('dddd, Do MMMM YYYY')}</h5> : null}
             </div>
 

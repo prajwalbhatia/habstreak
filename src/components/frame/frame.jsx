@@ -15,9 +15,10 @@ export default function Frame(props) {
         headerTitle,
         withSearchBox,
         children,
-        withBackIcon,
+        withInternalNavigation,
         withNavigation = true,
-        withDate
+        withDate,
+        internalNavigation
     } = props;
     return (
         <>
@@ -31,7 +32,8 @@ export default function Frame(props) {
                     <Header
                         headerText={headerTitle}
                         withSearchBox={withSearchBox}
-                        withBackIcon={withBackIcon}
+                        withInternalNavigation={withInternalNavigation}
+                        internalNavigation={internalNavigation}
                         withDate={withDate}
                     />
                 }
@@ -50,7 +52,9 @@ Frame.propTypes =
     headerTitle: PropTypes.string,
     withSearchBox: PropTypes.bool,
     headerIcon: PropTypes.element,
-    withDate: PropTypes.bool
+    withDate: PropTypes.bool,
+    withInternalNavigation : PropTypes.bool,
+    internalNavigation : PropTypes.string
 }
 
 Frame.defaultProps = {

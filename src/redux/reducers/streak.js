@@ -2,6 +2,7 @@ import {
     GET_STREAK,
     GET_STREAK_SUCCESS,
     GET_STREAK_FAIL,
+    GET_A_STREAK,
 
     GET_STREAK_DETAIL,
     GET_STREAK_DETAIL_SUCCESS,
@@ -16,6 +17,7 @@ import {
 } from '../constants/action-type';
 const initialState = {
     streaks: [],
+    streak : [],
     streakDetail: [],
     streaksListType : 'running',
     loading : true,
@@ -34,6 +36,8 @@ const streakReducer = (state = initialState, action) => {
             return { ...state, streaks: [...action.payload] , loading : false }
         case GET_STREAK_FAIL:
             return { ...state, error : action.payload , loading : false }
+        case GET_A_STREAK:
+            return { ...state, streak: action.payload }
         case STREAK_LIST_TYPE:
             return { ...state, streaksListType : action.payload }
         //STREAK DETAIL    

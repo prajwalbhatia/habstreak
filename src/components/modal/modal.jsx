@@ -39,12 +39,12 @@ function Modal(props) {
     })
 
     const calendarDate = (rangeArr) => {
-        const dateFrom = moment(rangeArr[0]).format().split('T')[0];
-        const dateTo = moment(rangeArr[1]).format().split('T')[0];
+        const dateFrom = moment(rangeArr[0]).format('YYYY-MM-DD');
+        const dateTo = moment(rangeArr[1]).format('YYYY-MM-DD');
 
         var from = moment(rangeArr[0]);
         var to = moment(rangeArr[1]);
-        const days = to.diff(from, 'days');
+        const days = to.diff(from, 'days') + 1;
 
         setFormData({ ...formData, dateFrom, dateTo, days })
         setShowCalendar(false);

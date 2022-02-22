@@ -49,7 +49,7 @@
   --pagesPaddingHorizontal: 50px;
   --headerHeight: 60px;
   --secondaryBtnColor: #F6F8F9;
-  --dangerColor : #D63E3E;
+  --dangerColor: #D63E3E;
 
 }
 
@@ -101,6 +101,10 @@ a:active {
   margin-top: 10px;
 }
 
+.mt-16 {
+  margin-top: 16px;
+}
+
 .mr-0 {
   margin-right: 0 !important;
 }
@@ -148,6 +152,15 @@ a:active {
   display: flex;
 }
 
+.flex-1 {
+  flex: 1
+}
+
+.flex-auto
+{
+  flex: auto;
+}
+
 .center-items {
   display: flex;
   align-items: center;
@@ -183,6 +196,10 @@ a:active {
 
 .h-40 {
   height: 40px;
+}
+
+.size-14 {
+  font-size: 14px;
 }
 
 .size-16-8f {
@@ -224,13 +241,11 @@ a:active {
   position: relative;
 }
 
-.font-rob-med
-{
+.font-rob-med {
   font-family: RobotoMedium;
 }
 
-.font-18
-{
+.font-18 {
   font-size: 18px;
 }
 
@@ -242,8 +257,52 @@ a:active {
   font-family: JosefinSansRegular;
 }
 
-.text-center
+.jos-18-primary {
+  font-family: JosefinSansRegular;
+  font-size: 18px;
+  color: var(--primaryColor);
+}
+
+.rob-med-12-primary,
+.rob-med-10-primary {
+  font-family: RobotoMedium;
+  font-size: 12px;
+  color: var(--primaryColor);
+}
+
+.rob-med-12-black,
+.rob-med-10-black {
+  font-family: RobotoMedium;
+  font-size: 12px;
+  color: var(--globaBlack);
+}
+
+.rob-med-10-primary ,
+.rob-med-10-black
 {
+  font-size: 10px;
+}
+
+.rob-bold-12-black {
+  font-family: RobotoBold;
+  font-size: 12px;
+  color: var(--globalBlack);
+}
+
+.rob-reg-14-grey,
+.rob-reg-14-black
+ {
+  font-family: RobotoRegular;
+  font-size: 14px;
+  color: var(--greyText);
+}
+
+.rob-reg-14-black
+{
+  color : var(--globaBlack)
+}
+
+.text-center {
   text-align: center;
 }
 

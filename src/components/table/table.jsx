@@ -62,19 +62,30 @@ function Table(props) {
     )
   }
 
-  const deleteRow = (streak) => {
+  const deleteRow = (e, streak) => {
+    e.stopPropagation();
     action({
       actionType: 'deleteRow',
       data: streak
     })
   }
 
-  const editRow = (streak) => {
+  const editRow = (e, streak) => {
+    e.stopPropagation();
     action({
       actionType: 'editRow',
       data: streak
     })
   }
+
+  const navigate = (streak) => {
+    action({
+      actionType: 'navigate',
+      data: streak
+    })
+  }
+
+
 
   const dataRow = (headingData, data, index) => {
     switch (headingData.uid) {
@@ -92,12 +103,12 @@ function Table(props) {
           <div key={index} className="s-14-rm-grey bor-16-right table-data">
             <div className="d-flex table-btns-container">
               <div
-                onClick={() => deleteRow(data)}
+                onClick={(e) => deleteRow(e, data)}
                 className="center-items delete-btn">
                 <i className="demo-icon icon-delete" />
               </div>
               <div
-                onClick={() => editRow(data)}
+                onClick={(e) => editRow(e, data)}
                 className="center-items edit-btn">
                 <i className="demo-icon icon-edit" />
               </div>
@@ -125,7 +136,9 @@ function Table(props) {
             ?
             data.map((data, index) => {
               return (
-                <div key={index} className="d-flex table-row">
+                <div
+                  onClick={() => navigate(data)}
+                  key={index} className="d-flex table-row">
                   {
                     head.map((headingData, index) => {
                       return dataRow(headingData, data, index)

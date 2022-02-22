@@ -18,6 +18,7 @@ export const createReward = (reward) => API.post('/reward', reward);
 
 //STREAK
 export const getStreaks = () => API.get('/streak');
+export const getStreak = (id) => API.get(`/streak/${id}`);
 export const deleteStreak = (id) => API.delete(`/streak/${id}`);
 export const deleteStreakAndReward = (id) => API.delete(`/streak/${id}/deleteAndUpdate`);
 export const updateStreak = (streak, id) => API.patch(`/streak/${id}`, streak);

@@ -7,13 +7,16 @@ import {
     createStreakDetail,
     getStreaksDetail,
     updateStreakDetail,
-    deleteStreakDetail
+    deleteStreakDetail,
+    getStreak
 } from '../api';
 
 import {
     GET_STREAK,
     GET_STREAK_SUCCESS,
     GET_STREAK_FAIL,
+
+    GET_A_STREAK,
 
     GET_STREAK_DETAIL,
     GET_STREAK_DETAIL_SUCCESS,
@@ -77,6 +80,7 @@ export const updateStreakData = (streak, streakId) => async (dispatch) => {
     try {
         await updateStreak(streak, streakId);
         dispatch(getStreaksData());
+        dispatch(getStreakData(streakId));
     } catch (error) {
         console.log(error);
     }
@@ -93,6 +97,20 @@ export const getStreaksData = () => async (dispatch) => {
         console.log(error);
         const action = { type: GET_STREAK_FAIL, error: error }
         dispatch(action);
+    }
+}
+
+export const getStreakData = (streakId) => async (dispatch) => {
+    // const action = { type: GET_A_STREAK }
+    // dispatch(action);
+    try {
+        const streak = await getStreak(streakId);
+        const action = { type: GET_A_STREAK, payload: streak.data }
+        dispatch(action);
+    } catch (error) {
+        console.log(error);
+        // const action = { type: GET_STREAK_FAIL, error: error }
+        // dispatch(action);
     }
 }
 

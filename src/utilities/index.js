@@ -13,58 +13,6 @@ export const errorHandler = (error, errorInfo) => {
   console.log('LOGGING', error, errorInfo)
 }
 
-// export const dialogCreateStreak = () => {
-//   Modal.show({
-//     type: 'create',
-//     title: 'New Streak',
-//     icon: 'icon-streak',
-//     primaryButtonText: 'ADD',
-//     secondaryButtonText: "Cancel",
-//     content: [
-//       {
-//         uid: "title",
-//         type: "text",
-//         eleType: "input",
-//         placeholder: 'STREAK NAME',
-//         autoFocus: true
-//       },
-//       {
-//         group: true,
-//         items: [{
-//           uid: "dateFrom",
-//           type: "text",
-//           eleType: "input",
-//           placeholder: 'FROM',
-//           icon: 'icon-calendar'
-//         },
-//         {
-//           uid: "dateTo",
-//           type: "text",
-//           eleType: "input",
-//           placeholder: 'TO',
-//           icon: 'icon-calendar'
-//         }
-//         ]
-//       },
-//       {
-//         uid: "description",
-//         type: "text",
-//         eleType: "textArea",
-//         placeholder: 'DETAILS ABOUT STREAK'
-//       },
-//     ],
-//     btnClickHandler: (data) => {
-//       if (data.type === "primary") {
-//         delete data.type
-//         store.dispatch(createStreakData(data));
-//       }
-//       Modal.hide();
-//     },
-//   });
-// };
-
-
-
 
 /**
  * 
@@ -73,20 +21,10 @@ export const errorHandler = (error, errorInfo) => {
  * @param {String} streakId - In case of update id of streak we want to update
  */
 export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) => {
-  Modal.show({
-    title: type === 'create' ? "Create Streak" : 'Update Streak',
-    icon: 'icon-streak',
-    initialData: type === 'create' ? {} : {
-      title: data?.title,
-      dateFrom: moment(data?.startDate).format().split('T')[0],
-      dateTo: moment(data?.endDate).format().split('T')[0],
-      description: data?.description
-    },
-    primaryButtonText: type === 'create' ? "Create" : 'Update',
-    secondaryButtonText: "Cancel",
-
-    content: [
-      {
+  const contentData =
+    type === 'create'
+      ?
+      [{
         uid: "title",
         type: "text",
         eleType: "input",
@@ -116,7 +54,38 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
         type: "text",
         eleType: "textArea",
         placeholder: 'DETAILS ABOUT STREAK'
+      }]
+      :
+      [{
+        uid: "title",
+        type: "text",
+        eleType: "input",
+        placeholder: 'STREAK NAME',
+        autoFocus: true
       },
+
+      {
+        uid: "description",
+        type: "text",
+        eleType: "textArea",
+        placeholder: 'DETAILS ABOUT STREAK'
+      },]
+
+
+  Modal.show({
+    title: type === 'create' ? "Create Streak" : 'Update Streak',
+    icon: 'icon-streak',
+    initialData: type === 'create' ? {} : {
+      title: data?.title,
+      dateFrom: moment(data?.startDate).format().split('T')[0],
+      dateTo: moment(data?.endDate).format().split('T')[0],
+      description: data?.description
+    },
+    primaryButtonText: type === 'create' ? "Create" : 'Update',
+    secondaryButtonText: "Cancel",
+
+    content: [
+      ...contentData
     ],
     btnClickHandler: (data) => {
       if (data.type === "primary") {

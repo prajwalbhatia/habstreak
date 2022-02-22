@@ -31,7 +31,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, dialogForCreateAndUpdateStreak} from 'utilities';
+import { errorHandler, dialogForCreateAndUpdateStreak } from 'utilities';
 
 //CONSTANTS
 import { streakListTableHeadings } from "constants/index";
@@ -146,7 +146,7 @@ function Streak(props) {
       streakObj.endDate = moment(streak.dateTo).format('L');;
       streakObj.running = currentTab === 'Upcoming' ? '--' : `${streak.days} days`;
       streakObj.reward = 'Yes';
-      streakObj.description = streak.description;
+      streakObj.description = streak.description
 
       return streakObj;
     });
@@ -180,10 +180,10 @@ function Streak(props) {
       extraButtons: [
         {
           text: 'Special Delete',
-          btnClass : 'special-btn',
+          btnClass: 'special-btn',
           uid: 'delete-streak-and-rewards',
-          tooltip : true,
-          tooltipData : 'Delete streak and rewards assosiated with it'
+          tooltip: true,
+          tooltipData: 'Delete streak and rewards assosiated with it'
         }
       ],
       content: [
@@ -271,6 +271,16 @@ function Streak(props) {
 
     else if (actionObj.actionType === 'editRow') {
       updateStreak(actionObj.data);
+    }
+
+    else if (actionObj.actionType === 'navigate') {
+      history.push({
+        pathname: `/streak-list/${actionObj.data._id}`,
+        state: {
+          from: 'Streak',
+        },
+
+      });
     }
   }
 

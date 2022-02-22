@@ -9,7 +9,6 @@ import { noop } from 'lodash';
 
 
 export function InputElement({ lable, type, uid, placeholder, containerClass, icon, errMsg, successMsg, ...rest }) {
-  console.log('🚀 ~ file: form-elements.jsx ~ line 12 ~ InputElement ~ rest', rest)
   return (
     <div key={uid} className={`element input-container ${containerClass}`}>
       <div className='d-flex justify-space-between'>
