@@ -50,6 +50,7 @@ export function TextInputElement({ lable, type, uid, placeholder, containerClass
 }
 
 export function Dropdown({ labelName, options, optionSelect, value, ...rest }) {
+  console.log('🚀 ~ file: form-elements.jsx ~ line 53 ~ Dropdown ~ value', value);
   return (
     <div className="dropdown">
       <FormControl variant="outlined">

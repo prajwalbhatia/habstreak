@@ -6,42 +6,61 @@ import { useDispatch, useSelector } from "react-redux";
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
-import Chip from '@mui/material/Chip';
 
 //Actions
-import { getRewardsData, createRewardData, updateRewardData, deleteRewardData } from "../../redux/actions/reward";
-import { getStreaksData } from "../../redux/actions/streak";
-
-//Icons
-import { AiFillDelete } from "react-icons/ai";
-import { HiPencil } from "react-icons/hi";
+import { getRewardsData } from "redux/actions/reward";
+import { getStreaksData } from "redux/actions/streak";
 
 //CSS
 import "./reward.css";
 
 //ERROR BOUNDARY
 import { ErrorBoundary } from 'react-error-boundary';
-import Fallback  from 'utilities/fallback/fallback.js';
+import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler } from 'utilities';
-
-import { AiFillTrophy } from "react-icons/ai";
-import { GiGlassCelebration } from "react-icons/gi";
-import { IconContext } from "react-icons";
+import { dialogForCreateAndUpdateReward, errorHandler, dialogBeforDeletng, progressFun } from 'utilities';
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
-import Card from "../../components/card/card";
-import Modal from "../../components/modal";
+import Table from "components/table/table.jsx";
+
+//CONSTANTS
+import { rewardListTableHeadings } from "constants/index";
 
 function Streak(props) {
   const dispatch = useDispatch();
-  const [dropdownDates, setDropdownDates] = useState([]);
+
+  const [tabData, setTabData] = useState(
+    [
+      {
+        title: 'To Buy',
+        count: 0,
+        active: true
+      },
+      {
+        title: 'Earned',
+        count: 0,
+        active: false
+      },
+      {
+        title: 'Unfinished',
+        count: 0,
+        active: false
+      }
+    ]
+  );
+
+  const [tableData, setTableData] = useState([]);
+  const [currentTab, setCurrentTab] = useState('To Buy');
+
   const [rewardsEarned, setRewardsEarned] = useState([]);
   const [rewardsToBuy, setRewardsToBuy] = useState([]);
+  const [rewardsUnfinished, setRewardsUnfinished] = useState([]);
+
 
   const rewards = useSelector((state) => state.reward.rewards);
+  console.log('🚀 ~ file: reward.jsx ~ line 63 ~ Streak ~ rewards', rewards);
   const streaks = useSelector((state) => state.streak.streaks);
   const loading = useSelector((state) => state.streak.loading);
 
@@ -49,13 +68,15 @@ function Streak(props) {
   useEffect(() => {
     dispatch(getStreaksData());
     dispatch(getRewardsData());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     const earned = [];
     const toBuy = [];
+    const unfinished = [];
 
-    rewards.forEach((reward) => {
+
+    [...rewards].forEach((reward) => {
       if (!reward.rewardEarned)
         toBuy.push(reward);
       else
@@ -65,166 +86,139 @@ function Streak(props) {
     setRewardsEarned([...earned]);
     setRewardsToBuy([...toBuy]);
 
+    const dataOfTabs = [...tabData];
+    dataOfTabs[0].count = toBuy.length;
+    dataOfTabs[1].count = earned.length;
+    dataOfTabs[2].count = unfinished.length;
+    setTabData([...dataOfTabs]);
+
+
+    updateTableData();
+
   }, [rewards])
 
-  const dialog = (streaks, dropdownDates, rewardData) => {
 
-    Modal.show({
-      title: "Create reward",
-      icon: <AiFillTrophy />,
-      primaryButtonText: "Create",
-      secondaryButtonText: "Cancel",
-      content: dropdownDates.length > 0 ? [
-        {
-          // label: "Title",
-          uid: "title",
-          type: "text",
-          placeholder: 'Enter a title',
-          eleType: "input",
-        },
-        {
-          label: "Streak name",
-          uid: "streakName",
-          eleType: "dropdown",
-          options: [...streaks]
-        },
-        {
-          label: "Date",
-          uid: "date",
-          eleType: "dropdown",
-          options: [...dropdownDates]
-        },
-      ]
-        :
-        [
-          {
-            uid: "title",
-            type: "text",
-            placeholder: 'Enter a title',
-            eleType: "input",
-          },
-          {
-            label: "Streak name",
-            uid: "streakName",
-            eleType: "dropdown",
-            options: [...streaks]
-          },
-        ]
-      ,
-      btnClickHandler: (data) => {
-        if (data.type === "primary") {
-          delete data.type
-          const rewardData = { title: data.title, date: data.date, streakId: data?.['streakName']?._id }
-          dispatch(createRewardData(rewardData));
-        }
-        Modal.hide();
-      },
-      dropdownHandler: (uid, selectedStreak) => {
-        if (uid === 'streakName') {
-          const dateArr = arrayOfDates(selectedStreak);
-          setDropdownDates([...dateArr]);
-          dialog(streaks, dateArr, rewardData);
-        }
+  useEffect(() => {
+    updateTableData();
+  }, [tabData])
+
+
+
+  const modifyReward = (rewards) => {
+    const rewardData = [...rewards];
+
+    const modified = rewardData.map((reward) => {
+      const streakAssociated = streaks.filter((streak) => streak._id === reward.streakId);
+
+      if (streakAssociated[0]) {
+        const rewardDate = moment(reward.date);
+        const streakStartDate = moment(streakAssociated[0].dateFrom);
+        const currentDate = moment(new Date());
+
+        const daysLeft = rewardDate.diff(currentDate, 'days') + 1;
+        const progress = progressFun(streakStartDate, rewardDate, daysLeft)
+
+        let rewardObj = {};
+        rewardObj._id = reward._id;
+        rewardObj.title = reward.title;
+        rewardObj.associated = streakAssociated.length > 0 && (streakAssociated[0].title || '');
+        rewardObj.date = moment(reward.date).format('L');
+        rewardObj.running = daysLeft;
+        rewardObj.reward = streakAssociated.rewards && `${streakAssociated?.rewards.length}`;
+        rewardObj.progress = `${progress}%`;
+        rewardObj.streak = streakAssociated.length > 0 && streakAssociated[0];
+
+        return rewardObj;
       }
     });
-  };
 
-  const dialogForUpdate = (streaks, dropdownDates, reward = {}, selectedStreak = null, selectedDate = null, dateDisabilityArg = true) => {
-    Modal.show({
-      title: 'Update reward',
-      icon: <AiFillTrophy />,
-      primaryButtonText: 'Update',
-      secondaryButtonText: "Cancel",
-      initialData: {
-        title: reward?.title,
-        streakName: selectedStreak ? selectedStreak : streaks.filter((streak) => streak._id === reward.streakId)[0],
-        date: selectedDate ? selectedDate : moment(reward?.date).format('YYYY-MM-DD')
-      },
-      content:
-        [
-          {
-            uid: "title",
-            type: "text",
-            placeholder: 'Enter a title',
-            eleType: "input",
-          },
-          {
-            label: "",
-            uid: "streakName",
-            eleType: "dropdown",
-            options: [...streaks]
-          },
-          {
-            label: "",
-            uid: "date",
-            eleType: "dropdown",
-            options: [...dropdownDates],
-            disabled: dateDisabilityArg
-          },
-        ],
-      btnClickHandler: (data) => {
-        if (data.type === "primary") {
-          delete data.type
-          const rewardData = { title: data.title, date: data.date, streakId: data?.['streakName']?._id }
-          dispatch(updateRewardData(rewardData, reward._id));
-        }
-        Modal.hide();
-      },
-      dropdownHandler: (uid, selectedStreak) => {
-        if (uid === 'streakName') {
-          const dateArr = arrayOfDates(selectedStreak);
-          setDropdownDates([...dateArr]);
-          dialogForUpdate(streaks, dateArr, reward, selectedStreak, ' ', false);
-        }
-      }
-    });
-  };
+    return modified
+  }
 
-  const dialogBeforDeletngReward = (reward) => {
-    Modal.show({
-      title: 'Delete',
-      icon: <AiFillDelete />,
-      primaryButtonText: 'Delete',
-      primaryButtonColor: '#d7443e',
-      secondaryButtonText: "Cancel",
-      content: [
-        {
-          eleType: 'text',
-          text: `Are you sure you want delete reward ${reward.title} ?`
-        },
-      ],
-      btnClickHandler: (data) => {
-        if (data.type === "primary") {
-          dispatch(deleteRewardData(reward._id));
-        }
-        Modal.hide();
-      },
-    });
-  };
+
+  const updateTableData = () => {
+    let selectedData = [];
+    if (currentTab === 'To Buy')
+      selectedData = [...rewardsToBuy];
+    else if (currentTab === 'Earned')
+      selectedData = [...rewardsEarned];
+    else
+      selectedData = [];
+
+    const modifiedData = modifyReward([...selectedData]);
+    setTableData([...modifiedData]);
+  }
 
   /**
  * 
  * @param {Object} e - event
  * @param {String} id - Id of streak to delete 
  */
-  const deleteReward = (e, reward) => {
-    e.stopPropagation();
-    dialogBeforDeletngReward(reward);
+  const deleteReward = (reward) => {
+    dialogBeforDeletng(reward, 'reward');
   }
 
   /**
-   * 
-   * @param {Object} data - streak object
-   * @returns 
-   */
-  const arrayOfDates = (data) => {
-    let dateArr = [];
-    for (let i = 0; i <= +data.days; i++) {
-      let date = moment(data?.date).add(i, 'days').format('YYYY-MM-DD');
-      if (moment(moment(date).format('YYYY-MM-DD')).isAfter(moment(Date.now()).format('YYYY-MM-DD')))
-        dateArr.push(date);
+  * 
+  * @param {Object} actionObj
+  */
+  const tableAction = (actionObj) => {
+    console.log('🚀 ~ file: reward.jsx ~ line 326 ~ tableAction ~ actionObj', actionObj);
+    if (actionObj.actionType === 'tabClicked') {
+      if (actionObj.data === 'To Buy') {
+        const tab = [...tabData];
+        tab[0].active = true;
+        tab[1].active = false;
+        tab[2].active = false;
+        setTabData([...tab]);
+
+        const modifiedData = modifyReward([...rewardsToBuy]);
+        setTableData([...modifiedData]);
+        setCurrentTab('To buy');
+      }
+      else if (actionObj.data === 'Earned') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = true;
+        tab[2].active = false;
+        setTabData([...tab]);
+
+
+        const modifiedData = modifyReward([...rewardsEarned]);
+        setTableData([...modifiedData]);
+        setCurrentTab('Earned');
+
+      }
+      else if (actionObj.data === 'Unfinished') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = false;
+        tab[2].active = true;
+        setTabData([...tab]);
+
+        const modifiedData = modifyReward([...rewardsUnfinished]);
+        setTableData([...modifiedData]);
+        setCurrentTab('Unfinished');
+
+      }
     }
-    return [...dateArr];
+    else if (actionObj.actionType === 'deleteRow') {
+      deleteReward(actionObj.data);
+    }
+
+    else if (actionObj.actionType === 'editRow') {
+      dialogForCreateAndUpdateReward('update', actionObj.data, actionObj.data._id, [...streaks]);
+    }
+
+    // else if (actionObj.actionType === 'navigate') {
+    //   history.push({
+    //     pathname: `/streak-list/${actionObj.data._id}`,
+    //     state: {
+    //       from: 'Streak',
+    //     },
+
+    //   });
+    // }
   }
 
   return (
@@ -242,131 +236,15 @@ function Streak(props) {
               <ClipLoader loading size={40} color="var(--primaryColor)" />
             </div>
             :
-            <div >
-              <div className="rewards-area">
-                <div className="left-portion">
-                  <h4>TO BUY</h4>
+            <div className="rewards-area">
+              <Table
+                tableHead={rewardListTableHeadings}
+                tabData={[...tabData]}
+                tableData={[...tableData]}
 
-                  <div className="rewards-list">
-                    {
-                      rewardsToBuy.length > 0
-                        ?
-                        rewardsToBuy.map((reward, index) => {
-
-                          let labelArr = streaks.filter((streak) => {
-                            if (streak._id === reward.streakId)
-                              return streak;
-                            else
-                              return null;
-                          });
-
-                          let labelName = labelArr.length > 0 ? labelArr[0].title : '';
-                          return (
-                            <Card key={reward._id} withLine={true} cardClass="reward-card">
-                              <div className="info-container">
-                                <div className="d-flex ai-b">
-                                  <h4 className="mr-10">{reward.title}</h4>
-                                  {
-                                    reward.title && reward.date
-                                      ?
-                                      <Chip color="success" label="Assosiated" size="small" />
-                                      :
-                                      <Chip color="primary" label="Unassosiated" size="small" />
-                                  }
-                                </div>
-                                <h5>{labelName}</h5>
-                                <h5>{reward.date ? moment(reward?.date).format('YYYY-MM-DD') : ''}</h5>
-                              </div>
-
-                              <div className="icons-container">
-                                <div className="icn icon-delete" onClick={(e) => deleteReward(e, reward)}>
-                                  <IconContext.Provider value={{ className: 'common-icon' }}>
-                                    <AiFillDelete />
-                                  </IconContext.Provider>
-                                </div>
-                                <div
-                                  className="icn icon-edit"
-                                  onClick={() => {
-                                    dialogForUpdate(streaks, dropdownDates, reward)
-                                  }
-                                  }
-                                >
-                                  <IconContext.Provider value={{ className: 'common-icon' }}>
-                                    <HiPencil />
-                                  </IconContext.Provider>
-                                </div>
-                              </div>
-                            </Card>
-                          );
-                        })
-                        :
-                        <div className="empty-container">
-                          <p>You have nothing to buy</p>
-                        </div>
-                    }
-                  </div>
-                </div>
-                <div className="right-portion">
-                  <h4>Rewards Earned</h4>
-
-                  <div className="rewards-list">
-
-                    {
-                      rewardsEarned.length > 0
-                        ?
-                        rewardsEarned.map((reward) => {
-                          return (
-                            <Card key={reward._id} withLine={true} cardClass="reward-earned-card">
-                              <div className="d-flex">
-                                <h4 className="mr-10">{reward.title}</h4>
-                                <Chip color="success" label="Earned" size="small" />
-                              </div>
-                              <IconContext.Provider
-                                value={{
-                                  style: {
-                                    fontSize: "2rem",
-                                    color: "var(--primaryColor)",
-                                    marginTop: "-10px",
-                                    marginRight: "5px",
-                                  },
-                                }}
-                              >
-                                <GiGlassCelebration />
-                              </IconContext.Provider>
-                            </Card>
-                          );
-                        })
-                        :
-                        <div className="empty-container">
-                          <p>You have not earned anything</p>
-                        </div>
-                    }
-
-                  </div>
-                </div>
-
-
-              </div>
-
-              <Card cardClass="new-reward-card" onClick={() => dialog(streaks, dropdownDates)}>
-                <div className="content-container">
-                  <h2>Create new reward</h2>
-                  <IconContext.Provider
-                    value={{
-                      style: {
-                        fontSize: "1.5rem",
-                        color: "var(--primaryColor)",
-                        marginTop: "3px",
-                        marginRight: "5px",
-                      },
-                    }}
-                  >
-                    <AiFillTrophy />
-                  </IconContext.Provider>
-                </div>
-              </Card>
+                action={tableAction}
+              />
             </div>
-
         }
       </ErrorBoundary>
     </Frame>

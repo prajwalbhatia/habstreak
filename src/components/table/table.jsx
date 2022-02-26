@@ -11,7 +11,6 @@ import { theme } from "constants/index";
 
 function Table(props) {
   const { tableHead, tabData, tableData, action } = props;
-  const [emptyStateText, setEmptyStateText] = useState('No Streaks available..Please create some streaks');
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -94,8 +93,22 @@ function Table(props) {
           <div key={index} className="table-data bor-16-left first-data">
             <div
               className="ver-line"
-              style={{ background: theme[Math.ceil(Math.random() * 10)] }}
+              style={{ background: data.theme }}
             ></div>
+          </div>
+        );
+      case 'progress':
+        return (
+          <div key={index} className='table-data center-items flex-dir-col table-progress-container'>
+            <div>
+              <span className='rob-med-12-primary'>{data[headingData.uid]}</span>
+            </div>
+            <div className='table-progress-bar'>
+              <div 
+              className='inner-bar'
+                style={{ width: data[headingData.uid] }}
+              ></div>
+            </div>
           </div>
         );
       case 'action':
@@ -129,19 +142,23 @@ function Table(props) {
   const renderTableData = () => {
     const data = _cloneDeep(tableData);
     const head = _cloneDeep(tableHead);
+    let val = 0;
     return (
       <>
         {
           data.length > 0
             ?
-            data.map((data, index) => {
+            data.map((dataInner, index) => {
+              dataInner.theme = theme[val];
+              val += 1;
+              if (val === 10) val = 0;
               return (
                 <div
-                  onClick={() => navigate(data)}
+                  onClick={() => navigate(dataInner)}
                   key={index} className="d-flex table-row">
                   {
                     head.map((headingData, index) => {
-                      return dataRow(headingData, data, index)
+                      return dataRow(headingData, dataInner, index)
                     })
                   }
                 </div>

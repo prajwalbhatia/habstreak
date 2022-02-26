@@ -38,9 +38,14 @@
   .dropdown {
     margin: 10px 0;
 
-    .MuiOutlinedInput-root {
-      height: 30px;
-      min-width: 180px;
+
+    .MuiFormControl-root {
+      height: 60px;
+      width: 100%;
+      outline: none;
+      border-radius: 6px;
+      // border: 1px solid #E8EEF2;
+      border: none;
     }
 
     .MuiInputLabel-outlined {
@@ -49,5 +54,35 @@
 
     .MuiOutlinedInput-input {
       padding: 10px;
+    }
+
+    .MuiOutlinedInput-root {
+      background-color: #F6F8F9;
+      height: inherit;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .MuiOutlinedInput-root:hover {
+      outline: none;
+      box-shadow: 0px 3px 6px #00000029;
+      border: 1px solid #E8EEF2;
+       background: #fff;
+    }
+    
+    .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline
+    {
+      border: none;
+    }
+
+    .MuiSelect-select:focus
+    {
+      background: none;
+    }
+
+
+    .PrivateNotchedOutline-root-1 {
+      border-style: none;
+      border-width: 0;
     }
   }

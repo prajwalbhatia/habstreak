@@ -9,17 +9,12 @@ import { groupBy as _groupBy, size as _size, map as _map } from "lodash";
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
-import Card from "../../components/card/card";
-import { PrimaryButton } from "../../components/button/button";
 import { OutlinedPrimaryButton } from "components/button/button";
-import { dialogForCreateAndUpdateStreak } from "utilities";
+import { dialogForCreateAndUpdateStreak, perPerDay} from "utilities";
 
 //Actions
 import { getStreaksData } from "../../redux/actions/streak";
 import { getRecentActivitiesData } from "../../redux/actions/recentActivities";
-
-//Icons
-import { GrRefresh } from "react-icons/gr";
 
 //CSS
 import './dashboard.css';
@@ -30,7 +25,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler } from 'utilities';
+import { errorHandler, isSameOrBefore, activityTitle, progressFun } from 'utilities';
 
 //CONSTANTS
 import { icons, theme } from "constants/index";
@@ -58,7 +53,7 @@ function Dashboard(props) {
 
   useEffect(() => {
     const running = streaks.filter((streak) => {
-      if (moment(moment(streak.dateFrom).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
+      if (isSameOrBefore(streak.dateFrom, Date().now)) {
         return streak;
       }
       else
@@ -84,58 +79,51 @@ function Dashboard(props) {
     setGroupedActivities(groupedByDate);
   }, [activities, streaks]);
 
-  /**
-   * 
-   * @param {String} type - type of activity (create-streak , delete-streak etc)
-   * @returns 
-   */
-  const activityTitle = (type) => {
-    switch (type) {
-      case 'create-streak':
-        return `Streak Created`;
-      case 'delete-streak':
-        return `Streak Deleted`;
-      case 'create-reward':
-        return `Reward Created`;
-      case 'delete-reward':
-        return `Reward Deleted`;
-      case 'reward-earned':
-        return `Reward Earned`;
-      default:
-        return 'No type is found'
-    }
-  }
-
-  const refreshClicked = () => {
-    dispatch(getRecentActivitiesData());
-  }
 
   const streakCardJsx = () => {
     if (streaks.length > 0) {
+      const filterSttreaks = streaks.filter((streak, index) => {
+        if (index <= 3 && isSameOrBefore(streak.dateFrom, Date().now))
+          return streak
+      })
       return (
-        streaks.map((streak, index) => {
-          if (index <= 3 && moment(moment(streak.dateFrom).format('YYYY-MM-DD')).isSameOrBefore(moment(Date.now()).format('YYYY-MM-DD'))) {
-            return (
-              <div key={streak._id} className='flex-dir-col streak-card'>
-                <div
-                  className='center-items card-icon'
-                  style={{ background: theme[index] }}
-                >
-                  <i className={`demo-icon ${icons[index]}`} />
-                </div>
-                <h4>{streak.title}</h4>
-                <h6 className='mt-10'>Task completed</h6>
-                <h1 style={{ color: theme[index] }} >82%</h1>
-                <span>{`${streak.days} day to go`}</span>
-                <div
-                  className='d-flex go-btn'
-                  style={{ background: theme[index] }}
-                >
-                  <i className="demo-icon icon-going-in" />
-                </div>
+        filterSttreaks.map((streak, index) => {
+          const { dateFrom, dateTo, days, _id } = streak;
+          const todayDate = moment(new Date());
+          const percPerDay = perPerDay(dateFrom , dateTo);
+          const daysDone = todayDate.diff(dateFrom, 'days');
+          const progress = percPerDay * daysDone;
+          return (
+            <div
+              key={_id} className='flex-dir-col streak-card'
+              onClick={() => {
+                history.push({
+                  pathname: `/streak-list/${_id}`,
+                  state: {
+                    from: 'Dashboard',
+                  },
+
+                })
+              }}
+            >
+              <div
+                className='center-items card-icon'
+                style={{ background: theme[index] }}
+              >
+                <i className={`demo-icon ${icons[index]}`} />
               </div>
-            )
-          }
+              <h4>{streak.title}</h4>
+              <h6 className='mt-10'>Running</h6>
+              <h1 style={{ color: theme[index] }} >{`${progress}%`}</h1>
+              <span>{`${streak.days} day to go`}</span>
+              <div
+                className='d-flex go-btn'
+                style={{ background: theme[index] }}
+              >
+                <i className="demo-icon icon-going-in" />
+              </div>
+            </div>
+          )
         })
       )
     }
@@ -159,13 +147,13 @@ function Dashboard(props) {
                   return (
                     <div className='info-container'>
                       <h3 className='time'>{val.time}</h3>
-                      <div 
-                      className='hr-line'
-                        style={{ background: theme[Math.ceil(Math.random() * 10)]}}
+                      <div
+                        className='hr-line'
+                        style={{ background: theme[Math.ceil(Math.random() * 10)] }}
                       ></div>
                       <div className='flex-dir-col action-info'>
                         <span className='name'>{val.title}</span>
-                        <span className='action'>{`Action: ${activityTitle(val.type)}`}</span>
+                        <span className='action'>{`Action: ${activityTitle(val.type, '', 'dashboard')}`}</span>
                       </div>
                     </div>
                   )
@@ -175,6 +163,13 @@ function Dashboard(props) {
           )
         })
       );
+    }
+    else {
+      return (
+        <div className='d-flex center-items h-100'>
+          <h3>No data</h3>
+        </div>
+      )
     }
   }
 
@@ -201,7 +196,6 @@ function Dashboard(props) {
                     <div className='flex-dir-col summary'>
                       <h2>Tasks for today</h2>
                       <h4>You have <span className='color-primary'>{taskCount}</span> task to complete today
-                        {/* and <span className='color-primary'>3</span> task in progress */}
                       </h4>
                       <OutlinedPrimaryButton
                         name={'Add New Streak'}
@@ -213,7 +207,6 @@ function Dashboard(props) {
 
                     <div className={taskCount === 0 ? 'd-flex streaks center-items' : 'd-flex streaks'}>
                       {streakCardJsx()}
-
                     </div>
                   </div>
                   <div className='flex-dir-col data-container'>
@@ -284,10 +277,19 @@ function Dashboard(props) {
                   </div>
                 </div>
                 <div className='flex-dir-col right-container'>
-                  <h3 className='right-container-title'>Calendar</h3>
-                  {recentActivityCardJsx()}
+                  <div className='d-flex flex-auto flex-dir-col'>
+                    <h3 className='right-container-title'>Calendar</h3>
+                    {recentActivityCardJsx()}
+                  </div>
 
-                  <div className='see-all-container center-items mt-50'>
+                  <div
+                    className='see-all-container center-items mt-50'
+                    onClick={() => {
+                      history.push({
+                        pathname: `/recent-activities`,
+                      })
+                    }}
+                  >
                     <span className='see-all'>SEE ALL</span>
                     <span className='see-all-btn center-items'>
                       <i className="demo-icon icon-going-in" />

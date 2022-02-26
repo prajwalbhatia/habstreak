@@ -17,11 +17,22 @@ import "./modal.css";
 
 function Modal(props) {
     const [formData, setFormData] = useState({});
+    console.log('🚀 ~ file: modal.jsx ~ line 20 ~ Modal ~ formData', formData);
     const [showCalendar, setShowCalendar] = useState(false);
     const [modalType, setModalType] = useState('');
 
+    const [minDate, setMinDate] = useState(null);
+    const [maxDate, setMaxDate] = useState(null);
+
     useEffect(() => {
-        setFormData(cloneDeep(props?.initialData) || {});
+        if (props.initialData) {
+            setFormData(cloneDeep(props?.initialData) || {});
+            if (props.initialData.minDate)
+                setMinDate(props.initialData.minDate);
+
+            if (props.initialData.maxDate)
+                setMaxDate(props.initialData.maxDate);
+        }
     }, [props.initialData])
 
     useState(() => {
@@ -39,14 +50,20 @@ function Modal(props) {
     })
 
     const calendarDate = (rangeArr) => {
-        const dateFrom = moment(rangeArr[0]).format('YYYY-MM-DD');
-        const dateTo = moment(rangeArr[1]).format('YYYY-MM-DD');
+        if (Array.isArray(rangeArr)) {
+            const dateFrom = moment(rangeArr[0]).format('YYYY-MM-DD');
+            const dateTo = moment(rangeArr[1]).format('YYYY-MM-DD');
 
-        var from = moment(rangeArr[0]);
-        var to = moment(rangeArr[1]);
-        const days = to.diff(from, 'days') + 1;
+            let from = moment(rangeArr[0]);
+            let to = moment(rangeArr[1]);
+            const days = to.diff(from, 'days') + 1;
 
-        setFormData({ ...formData, dateFrom, dateTo, days })
+            setFormData({ ...formData, dateFrom, dateTo, days })
+        }
+        else {
+            const date = moment(rangeArr).format('YYYY-MM-DD');
+            setFormData({ ...formData, pickDate: date });
+        }
         setShowCalendar(false);
     }
     //FUNCTIONS
@@ -94,6 +111,9 @@ function Modal(props) {
                         optionSelect={(value) => {
                             setDropDown(data.uid, value)
                             props.dropdownHandler(data.uid, value)
+                            const { dateFrom, dateTo } = value;
+                            setMinDate(new Date(dateFrom));
+                            setMaxDate(new Date(dateTo));
                         }}
                         disabled={data?.disabled}
                     />
@@ -101,24 +121,24 @@ function Modal(props) {
             }
             else if (data.group) {
                 return (
-                    <div className="pos-relative">
-                        <div className="d-flex">
+                    <div className="d-flex pos-relative">
+                        <div className="d-flex flex-1">
                             {
-                                data?.items.map((data, index) => {
+                                data?.items.map((dataInner, index) => {
                                     return (
                                         <InputElement
-                                            lable={data?.label}
-                                            uid={data.uid}
-                                            placeholder={data?.placeholder}
-                                            containerClass={index === 0 ? 'mr-10' : ''}
-                                            value={formData?.[data.uid]}
+                                            lable={dataInner?.label}
+                                            uid={dataInner.uid}
+                                            placeholder={dataInner?.placeholder}
+                                            containerClass={data.items && data?.items.length > 1 ? 'd-flex flex-1 mr-10' : 'd-flex flex-1'}
+                                            value={formData?.[dataInner.uid]}
                                             onChange={changeHandler}
-                                            type={data.type}
+                                            type={dataInner.type}
                                             disabled
-                                            icon={data.icon
+                                            icon={dataInner.icon
                                                 ?
                                                 <i
-                                                    className={`{demo-icon ${data.icon} size-16-8f}`}
+                                                    className={`{demo-icon ${dataInner.icon} size-16-8f}`}
                                                     onClick={() => setShowCalendar((prop) => !prop)}
                                                 />
                                                 : null}
@@ -133,10 +153,11 @@ function Modal(props) {
                                 ?
                                 <div className="react-calendar-container">
                                     <Calendar
-                                        returnValue="range"
-                                        selectRange={true}
+                                        returnValue={data.range ? "range" : "start"}
+                                        selectRange={data.range}
                                         onChange={calendarDate}
-                                        minDate={new Date()}
+                                        minDate={minDate ? new Date(minDate) : new Date()}
+                                        maxDate={maxDate ? new Date(maxDate) : ''}
                                     />
                                 </div>
                                 :

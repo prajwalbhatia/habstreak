@@ -19,7 +19,7 @@ const initialState = {
     streaks: [],
     streak : [],
     streakDetail: [],
-    streaksListType : 'running',
+    streaksListType : 'Running',
     loading : true,
     error : ''
 }

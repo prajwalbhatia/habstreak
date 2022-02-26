@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 //Actions
-import { getStreaksDetailData, updateStreakDetailData, emptyStreaksDetail, getStreakData } from "../../redux/actions/streak";
+import { getStreaksDetailData, updateStreakDetailData, emptyStreaksDetail, getStreakData } from "redux/actions/streak";
 
 //CSS
 import "./streak.css";
@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, dialogForCreateAndUpdateStreak } from 'utilities';
+import { errorHandler, dialogForCreateAndUpdateStreak, progress, perPerDay, isSame, isBefore } from 'utilities';
 
 
 //COMPONENTS
@@ -41,24 +41,22 @@ function Streak(props) {
     const [progressData, setProgressData] = useState({
         weekDaysArr: [],
         daysArr: [],
-        perc: '0'
+        perc: '0',
+        rewards: []
     });
 
 
     //Getting the data from the state
     const streakDetail = useSelector((state) => state.streak.streakDetail);
     const streak = useSelector((state) => state.streak.streak);
-    console.log('🚀 ~ file: streak.jsx ~ line 45 ~ Streak ~ streak', streak);
 
     const loading = useSelector((state) => state.streak.loading);
-    console.log('🚀 ~ file: streak.jsx ~ line 40 ~ Streak ~ streakDetail', streakDetail);
     //Getting initial data
     useEffect(() => {
         if (props?.match?.params?.id) {
             dispatch(getStreaksDetailData(props.match.params.id));
             dispatch(getStreakData(props.match.params.id));
         }
-
         return () => {
             dispatch(emptyStreaksDetail());
         }
@@ -71,13 +69,11 @@ function Streak(props) {
     useEffect(() => {
         if (streakDetail.length > 0 && JSON.stringify(streaks) !== JSON.stringify(streakDetail)) {
             let streaksData = [...streakDetail];
-            console.log('🚀 ~ file: streak.jsx ~ line 62 ~ useEffect ~ streaksData', streaksData);
             let descDetail = {};
             let collapseDetail = {}
             streaksData.forEach((detail) => {
                 descDetail[detail._id] = detail.description;
-
-                if (moment(moment(detail.date).format('YYYY-MM-DD')).isSame(moment().format('YYYY-MM-DD')))
+                if (isSame(detail.date, moment().format()))
                     collapseDetail[detail._id] = false
                 else
                     collapseDetail[detail._id] = true
@@ -91,10 +87,14 @@ function Streak(props) {
 
 
     useEffect(() => {
-        const { dateFrom, days } = streak.length > 0 && streak[0];
+        const { dateFrom, dateTo, days, rewards } = streak.length > 0 && streak[0];
         const weekDaysArr = [];
         const daysArr = [];
-        let perc = (100 / days) * (streakDetail.length - 1);
+        const perDayPerc = Number((100 / (Number(days))).toFixed(2));
+        const daysCompleted = streakDetail.length - 1;
+        const progress = daysCompleted * perDayPerc;
+
+
 
         for (let i = 0; i < days; i++) {
             let date = moment(dateFrom).add(i, 'days').format('D');
@@ -104,10 +104,19 @@ function Streak(props) {
             daysArr.push(date);
         }
 
+        const modifiedReward = rewards && rewards.map((reward) => {
+            let from = moment(dateFrom);
+            let rewardDate = moment(new Date(reward.date));
+            const daysDiffOfReward = rewardDate.diff(from, 'days') + 1;
+            const perDayPerc = perPerDay(dateFrom, dateTo);
+            return { perc: perDayPerc * daysDiffOfReward }
+        })
+
         let progressData = {
             weekDaysArr,
             daysArr,
-            perc
+            perc: progress,
+            rewards: modifiedReward || []
         }
 
         setProgressData(progressData);
@@ -135,13 +144,12 @@ function Streak(props) {
 
     const checkingStatus = (date) => {
         let status = '';
-        if (moment(moment(date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD')))
+        if (isSame(date, moment().format()))
             status = 'Active';
-        else if (moment(moment(date).format('YYYY-MM-DD')).isBefore(moment(Date.now()).format('YYYY-MM-DD')))
+        else if (isBefore(date, moment().format()))
             status = 'Past';
         else
             status = 'Upcoming';
-
         return status;
     }
 
@@ -322,7 +330,7 @@ function Streak(props) {
                                         <>
                                             <div
                                                 key={index} className='center-items back-circle'
-                                                style={index < streakDetail.length - 1 
+                                                style={index < streakDetail.length - 1
                                                     ?
                                                     { background: 'var(--primaryColor)' }
                                                     :
@@ -332,7 +340,7 @@ function Streak(props) {
                                                     className='center-items circle'
                                                     style={index >= streakDetail.length - 1
                                                         ?
-                                                        { background: '#E8EEF2' , minWidth : '40px' , height : '40px' }
+                                                        { background: '#E8EEF2', minWidth: '40px', height: '40px' }
                                                         :
                                                         {}}
                                                 >
@@ -357,11 +365,24 @@ function Streak(props) {
                         <div className='prgress-slider'>
                             <div
                                 className='inner-slider'
-                                style={{ width: progressData.perc }}
+                                style={{ width: `${progressData.perc}%` }}
                             >
                                 {streakDetail.length >= 2 && <i className="demo-icon icon-streak" />}
                             </div>
 
+                            {
+                                progressData.rewards.map((reward, index) => {
+                                    return (
+                                        <div
+                                            key={index}
+                                            className='center-items trophy-container'
+                                            style={{ left: `${reward.perc}%` }}
+                                        >
+                                            <i className="demo-icon icon-reward" />
+                                        </div>
+                                    );
+                                })
+                            }
                             <div className='center-items trophy-container'>
                                 <i className="demo-icon icon-reward" />
                             </div>

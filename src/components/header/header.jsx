@@ -1,28 +1,32 @@
 import React from "react";
 import { useHistory } from "react-router";
 
-import { IoArrowBackCircleOutline } from "react-icons/io5";
-import { IconContext } from "react-icons"
-
 import "./header.css";
+
+//Redux
+import { useSelector } from "react-redux";
 
 //LIBRARIES
 import moment from 'moment';
+
 
 //Component 
 import Search from "../search/search";
 import { OutlinedPrimaryButton } from "components/button/button";
 import { IconButton } from "components/button/button";
 
-import { dialogForCreateAndUpdateStreak } from "utilities";
+import { dialogForCreateAndUpdateStreak, dialogForCreateAndUpdateReward } from "utilities";
 
 function Header(props) {
     const history = useHistory();
-    const { internalNavigation } = props;
+
+    const streaks = useSelector((state) => state.streak.streaks);
+
+    const { internalNavigation, headerText } = props;
     return (
         <header className="header">
             <div className="header-text-container">
-                <h1 className="heading">{props.headerText}</h1>
+                <h1 className="heading">{headerText}</h1>
                 {props.withInternalNavigation
                     &&
                     <div onClick={() => history.goBack()} className="d-flex header-nav-container">
@@ -63,9 +67,14 @@ function Header(props) {
                     </div> */}
                 </div>
 
+
                 <OutlinedPrimaryButton
-                    name={'Add New Streak'}
-                    click={() => dialogForCreateAndUpdateStreak()}
+                    name={headerText === 'Rewards' ? 'Add New Reward' : 'Add New Streak'}
+                    click={headerText === 'Rewards' ?
+                        () => dialogForCreateAndUpdateReward('create', {}, '', streaks)
+                        :
+                        () => dialogForCreateAndUpdateStreak()
+                    }
                     btnContainerClass=""
                     btnClass='h-40'
                 />

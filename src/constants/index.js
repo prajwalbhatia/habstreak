@@ -48,3 +48,35 @@ export const streakListTableHeadings = [
     data: 'ACTION'
   },
 ];
+
+export const rewardListTableHeadings = [
+  {
+    uid: '',
+    data: ''
+  },
+  {
+    uid: 'title',
+    data: 'REWARD NAME'
+  },
+  {
+    uid: 'associated',
+    data: 'ASSOCIATED WITH'
+  },
+  {
+    uid: 'date',
+    data: 'DATE'
+  },
+  {
+    uid: 'running',
+    data: 'Days left'
+  },
+  {
+    uid: 'progress',
+    data: 'Progress'
+  },
+  {
+    uid: 'action',
+    data: 'ACTION'
+  },
+];
+
