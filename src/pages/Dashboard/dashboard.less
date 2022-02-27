@@ -3,6 +3,7 @@
 }
 
 .dashboard-inner-container {
+  height: calc(100vh - (60px + 50px + 50px));
   .left-container {
     margin-right: 30px;
     margin-top: 30px;
@@ -314,6 +315,8 @@
 
     .date-data {
       margin-top: 20px;
+      max-height: calc(100vh - (60px + 50px + 50px + 80px + 80px));
+      overflow: auto;
 
       .date-content {
         font-family: RobotoBold;

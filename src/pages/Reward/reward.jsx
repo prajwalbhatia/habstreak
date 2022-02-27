@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
-
-//Redux
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from 'react';
+import { useLocation, withRouter } from 'react-router-dom';
 
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
 
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+
 //Actions
-import { getRewardsData } from "redux/actions/reward";
-import { getStreaksData } from "redux/actions/streak";
+import { getStreaksDetailData, updateStreakDetailData, emptyStreaksDetail, getStreakData } from "redux/actions/streak";
 
 //CSS
 import "./reward.css";
@@ -19,214 +20,144 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { dialogForCreateAndUpdateReward, errorHandler, dialogBeforDeletng, progressFun } from 'utilities';
+import { errorHandler, dialogForCreateAndUpdateStreak, progress, perPerDay, isSame, isBefore } from 'utilities';
+
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
-import Table from "components/table/table.jsx";
+import { InputElement } from "components/form-elements/form-elements";
+import { OutlinedPrimaryButton } from "components/button/button";
 
-//CONSTANTS
-import { rewardListTableHeadings } from "constants/index";
-
-function Streak(props) {
+function Reward(props) {
+  const location = useLocation();
   const dispatch = useDispatch();
+  const [desc, setDesc] = useState({});
+  const [streaks, setStreaks] = useState([]);
 
-  const [tabData, setTabData] = useState(
-    [
-      {
-        title: 'To Buy',
-        count: 0,
-        active: true
-      },
-      {
-        title: 'Earned',
-        count: 0,
-        active: false
-      },
-      {
-        title: 'Unfinished',
-        count: 0,
-        active: false
-      }
-    ]
-  );
+  const [collapseState, setCollapseState] = useState({
 
-  const [tableData, setTableData] = useState([]);
-  const [currentTab, setCurrentTab] = useState('To Buy');
+  });
 
-  const [rewardsEarned, setRewardsEarned] = useState([]);
-  const [rewardsToBuy, setRewardsToBuy] = useState([]);
-  const [rewardsUnfinished, setRewardsUnfinished] = useState([]);
+  const [progressData, setProgressData] = useState({
+    weekDaysArr: [],
+    daysArr: [],
+    perc: '0',
+    rewards: []
+  });
 
 
-  const rewards = useSelector((state) => state.reward.rewards);
-  console.log('🚀 ~ file: reward.jsx ~ line 63 ~ Streak ~ rewards', rewards);
-  const streaks = useSelector((state) => state.streak.streaks);
+  //Getting the data from the state
+  const streakDetail = useSelector((state) => state.streak.streakDetail);
+  const streak = useSelector((state) => state.streak.streak);
+
   const loading = useSelector((state) => state.streak.loading);
-
   //Getting initial data
   useEffect(() => {
-    dispatch(getStreaksData());
-    dispatch(getRewardsData());
-  }, []);
+    if (props?.match?.params?.id) {
+      dispatch(getStreaksDetailData(props.match.params.id));
+      dispatch(getStreakData(props.match.params.id));
+    }
+    return () => {
+      dispatch(emptyStreaksDetail());
+    }
+
+  }, [dispatch, props.match.params.id]);
+
+  //Whenver there is a change in streakDetails
+  //then we want to update out description array
+  //with the latest data 
+  useEffect(() => {
+    if (streakDetail.length > 0 && JSON.stringify(streaks) !== JSON.stringify(streakDetail)) {
+      let streaksData = [...streakDetail];
+      let descDetail = {};
+      let collapseDetail = {}
+      streaksData.forEach((detail) => {
+        descDetail[detail._id] = detail.description;
+        if (isSame(detail.date, moment().format()))
+          collapseDetail[detail._id] = false
+        else
+          collapseDetail[detail._id] = true
+      });
+      setDesc({ ...desc, ...descDetail });
+      setCollapseState({ ...collapseState, collapseDetail });
+      setStreaks([...streaksData]);
+    }
+  }, [streakDetail, desc, streaks])
+
+
 
   useEffect(() => {
-    const earned = [];
-    const toBuy = [];
-    const unfinished = [];
-
-
-    [...rewards].forEach((reward) => {
-      if (!reward.rewardEarned)
-        toBuy.push(reward);
-      else
-        earned.push(reward);
-    });
-
-    setRewardsEarned([...earned]);
-    setRewardsToBuy([...toBuy]);
-
-    const dataOfTabs = [...tabData];
-    dataOfTabs[0].count = toBuy.length;
-    dataOfTabs[1].count = earned.length;
-    dataOfTabs[2].count = unfinished.length;
-    setTabData([...dataOfTabs]);
-
-
-    updateTableData();
-
-  }, [rewards])
-
-
-  useEffect(() => {
-    updateTableData();
-  }, [tabData])
+    const { dateFrom, dateTo, days, rewards } = streak.length > 0 && streak[0];
+    const weekDaysArr = [];
+    const daysArr = [];
+    const perDayPerc = Number((100 / (Number(days))).toFixed(2));
+    const daysCompleted = streakDetail.length - 1;
+    const progress = daysCompleted * perDayPerc;
 
 
 
-  const modifyReward = (rewards) => {
-    const rewardData = [...rewards];
+    for (let i = 0; i < days; i++) {
+      let date = moment(dateFrom).add(i, 'days').format('D');
+      let day = moment(dateFrom).add(i, 'days').format('ddd');
 
-    const modified = rewardData.map((reward) => {
-      const streakAssociated = streaks.filter((streak) => streak._id === reward.streakId);
+      weekDaysArr.push(day);
+      daysArr.push(date);
+    }
 
-      if (streakAssociated[0]) {
-        const rewardDate = moment(reward.date);
-        const streakStartDate = moment(streakAssociated[0].dateFrom);
-        const currentDate = moment(new Date());
+    const modifiedReward = rewards && rewards.map((reward) => {
+      let from = moment(dateFrom);
+      let rewardDate = moment(new Date(reward.date));
+      const daysDiffOfReward = rewardDate.diff(from, 'days') + 1;
+      const perDayPerc = perPerDay(dateFrom, dateTo);
+      return { perc: perDayPerc * daysDiffOfReward }
+    })
 
-        const daysLeft = rewardDate.diff(currentDate, 'days') + 1;
-        const progress = progressFun(streakStartDate, rewardDate, daysLeft)
+    let progressData = {
+      weekDaysArr,
+      daysArr,
+      perc: progress,
+      rewards: modifiedReward || []
+    }
 
-        let rewardObj = {};
-        rewardObj._id = reward._id;
-        rewardObj.title = reward.title;
-        rewardObj.associated = streakAssociated.length > 0 && (streakAssociated[0].title || '');
-        rewardObj.date = moment(reward.date).format('L');
-        rewardObj.running = daysLeft;
-        rewardObj.reward = streakAssociated.rewards && `${streakAssociated?.rewards.length}`;
-        rewardObj.progress = `${progress}%`;
-        rewardObj.streak = streakAssociated.length > 0 && streakAssociated[0];
+    setProgressData(progressData);
 
-        return rewardObj;
-      }
-    });
-
-    return modified
-  }
+  }, [streak])
 
 
-  const updateTableData = () => {
-    let selectedData = [];
-    if (currentTab === 'To Buy')
-      selectedData = [...rewardsToBuy];
-    else if (currentTab === 'Earned')
-      selectedData = [...rewardsEarned];
-    else
-      selectedData = [];
-
-    const modifiedData = modifyReward([...selectedData]);
-    setTableData([...modifiedData]);
+  /**
+   * 
+   * @param {Object} detail - Object of detail we want to update
+   */
+  const updateStreakDetail = (detail) => {
+    dispatch(updateStreakDetailData({
+      description: desc[detail._id]
+    }, detail._id, detail.streakId));
   }
 
   /**
  * 
- * @param {Object} e - event
- * @param {String} id - Id of streak to delete 
+ * @param {Object} streak - data we want to update  
  */
-  const deleteReward = (reward) => {
-    dialogBeforDeletng(reward, 'reward');
+  const updateStreak = (streak) => {
+    dialogForCreateAndUpdateStreak('update', streak, streak._id);
   }
 
-  /**
-  * 
-  * @param {Object} actionObj
-  */
-  const tableAction = (actionObj) => {
-    console.log('🚀 ~ file: reward.jsx ~ line 326 ~ tableAction ~ actionObj', actionObj);
-    if (actionObj.actionType === 'tabClicked') {
-      if (actionObj.data === 'To Buy') {
-        const tab = [...tabData];
-        tab[0].active = true;
-        tab[1].active = false;
-        tab[2].active = false;
-        setTabData([...tab]);
-
-        const modifiedData = modifyReward([...rewardsToBuy]);
-        setTableData([...modifiedData]);
-        setCurrentTab('To buy');
-      }
-      else if (actionObj.data === 'Earned') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = true;
-        tab[2].active = false;
-        setTabData([...tab]);
 
 
-        const modifiedData = modifyReward([...rewardsEarned]);
-        setTableData([...modifiedData]);
-        setCurrentTab('Earned');
 
-      }
-      else if (actionObj.data === 'Unfinished') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = false;
-        tab[2].active = true;
-        setTabData([...tab]);
 
-        const modifiedData = modifyReward([...rewardsUnfinished]);
-        setTableData([...modifiedData]);
-        setCurrentTab('Unfinished');
+ 
 
-      }
-    }
-    else if (actionObj.actionType === 'deleteRow') {
-      deleteReward(actionObj.data);
-    }
-
-    else if (actionObj.actionType === 'editRow') {
-      dialogForCreateAndUpdateReward('update', actionObj.data, actionObj.data._id, [...streaks]);
-    }
-
-    // else if (actionObj.actionType === 'navigate') {
-    //   history.push({
-    //     pathname: `/streak-list/${actionObj.data._id}`,
-    //     state: {
-    //       from: 'Streak',
-    //     },
-
-    //   });
-    // }
-  }
+ 
 
   return (
     <Frame
+      containerClass="streak"
       withHeader={true}
       withSearchBox={false}
-      headerTitle="Rewards"
-      containerClass="rewards"
+      headerTitle={streak[0]?.title}
+      withInternalNavigation={true}
+      internalNavigation={location?.state?.from}
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
         {
@@ -236,14 +167,8 @@ function Streak(props) {
               <ClipLoader loading size={40} color="var(--primaryColor)" />
             </div>
             :
-            <div className="rewards-area">
-              <Table
-                tableHead={rewardListTableHeadings}
-                tabData={[...tabData]}
-                tableData={[...tableData]}
-
-                action={tableAction}
-              />
+            <div className="d-flex ">
+            
             </div>
         }
       </ErrorBoundary>
@@ -251,4 +176,7 @@ function Streak(props) {
   );
 }
 
-export default Streak;
+export default withRouter(Reward);
+
+
+

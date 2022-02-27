@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useEffect } from "react";
@@ -59,7 +58,13 @@ function Streak(props) {
         title: 'Finished',
         count: 0,
         active: false
+      },
+      {
+        title: 'Unfinished',
+        count: 0,
+        active: false
       }
+
     ]
   );
 
@@ -69,6 +74,7 @@ function Streak(props) {
   const [running, setRunning] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [finished, setFinished] = useState([]);
+  const [unfinished, setUnfinished] = useState([]);
 
   const history = useHistory();
 
@@ -97,10 +103,12 @@ function Streak(props) {
 
   useEffect(() => {
     const currentDate = moment().format();
+    const unfinished = streaks.filter((streak) => streak.tag === 'unfinished');
+
     const finished = streaks.filter((streak) => {
       const streakEndDate = moment(streak.dateTo).format();
 
-      if (isBefore(streakEndDate, currentDate)) {
+      if (isBefore(streakEndDate, currentDate) && !streak.tag) {
         return streak;
       }
       else
@@ -108,7 +116,7 @@ function Streak(props) {
     });
 
     const running = streaks.filter((streak) => {
-      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate)) {
+      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
         return streak;
       }
       else
@@ -116,7 +124,7 @@ function Streak(props) {
     });
 
     const upcoming = streaks.filter((streak) => {
-      if (isAfter(streak.dateFrom, currentDate)) {
+      if (isAfter(streak.dateFrom, currentDate) && !streak.tag) {
         return streak;
       }
       else
@@ -126,11 +134,14 @@ function Streak(props) {
     setRunning([...running]);
     setUpcoming([...upcoming]);
     setFinished([...finished]);
+    setUnfinished([...unfinished])
 
     const dataOfTabs = [...tabData];
     dataOfTabs[0].count = running.length;
     dataOfTabs[1].count = upcoming.length;
     dataOfTabs[2].count = finished.length;
+    dataOfTabs[3].count = unfinished.length;
+
     setTabData([...dataOfTabs]);
 
     updateTableData();
@@ -148,6 +159,7 @@ function Streak(props) {
     const streakData = _cloneDeep(streaks);
 
     const modified = streakData.map((streak) => {
+      console.log('CURRENTtab', currentTab)
       const totalRewardsCount = streak.rewards.length;
       const rewardEarned = streak.rewards.filter((reward) => reward.rewardEarned).length
       let streakObj = {};
@@ -155,7 +167,10 @@ function Streak(props) {
       streakObj.title = streak.title;
       streakObj.startDate = moment(streak.dateFrom).format('L');;
       streakObj.endDate = moment(streak.dateTo).format('L');;
-      streakObj.running = currentTab === 'Upcoming' ? '--' : `${streak.days} days`;
+      streakObj.running = currentTab === 'Upcoming'
+        ? '--'
+        :
+        (currentTab === 'Unfinished' ? 'DROPPED' : `${streak.days} days`);
       streakObj.reward = `${rewardEarned}/${totalRewardsCount}`;
       streakObj.description = streak.description
 
@@ -172,6 +187,8 @@ function Streak(props) {
       selectedData = [...running];
     else if (currentTab === 'Upcoming')
       selectedData = [...upcoming];
+    else if (currentTab === 'Unfinished')
+      selectedData = [...unfinished];
     else
       selectedData = [...finished];
 
@@ -196,6 +213,21 @@ function Streak(props) {
     dialogForCreateAndUpdateStreak('update', streak, streak._id);
   }
 
+  const statusFun = (currentTab) => {
+    switch (currentTab) {
+      case 'Running':
+        return ('Active');
+      case 'Upcoming':
+        return ('Upcoming');
+      case 'Finished':
+        return ('Finished');
+      case 'Unfinished':
+        return ('Dropped');
+      default:
+        break;
+    }
+  }
+
   /**
    * 
    * @param {Object} actionObj
@@ -208,6 +240,7 @@ function Streak(props) {
         tab[0].active = true;
         tab[1].active = false;
         tab[2].active = false;
+        tab[3].active = false;
         setTabData([...tab]);
 
         const modifiedData = modifyStreaks([...running]);
@@ -219,6 +252,8 @@ function Streak(props) {
         tab[0].active = false;
         tab[1].active = true;
         tab[2].active = false;
+        tab[3].active = false;
+
         setTabData([...tab]);
 
 
@@ -232,12 +267,40 @@ function Streak(props) {
         tab[0].active = false;
         tab[1].active = false;
         tab[2].active = true;
+        tab[3].active = false;
+
         setTabData([...tab]);
 
         const modifiedData = modifyStreaks([...finished]);
         setTableData([...modifiedData]);
         setCurrentTab('Finished');
 
+      }
+      else if (actionObj.data === 'Finished') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = false;
+        tab[2].active = true;
+        tab[3].active = false;
+
+        setTabData([...tab]);
+
+        const modifiedData = modifyStreaks([...finished]);
+        setTableData([...modifiedData]);
+        setCurrentTab('Finished');
+
+      } else if (actionObj.data === 'Unfinished') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = false;
+        tab[2].active = false;
+        tab[3].active = true;
+
+        setTabData([...tab]);
+
+        const modifiedData = modifyStreaks([...unfinished]);
+        setTableData([...modifiedData]);
+        setCurrentTab('Unfinished');
       }
     }
     else if (actionObj.actionType === 'deleteRow') {
@@ -249,13 +312,16 @@ function Streak(props) {
     }
 
     else if (actionObj.actionType === 'navigate') {
-      history.push({
-        pathname: `/streak-list/${actionObj.data._id}`,
-        state: {
-          from: 'Streak',
-        },
+      if (currentTab !== 'Unfinished') {
+        history.push({
+          pathname: `/streak/${actionObj.data._id}`,
+          state: {
+            from: 'Streak',
+            status: statusFun(currentTab)
+          },
 
-      });
+        });
+      }
     }
   }
 
@@ -279,7 +345,7 @@ function Streak(props) {
                 tableHead={streakListTableHeadings}
                 tabData={[...tabData]}
                 tableData={[...tableData]}
-
+                currentTab={currentTab}
                 action={tableAction}
               />
 

@@ -20,7 +20,7 @@ export const navigationList = [
         _id: "3",
         name: "Rewards",
         active: false,
-        url: "/reward",
+        url: "/reward-list",
     },
     {
         _id: "4",

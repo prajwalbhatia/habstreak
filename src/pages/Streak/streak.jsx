@@ -87,41 +87,41 @@ function Streak(props) {
 
 
     useEffect(() => {
-        const { dateFrom, dateTo, days, rewards } = streak.length > 0 && streak[0];
-        const weekDaysArr = [];
-        const daysArr = [];
-        const perDayPerc = Number((100 / (Number(days))).toFixed(2));
-        const daysCompleted = streakDetail.length - 1;
-        const progress = daysCompleted * perDayPerc;
+        if (streak && streak[0] && streakDetail && streakDetail.length > 0) {
+            const { dateFrom, dateTo, days, rewards } = streak.length > 0 && streak[0];
+            const weekDaysArr = [];
+            const daysArr = [];
+            const perDayPerc = (100 / (Number(days))).toFixed(2);
+            const daysCompleted = streakDetail.length - 1;
+            const progress = daysCompleted * perDayPerc;
 
+            for (let i = 0; i < days; i++) {
+                let date = moment(dateFrom).add(i, 'days').format('D');
+                let day = moment(dateFrom).add(i, 'days').format('ddd');
 
+                weekDaysArr.push(day);
+                daysArr.push(date);
+            }
 
-        for (let i = 0; i < days; i++) {
-            let date = moment(dateFrom).add(i, 'days').format('D');
-            let day = moment(dateFrom).add(i, 'days').format('ddd');
+            const modifiedReward = rewards && rewards.map((reward) => {
+                let from = moment(dateFrom);
+                let rewardDate = moment(new Date(reward.date));
+                const daysDiffOfReward = rewardDate.diff(from, 'days') + 1;
+                const perDayPerc = perPerDay(dateFrom, dateTo);
+                return { perc: perDayPerc * daysDiffOfReward }
+            })
 
-            weekDaysArr.push(day);
-            daysArr.push(date);
+            let progressData = {
+                weekDaysArr,
+                daysArr,
+                perc: progress,
+                rewards: modifiedReward || []
+            }
+
+            setProgressData(progressData);
         }
 
-        const modifiedReward = rewards && rewards.map((reward) => {
-            let from = moment(dateFrom);
-            let rewardDate = moment(new Date(reward.date));
-            const daysDiffOfReward = rewardDate.diff(from, 'days') + 1;
-            const perDayPerc = perPerDay(dateFrom, dateTo);
-            return { perc: perDayPerc * daysDiffOfReward }
-        })
-
-        let progressData = {
-            weekDaysArr,
-            daysArr,
-            perc: progress,
-            rewards: modifiedReward || []
-        }
-
-        setProgressData(progressData);
-
-    }, [streak])
+    }, [streak , streakDetail])
 
 
     /**
@@ -371,20 +371,24 @@ function Streak(props) {
                             </div>
 
                             {
+                                // progressData.rewards.length > 0
+                                //     ?
                                 progressData.rewards.map((reward, index) => {
                                     return (
                                         <div
                                             key={index}
                                             className='center-items trophy-container'
-                                            style={{ left: `${reward.perc}%` }}
+                                            style={{ left: `calc(${reward.perc}% - 30px)` }}
                                         >
                                             <i className="demo-icon icon-reward" />
                                         </div>
                                     );
                                 })
+                                // :
+
                             }
                             <div className='center-items trophy-container'>
-                                <i className="demo-icon icon-reward" />
+                                <i className="demo-icon icon-flag" />
                             </div>
                         </div>
 
@@ -396,6 +400,7 @@ function Streak(props) {
             </div>
         )
     }
+
 
     return (
         <Frame
@@ -418,7 +423,7 @@ function Streak(props) {
                             <div className='left-container'>
                                 <div className='d-flex justify-space-between container-heading'>
                                     <h3 className='jos-18-primary task-heading'>Tasks</h3>
-                                    <span className='rob-med-12-primary streak-status'>State: Active</span>
+                                    <span className='rob-med-12-primary streak-status'>State: {location?.state?.status}</span>
                                 </div>
 
                                 <div className='task-container  mt-20'>

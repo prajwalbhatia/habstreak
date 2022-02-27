@@ -8,13 +8,14 @@ import { ClipLoader } from "react-spinners";
 import { groupBy as _groupBy, size as _size, map as _map } from "lodash";
 
 //COMPONENTS
-import Frame from "../../components/frame/frame";
+import Frame from "components/frame/frame";
 import { OutlinedPrimaryButton } from "components/button/button";
-import { dialogForCreateAndUpdateStreak, perPerDay} from "utilities";
+import { dialogForCreateAndUpdateStreak, perPerDay } from "utilities";
 
 //Actions
-import { getStreaksData } from "../../redux/actions/streak";
-import { getRecentActivitiesData } from "../../redux/actions/recentActivities";
+import { getStreaksData } from "redux/actions/streak";
+import { getRewardsData } from "redux/actions/reward";
+import { getRecentActivitiesData } from "redux/actions/recentActivities";
 
 //CSS
 import './dashboard.css';
@@ -25,7 +26,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, isSameOrBefore, activityTitle, progressFun } from 'utilities';
+import { errorHandler, isSameOrBefore, activityTitle, progressFun, isSame, isBefore } from 'utilities';
 
 //CONSTANTS
 import { icons, theme } from "constants/index";
@@ -37,9 +38,15 @@ function Dashboard(props) {
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [taskCount, setTaskCount] = useState(0);
   const [groupedActivities, setGroupedActivities] = useState({});
+  const [percentageData, setPercentageData] = useState({
+    streakSuccess: 0,
+    rewardCollected: 0,
+    streakUnsuccessful: 0
+  });
 
   //Getting the data from the state
   const streaks = useSelector((state) => state.streak.streaks);
+  const rewards = useSelector((state) => state.reward.rewards);
   const activities = useSelector((state) => state.recentActivities.activities);
 
   const loading = useSelector((state) => state.streak.loading);
@@ -48,10 +55,21 @@ function Dashboard(props) {
     if (localStorage.getItem('profile')) {
       dispatch(getStreaksData());
       dispatch(getRecentActivitiesData());
+      dispatch(getRewardsData());
     }
   }, [dispatch])
 
   useEffect(() => {
+    const currentDate = moment().format();
+    const finished = streaks.filter((streak) => {
+      const streakEndDate = moment(streak.dateTo).format();
+      if (isBefore(streakEndDate, currentDate) && !streak.tag) {
+        return streak;
+      }
+      else
+        return null;
+    });
+
     const running = streaks.filter((streak) => {
       if (isSameOrBefore(streak.dateFrom, Date().now)) {
         return streak;
@@ -60,8 +78,38 @@ function Dashboard(props) {
         return null;
     });
 
+    const earned = rewards.filter(reward => reward.rewardEarned);
+    const unfinishedStreak = streaks.filter((streak) => streak.tag === 'unfinished');
+
+    const totalStreak = [...streaks].length;
+    const totalRewards = [...rewards].length;
+    let successfulStreak = 0;
+    let rewardsCollected = 0;
+    let streakUnsuccessful = 0;
+    let successfulStreakPerc = 0;
+    let rewardsCollectedPerc = 0;
+    let streakUnsuccessfulPerc = 0;
+
+
+    successfulStreak = finished.length;
+    rewardsCollected = earned.length;
+    streakUnsuccessful = unfinishedStreak.length;
+
+    successfulStreakPerc = totalStreak.length > 0 ? (successfulStreak / totalStreak) * 100 : 0;
+    rewardsCollectedPerc = totalRewards.length > 0 ? (rewardsCollected / totalRewards) * 100 : 0;
+    streakUnsuccessfulPerc = totalStreak.length > 0 ? (streakUnsuccessful / totalStreak) * 100 : 0;
+
+    setPercentageData({
+      streakSuccess: successfulStreakPerc,
+      streakCompleted: successfulStreak,
+      rewardsCollectedPerc: rewardsCollectedPerc,
+      rewardsCollected,
+      streakUnsuccessfulPerc: streakUnsuccessfulPerc,
+      streakUnsuccessful
+    })
+
     setTaskCount(running.length);
-  }, [streaks]);
+  }, [streaks, rewards]);
 
 
   useEffect(() => {
@@ -76,7 +124,11 @@ function Dashboard(props) {
       return activity;
     })
     const groupedByDate = _groupBy(modifiedActivities, 'date');
-    setGroupedActivities(groupedByDate);
+    const currentDate = moment(moment().format()).format('ll')
+    if (groupedActivities[currentDate])
+      setGroupedActivities({ [currentDate]: groupedByDate[currentDate] });
+    else
+      setGroupedActivities({})
   }, [activities, streaks]);
 
 
@@ -90,7 +142,7 @@ function Dashboard(props) {
         filterSttreaks.map((streak, index) => {
           const { dateFrom, dateTo, days, _id } = streak;
           const todayDate = moment(new Date());
-          const percPerDay = perPerDay(dateFrom , dateTo);
+          const percPerDay = perPerDay(dateFrom, dateTo);
           const daysDone = todayDate.diff(dateFrom, 'days');
           const progress = percPerDay * daysDone;
           return (
@@ -135,7 +187,6 @@ function Dashboard(props) {
 
   const recentActivityCardJsx = () => {
     const isEmpty = _size(groupedActivities) === 0;
-
     if (!isEmpty) {
       return (
         _map(groupedActivities, (value, key) => {
@@ -167,7 +218,7 @@ function Dashboard(props) {
     else {
       return (
         <div className='d-flex center-items h-100'>
-          <h3>No data</h3>
+          <h3>No Latest data</h3>
         </div>
       )
     }
@@ -224,12 +275,15 @@ function Dashboard(props) {
                         </div>
                         <div className='d-flex progress-bar'>
                           <div className='d-flex bar'>
-                            <div className='bar-complete bar-comp-succ'></div>
+                            <div
+                              className='bar-complete bar-comp-succ'
+                              style={{ width: `${percentageData.streakSuccess}%` }}
+                            ></div>
                           </div>
-                          <h4 className='perc prog-succ'>45%</h4>
+                          <h4 className='perc prog-succ'>{`${percentageData.streakSuccess}%`}</h4>
                         </div>
                         <div className='count-container count-container-succ'>
-                          <h4>73 Streak completed</h4>
+                          <h4>{`${percentageData.streakCompleted} Streak completed`}</h4>
                         </div>
 
                       </div>
@@ -243,12 +297,15 @@ function Dashboard(props) {
                         </div>
                         <div className='d-flex progress-bar'>
                           <div className='d-flex bar'>
-                            <div className='bar-complete bar-comp-reward'></div>
+                            <div
+                              className='bar-complete bar-comp-reward'
+                              style={{ width: `${percentageData.rewardsCollectedPerc}%` }}
+                            ></div>
                           </div>
-                          <h4 className='perc prog-reward'>57%</h4>
+                          <h4 className='perc prog-reward'>{`${percentageData.rewardsCollectedPerc}%`}</h4>
                         </div>
                         <div className='count-container count-container-reward'>
-                          <h4>47 Reward collected</h4>
+                          <h4>{`${percentageData.rewardsCollected} Rewards completed`}</h4>
                         </div>
 
                       </div>
@@ -258,16 +315,19 @@ function Dashboard(props) {
                           <div className='center-items title-icon title-icon-unsucc'>
                             <i className="demo-icon icon-streak" />
                           </div>
-                          <h3 className='d-flex'>Streak Successful</h3>
+                          <h3 className='d-flex'>Streak Unsuccessful</h3>
                         </div>
                         <div className='d-flex progress-bar'>
                           <div className='d-flex bar'>
-                            <div className='bar-complete bar-comp-unsucc'></div>
+                            <div
+                              className='bar-complete bar-comp-unsucc'
+                              style={{ width: `${percentageData.streakUnsuccessfulPerc}%` }}
+                            ></div>
                           </div>
-                          <h4 className='perc prog-unsucc'>45%</h4>
+                          <h4 className='perc prog-unsucc'>{`${percentageData.streakUnsuccessfulPerc}%`}</h4>
                         </div>
                         <div className='count-container count-container-unsucc'>
-                          <h4>73 Streak completed</h4>
+                          <h4>{`${percentageData.streakUnsuccessful} Streak unsuccessful`}</h4>
                         </div>
 
                       </div>

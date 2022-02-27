@@ -10,7 +10,7 @@ import { theme } from "constants/index";
 
 
 function Table(props) {
-  const { tableHead, tabData, tableData, action } = props;
+  const { tableHead, tabData, tableData, action, currentTab } = props;
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -104,8 +104,8 @@ function Table(props) {
               <span className='rob-med-12-primary'>{data[headingData.uid]}</span>
             </div>
             <div className='table-progress-bar'>
-              <div 
-              className='inner-bar'
+              <div
+                className='inner-bar'
                 style={{ width: data[headingData.uid] }}
               ></div>
             </div>
@@ -120,11 +120,18 @@ function Table(props) {
                 className="center-items delete-btn">
                 <i className="demo-icon icon-delete" />
               </div>
-              <div
-                onClick={(e) => editRow(e, data)}
-                className="center-items edit-btn">
-                <i className="demo-icon icon-edit" />
-              </div>
+
+              {
+                currentTab !== 'Unfinished'
+                  ?
+                  <div
+                    onClick={(e) => editRow(e, data)}
+                    className="center-items edit-btn">
+                    <i className="demo-icon icon-edit" />
+                  </div>
+                  :
+                  null
+              }
             </div>
           </div>
         );
@@ -134,7 +141,12 @@ function Table(props) {
         )
       default:
         return (
-          <div key={index} className="s-14-rm-grey table-data">{data[headingData.uid]}</div>
+          <div key={index} className={data[headingData.uid] === 'DROPPED'
+            ?
+            "s-14-rm-grey table-data color-red"
+            :
+            "s-14-rm-grey table-data"
+          }>{data[headingData.uid]}</div>
         );
     }
   }
@@ -203,7 +215,8 @@ Table.propTypes = {
     active: PropTypes.bool
   })).isRequired,
   tableData: PropTypes.arrayOf(PropTypes.object).isRequired,
-  action: PropTypes.func.isRequired
+  action: PropTypes.func.isRequired,
+  currentTab: PropTypes.string
 }
 
 export default Table
