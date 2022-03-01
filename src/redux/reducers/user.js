@@ -1,4 +1,4 @@
-import { AUTH, LOGOUT } from '../constants/action-type';
+import { AUTH, LOGOUT, REFRESH_TOKEN } from '../constants/action-type';
 
 const initialState = {
     authData: null
@@ -9,9 +9,12 @@ const userReducer = (state = initialState, action) => {
         case AUTH:
             localStorage.setItem('profile', JSON.stringify({ ...action?.data }))
             return { ...state, authData: action?.data }
+        case REFRESH_TOKEN:
+            localStorage.setItem('profile', JSON.stringify({ ...action?.data }))
+            return { ...state, authData: action?.data }
         case LOGOUT:
-            // localStorage.removeItem('profile');
             localStorage.clear();
+            // localStorage.removeItem('profile');
             return { ...state, authData: null }
         default:
             return state;

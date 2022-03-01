@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 //Third party libraries
 import {
@@ -7,12 +7,14 @@ import {
   Route,
 } from 'react-router-dom';
 
+//UTILITIES
+import { refreshToken } from 'utilities';
+
 //Paged
 import DashboardPage from 'pages/Dashboard/dashboard';
 import StreakListPage from 'pages/StreakList/streak-list';
 import Streak from "pages/Streak/streak";
 import RewardList from "pages/RewardList/rewardList";
-import Reward from "pages/Reward/reward";
 import RecentActivities from 'pages/RecentActivities/recentActivities';
 import AccountPage from 'pages/Account/account';
 import LandingPage from 'pages/LandingPage/landingPage';
@@ -23,6 +25,17 @@ import "./fontello/css/habstreak.css"
 import './App.css';
 
 function App(props) {
+  const [user] = useState(JSON.parse(localStorage.getItem('profile')));
+
+  useEffect(() => {
+    const token = user?.refreshToken;
+    if (token)
+      setInterval(() => {
+        refreshToken(token);
+      }, 50000);
+  }, [])
+
+
   return (
     <Router>
       <div id="modal-container-id"></div>
@@ -32,7 +45,6 @@ function App(props) {
         <Route path="/streak/:id" component={Streak} />
         <Route path="/recent-activities" component={RecentActivities} />
         <Route path="/reward-list" component={RewardList} />
-        <Route path="/reward/:id" component={Reward} />
         <Route path="/success" component={SuccessPage} />
         <Route path="/error" component={Errorpage} />
         <Route path="/account" component={AccountPage} />

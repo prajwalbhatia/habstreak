@@ -8,10 +8,15 @@ import moment from 'moment';
 import { createStreakData, updateStreakData, deleteStreakData, deleteStreakAndRewardData } from "redux/actions/streak";
 import { createRewardData, updateRewardData, deleteRewardBulk, deleteRewardData } from "redux/actions/reward";
 import { size } from "lodash";
+import { refreshTokenFun } from "redux/actions/user";
 
 //FUNCTIONS
 export const errorHandler = (error, errorInfo) => {
   console.log('LOGGING', error, errorInfo)
+}
+
+export const refreshToken = (token) => {
+  store.dispatch(refreshTokenFun({refreshToken : token}));
 }
 
 /**
@@ -136,7 +141,7 @@ export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewar
         type: "text",
         eleType: "dropdown",
         placeholder: 'ASSOSIATED STREAK NAME',
-        options: [...streaks],
+        options: [...streaks].filter((streak) => streak.tag !== 'unfinished'),
       },
 
       {
@@ -204,7 +209,7 @@ export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewar
         let rewardObj = {};
         rewardObj.userId = data?.streakName?.userId;
         rewardObj.title = data?.title
-        rewardObj.streakId = data?.streakName._id;
+        rewardObj.streakId = (data.streakName && data?.streakName?._id) || '';
         rewardObj.date = data?.pickDate;
         rewardObj.rewardEarned = false
 

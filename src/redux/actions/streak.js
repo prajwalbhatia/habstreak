@@ -29,6 +29,11 @@ import {
     STREAK_LIST_TYPE,
 } from '../constants/action-type';
 
+//UTILITIES
+import {
+    isSame
+} from 'utilities';
+
 //Libraries
 import moment from 'moment';
 import { getRecentActivitiesData } from './recentActivities';
@@ -40,7 +45,7 @@ export const createStreakData = (streak) => async (dispatch) => {
         const { data } = await createStreak(streak);
         //WE HAVE TO CREATE STREAK DETAIL IF
         //THE STREAK IS OF TODAY'S DATE
-        if (moment(moment(data.date).format('YYYY-MM-DD')).isSame(moment(Date.now()).format('YYYY-MM-DD'))) {
+        if (isSame(data.dateFrom, Date().now)) {
             const streadDetailData = {
                 date: data.date,
                 streakId: data._id,
@@ -115,7 +120,7 @@ export const getStreakData = (streakId) => async (dispatch) => {
 }
 
 export const streakListType = (type) => async (dispatch) => {
-    const action = { type: STREAK_LIST_TYPE , payload : type }
+    const action = { type: STREAK_LIST_TYPE, payload: type }
     dispatch(action);
 }
 

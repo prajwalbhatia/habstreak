@@ -18,7 +18,7 @@ export const createRewardData = (reward) => async (dispatch) => {
     await createReward(reward);
     dispatch(getRewardsData());
   } catch (error) {
-    console.log(error);
+    console.log('create reward ->' , error);
   }
 }
 
@@ -56,7 +56,7 @@ export const getRewardsData = () => async (dispatch) => {
     const action = { type: GET_REWARDS_SUCCESS, payload: rewards.data }
     dispatch(action);
   } catch (error) {
-    console.log(error);
+    console.log('getRewardsData -> ' , error);
     const action = { type: GET_REWARDS_FAIL, error: error }
     dispatch(action);
   }

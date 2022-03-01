@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from "react-router";
+
 
 //CSS
 import './table.css';
@@ -11,6 +13,7 @@ import { theme } from "constants/index";
 
 function Table(props) {
   const { tableHead, tabData, tableData, action, currentTab } = props;
+  const history = useHistory();
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -103,12 +106,17 @@ function Table(props) {
             <div>
               <span className='rob-med-12-primary'>{data[headingData.uid]}</span>
             </div>
-            <div className='table-progress-bar'>
-              <div
-                className='inner-bar'
-                style={{ width: data[headingData.uid] }}
-              ></div>
-            </div>
+
+            {
+              data[headingData.uid] !== '-'
+              &&
+              <div className='table-progress-bar'>
+                <div
+                  className='inner-bar'
+                  style={{ width: data[headingData.uid] }}
+                ></div>
+              </div>
+            }
           </div>
         );
       case 'action':
@@ -138,6 +146,24 @@ function Table(props) {
       case 'title':
         return (
           <div key={index} className="s-14-rm-pr table-data" > {data[headingData.uid]}</div >
+        )
+      case 'associated':
+        return (
+          <div
+            onClick={() => {
+              history.push({
+                pathname: `/streak/${data[headingData.uid].id}`,
+                state: {
+                  from: 'Reward',
+                  status: data[headingData.uid].state
+                },
+
+              });
+            }}  
+            key={index}
+            className="s-14-rm-pr table-data c-pointer" >
+            {data[headingData.uid].title}
+          </div >
         )
       default:
         return (
@@ -177,7 +203,9 @@ function Table(props) {
               )
             })
             :
-            null
+            <div className='center-items h-100'>
+              <h4>No data available</h4>
+            </div>
         }
 
       </>
@@ -196,7 +224,9 @@ function Table(props) {
           </div>
         </div>
 
-        <div className="flex-dir-col table-body">
+        <div
+          className={tableData.length > 0 ? "flex-dir-col table-body" : "flex-dir-col table-body h-100"}
+        >
           {renderTableData()}
         </div>
       </div>

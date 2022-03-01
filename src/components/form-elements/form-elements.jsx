@@ -11,7 +11,7 @@ import { noop } from 'lodash';
 export function InputElement({ lable, type, uid, placeholder, containerClass, icon, errMsg, successMsg, ...rest }) {
   return (
     <div key={uid} className={`element input-container ${containerClass}`}>
-      <div className='d-flex justify-space-between'>
+      <div className='d-flex justify-space-between mb-10'>
         <label className='label' for={uid}>{lable}</label>
         <label className='label' style={errMsg ? { color: '#FF0000' } : { color: '#267A08' }}>
           {errMsg ? errMsg : (successMsg ? successMsg : '')}
@@ -50,7 +50,6 @@ export function TextInputElement({ lable, type, uid, placeholder, containerClass
 }
 
 export function Dropdown({ labelName, options, optionSelect, value, ...rest }) {
-  console.log('🚀 ~ file: form-elements.jsx ~ line 53 ~ Dropdown ~ value', value);
   return (
     <div className="dropdown">
       <FormControl variant="outlined">

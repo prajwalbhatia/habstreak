@@ -207,6 +207,7 @@ function Dashboard(props) {
     //VALIDATION
     if (Object.keys(errMsg).length === 0)
       setIsValid(true);
+      
   }
   //FUNCTIONS
 
@@ -237,7 +238,7 @@ function Dashboard(props) {
           <h1>{isSignup ? 'Sign up to Habstreak' : 'Login to Habstreak'}</h1>
 
           <p className='already-member'>{isSignup ? 'Already a Member?' : 'Are you a new member?'}
-            <span onClick={switchMode}>{isSignup ? 'Login' : 'Sign up'}</span>
+            <span className='c-pointer' onClick={switchMode}>{isSignup ? 'Login' : 'Sign up'}</span>
           </p>
 
           {

@@ -169,6 +169,13 @@ function RecentActivities() {
         })
       );
     }
+    else {
+      return (
+        <div className='d-flex center-items h-100'>
+          <h3>No Activities</h3>
+        </div>
+      )
+    }
   }
 
   return (

@@ -39,3 +39,4 @@ export const GET_ACTIVITIES_FAIL = "GET_ACTIVITIES_FAIL";
 //USER
 export const AUTH = 'AUTH';
 export const LOGOUT = 'LOGOUT';
+export const REFRESH_TOKEN = 'REFRESH_TOKEN';

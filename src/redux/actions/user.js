@@ -1,9 +1,10 @@
-import { AUTH, LOGOUT } from '../constants/action-type';
+import { AUTH, LOGOUT, REFRESH_TOKEN } from '../constants/action-type';
 
 import {
     createUser,
     signIn,
-    signUp
+    signUp,
+    refreshToken
 } from '../api/user';
 
 export const auth = (data) => async (dispatch) => {
@@ -33,6 +34,16 @@ export const signup = (formData, history) => async dispatch => {
         const action = { type: AUTH, data }
         dispatch(action);
         history.push('/dashboard');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const refreshTokenFun = (token) => async dispatch => {
+    try {
+        const { data } = await refreshToken(token);
+        const action = { type: REFRESH_TOKEN, data }
+        dispatch(action);
     } catch (error) {
         console.log(error);
     }

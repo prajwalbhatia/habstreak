@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
+import { cloneDeep as _cloneDeep } from "lodash";
 
 //Actions
 import { getStreaksData, streakListType } from "../../redux/actions/streak";
@@ -37,10 +39,10 @@ import {
 
 //CONSTANTS
 import { streakListTableHeadings } from "constants/index";
-import { cloneDeep as _cloneDeep } from "lodash";
 
-function Streak(props) {
+function StreakList(props) {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const [tabData, setTabData] = useState(
     [
@@ -98,6 +100,27 @@ function Streak(props) {
     });
 
     setTabData(...data)
+
+    if (location.state && location.state.goTo) {
+      setCurrentTab(location.state.goTo)
+
+      if (location.state.goTo === 'Finished') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = false;
+        tab[2].active = true;
+        tab[3].active = false;
+        setTabData([...tab]);
+      }
+      if (location.state.goTo === 'Unfinished') {
+        const tab = [...tabData];
+        tab[0].active = false;
+        tab[1].active = false;
+        tab[2].active = false;
+        tab[3].active = true;
+        setTabData([...tab]);
+      }
+    }
   }, [])
 
 
@@ -159,7 +182,6 @@ function Streak(props) {
     const streakData = _cloneDeep(streaks);
 
     const modified = streakData.map((streak) => {
-      console.log('CURRENTtab', currentTab)
       const totalRewardsCount = streak.rewards.length;
       const rewardEarned = streak.rewards.filter((reward) => reward.rewardEarned).length
       let streakObj = {};
@@ -276,20 +298,7 @@ function Streak(props) {
         setCurrentTab('Finished');
 
       }
-      else if (actionObj.data === 'Finished') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = false;
-        tab[2].active = true;
-        tab[3].active = false;
-
-        setTabData([...tab]);
-
-        const modifiedData = modifyStreaks([...finished]);
-        setTableData([...modifiedData]);
-        setCurrentTab('Finished');
-
-      } else if (actionObj.data === 'Unfinished') {
+      else if (actionObj.data === 'Unfinished') {
         const tab = [...tabData];
         tab[0].active = false;
         tab[1].active = false;
@@ -356,4 +365,4 @@ function Streak(props) {
   );
 }
 
-export default Streak;
+export default StreakList;

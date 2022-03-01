@@ -178,13 +178,42 @@
                                 top: 0;
                                 bottom: 0;
                                 height: 30px;
-                                width: 30px;
+                                min-width: 30px;
+                                max-width: 30px;
                                 box-shadow: 0px 3px 6px var(--boxShadow);
                                 border-radius: 50%;
+                                transition: all 0.5s ease-in-out;
 
                                 i {
                                     font-size: 16px;
                                     color: #8F8F8F;
+                                }
+
+                                .title {
+                                    position: absolute;
+                                    left: 10px;
+                                    visibility: hidden;
+                                    opacity: 0;
+                                    width: 54px;
+                                    transition: visibility 0s,
+                                        opacity 0.5s linear;
+                                }
+                            }
+
+                            .trophy-container:hover {
+                                transition: all 0.5s ease-in-out;
+                                min-width: 90px;
+                                border-radius: 15px;
+
+                                i {
+                                    font-size: 16px;
+                                    color: #8F8F8F;
+                                }
+
+                                .title {
+                                    display: inline-block;
+                                    visibility: visible;
+                                    opacity: 1;
                                 }
                             }
                         }

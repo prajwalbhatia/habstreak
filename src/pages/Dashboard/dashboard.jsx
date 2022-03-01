@@ -95,16 +95,16 @@ function Dashboard(props) {
     rewardsCollected = earned.length;
     streakUnsuccessful = unfinishedStreak.length;
 
-    successfulStreakPerc = totalStreak.length > 0 ? (successfulStreak / totalStreak) * 100 : 0;
-    rewardsCollectedPerc = totalRewards.length > 0 ? (rewardsCollected / totalRewards) * 100 : 0;
-    streakUnsuccessfulPerc = totalStreak.length > 0 ? (streakUnsuccessful / totalStreak) * 100 : 0;
+    successfulStreakPerc = totalStreak > 0 ? ((successfulStreak / totalStreak) * 100).toFixed(2) : 0;
+    rewardsCollectedPerc = totalRewards > 0 ? ((rewardsCollected / totalRewards) * 100).toFixed(2) : 0;
+    streakUnsuccessfulPerc = totalStreak > 0 ? ((streakUnsuccessful / totalStreak) * 100).toFixed(2) : 0;
 
     setPercentageData({
       streakSuccess: successfulStreakPerc,
       streakCompleted: successfulStreak,
       rewardsCollectedPerc: rewardsCollectedPerc,
       rewardsCollected,
-      streakUnsuccessfulPerc: streakUnsuccessfulPerc,
+      streakUnsuccessfulPerc,
       streakUnsuccessful
     })
 
@@ -124,7 +124,9 @@ function Dashboard(props) {
       return activity;
     })
     const groupedByDate = _groupBy(modifiedActivities, 'date');
-    const currentDate = moment(moment().format()).format('ll')
+    console.log('🚀 ~ file: dashboard.jsx ~ line 127 ~ useEffect ~ groupedByDate', groupedByDate);
+    const currentDate = moment(moment().format()).format('ll');
+    console.log('🚀 ~ file: dashboard.jsx ~ line 129 ~ useEffect ~ currentDate', currentDate);
     if (groupedActivities[currentDate])
       setGroupedActivities({ [currentDate]: groupedByDate[currentDate] });
     else
@@ -187,6 +189,7 @@ function Dashboard(props) {
 
   const recentActivityCardJsx = () => {
     const isEmpty = _size(groupedActivities) === 0;
+    console.log('🚀 ~ file: dashboard.jsx ~ line 190 ~ recentActivityCardJsx ~ groupedActivities', groupedActivities);
     if (!isEmpty) {
       return (
         _map(groupedActivities, (value, key) => {
@@ -282,7 +285,17 @@ function Dashboard(props) {
                           </div>
                           <h4 className='perc prog-succ'>{`${percentageData.streakSuccess}%`}</h4>
                         </div>
-                        <div className='count-container count-container-succ'>
+                        <div
+                          onClick={() => {
+                            history.push({
+                              pathname: `/streak-list`,
+                              state: {
+                                goTo: 'Finished',
+                              },
+
+                            });
+                          }}
+                          className='count-container count-container-succ c-pointer'>
                           <h4>{`${percentageData.streakCompleted} Streak completed`}</h4>
                         </div>
 
@@ -304,7 +317,18 @@ function Dashboard(props) {
                           </div>
                           <h4 className='perc prog-reward'>{`${percentageData.rewardsCollectedPerc}%`}</h4>
                         </div>
-                        <div className='count-container count-container-reward'>
+                        <div
+                          className='count-container count-container-reward c-pointer'
+                          onClick={() => {
+                            history.push({
+                              pathname: `/reward-list`,
+                              state: {
+                                goTo: 'Earned',
+                              },
+
+                            });
+                          }}
+                        >
                           <h4>{`${percentageData.rewardsCollected} Rewards completed`}</h4>
                         </div>
 
@@ -326,7 +350,18 @@ function Dashboard(props) {
                           </div>
                           <h4 className='perc prog-unsucc'>{`${percentageData.streakUnsuccessfulPerc}%`}</h4>
                         </div>
-                        <div className='count-container count-container-unsucc'>
+                        <div
+                          className='count-container count-container-unsucc c-pointer'
+                          onClick={() => {
+                            history.push({
+                              pathname: `/streak-list`,
+                              state: {
+                                goTo: 'Unfinished',
+                              },
+
+                            });
+                          }}
+                        >
                           <h4>{`${percentageData.streakUnsuccessful} Streak unsuccessful`}</h4>
                         </div>
 

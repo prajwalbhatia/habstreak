@@ -7,6 +7,7 @@ const initialState = {
 }
 
 const rewardReducer = (state = initialState, action) => {
+console.log('🚀 ~ file: reward.js ~ line 10 ~ rewardReducer ~ action', action);
   switch (action.type) {
     case GET_REWARDS:
       return { ...state, loading : true }

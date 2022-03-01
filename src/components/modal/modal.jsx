@@ -108,6 +108,8 @@ function Modal(props) {
                         labelName={data.label}
                         options={data.options}
                         value={formData?.[data.uid]}
+                        placeholder={'data?.placeholder'}
+
                         optionSelect={(value) => {
                             setDropDown(data.uid, value)
                             props.dropdownHandler(data.uid, value)
@@ -156,7 +158,7 @@ function Modal(props) {
                                         returnValue={data.range ? "range" : "start"}
                                         selectRange={data.range}
                                         onChange={calendarDate}
-                                        minDate={minDate ? new Date(minDate) : new Date()}
+                                        minDate={minDate ? (minDate < new Date() ? new Date() : minDate) : new Date()}
                                         maxDate={maxDate ? new Date(maxDate) : ''}
                                     />
                                 </div>
@@ -193,9 +195,6 @@ function Modal(props) {
             else {
                 props.btnClickHandler({ type, ...formData });
             }
-        }
-        else if (type === 'secondary') {
-            props.btnClickHandler({ type });
         }
         else {
             props.btnClickHandler({ type })

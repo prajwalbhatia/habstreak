@@ -87,12 +87,14 @@ function Streak(props) {
 
 
     useEffect(() => {
-        if (streak && streak[0] && streakDetail && streakDetail.length > 0) {
+        if (streak && streak[0]
+            // && streakDetail && streakDetail.length > 0
+        ) {
             const { dateFrom, dateTo, days, rewards } = streak.length > 0 && streak[0];
             const weekDaysArr = [];
             const daysArr = [];
             const perDayPerc = (100 / (Number(days))).toFixed(2);
-            const daysCompleted = streakDetail.length - 1;
+            const daysCompleted = streakDetail.length > 0 ? streakDetail.length - 1 : 0;
             const progress = daysCompleted * perDayPerc;
 
             for (let i = 0; i < days; i++) {
@@ -108,7 +110,7 @@ function Streak(props) {
                 let rewardDate = moment(new Date(reward.date));
                 const daysDiffOfReward = rewardDate.diff(from, 'days') + 1;
                 const perDayPerc = perPerDay(dateFrom, dateTo);
-                return { perc: perDayPerc * daysDiffOfReward }
+                return { perc: perDayPerc * daysDiffOfReward , title : reward.title }
             })
 
             let progressData = {
@@ -121,7 +123,7 @@ function Streak(props) {
             setProgressData(progressData);
         }
 
-    }, [streak , streakDetail])
+    }, [streak, streakDetail])
 
 
     /**
@@ -371,25 +373,26 @@ function Streak(props) {
                             </div>
 
                             {
-                                // progressData.rewards.length > 0
-                                //     ?
-                                progressData.rewards.map((reward, index) => {
-                                    return (
-                                        <div
-                                            key={index}
-                                            className='center-items trophy-container'
-                                            style={{ left: `calc(${reward.perc}% - 30px)` }}
-                                        >
-                                            <i className="demo-icon icon-reward" />
-                                        </div>
-                                    );
-                                })
-                                // :
+                                progressData.rewards.length > 0
+                                    ?
+                                    progressData.rewards.map((reward, index) => {
+                                        return (
+                                            <div
+                                                key={index}
+                                                className='center-items trophy-container'
+                                                style={{ left: `calc(${reward.perc}% - 30px)` }}
+                                            >
+                                                <span className='rob-med-10-primary title'>{reward.title}</span>
+                                                <i className="demo-icon icon-reward" />
+                                            </div>
+                                        );
+                                    })
+                                    :
+                                    <div className='center-items trophy-container'>
+                                        <i className="demo-icon icon-flag" />
+                                    </div>
 
                             }
-                            <div className='center-items trophy-container'>
-                                <i className="demo-icon icon-flag" />
-                            </div>
                         </div>
 
                         <div className='center-items mt-20'>
