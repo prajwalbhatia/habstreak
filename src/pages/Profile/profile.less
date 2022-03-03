@@ -1,0 +1,77 @@
+.profile-inner-container {
+  height: calc(100vh - (60px + 50px + 50px));
+  padding-top: 30px;
+
+  .left-container,
+  .right-container {
+    background-color: #FBFBFB;
+    border-radius: 20px;
+    margin-right: 30px;
+    padding: 30px;
+  }
+
+  .left-container {
+    .pic-container {
+      .picture-box {
+        height: 170px;
+        width: 170px;
+        border-radius: 50%;
+        box-shadow: 0px 3px 6px var(--boxShadow);
+        margin-top: 20px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      .btns-container {
+        max-width: 140px;
+        margin-left: 20px;
+        justify-content: center;
+
+        .secondary-btn {
+          color: #D63E3E;
+        }
+      }
+    }
+
+  }
+
+  .right-container {
+    margin-right: 0;
+
+    .plan-container {
+      .plan-details {
+        height: 100%;
+        background-color: #fff;
+        box-shadow: 0px 3px 6px var(--boxShadow);
+        border-radius: 20px;
+        position: relative;
+
+        .plan-info {
+          padding: 0 20px;
+          justify-content: space-between;
+        }
+
+        .plan-type {
+          padding: 26px;
+          position: relative;
+          height: 101px;
+          background-color: #fff;
+          box-shadow: 0px 3px 6px var(--boxShadow);
+          border-radius: 20px;
+        }
+
+      }
+    }
+
+    .plan-btn-container {
+      margin-top: 40px;
+
+      .change-plan-btn {
+        max-width: 120px;
+
+      }
+    }
+  }
+
+}

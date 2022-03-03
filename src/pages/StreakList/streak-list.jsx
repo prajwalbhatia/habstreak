@@ -356,6 +356,7 @@ function StreakList(props) {
                 tableData={[...tableData]}
                 currentTab={currentTab}
                 action={tableAction}
+                type='Streak'
               />
 
             </div>

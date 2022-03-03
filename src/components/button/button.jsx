@@ -11,7 +11,7 @@ export function PrimaryButton(props) {
         <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
             <button
                 className={btnClass ? `btn primary-btn ${btnClass}` : `btn primary-btn`}
-                onClick={() => click()}
+                onClick={(e) => click(e)}
                 type="button"
                 {...rest}
             >
@@ -35,7 +35,7 @@ export function SecondaryButton(props) {
         <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
             <button
                 className={btnClass ? `btn secondary-btn ${btnClass}` : `btn secondary-btn`}
-                onClick={() => click()}
+                onClick={(e) => click(e)}
                 type="button"
                 {...rest}
             >
@@ -60,7 +60,7 @@ export function OutlinedPrimaryButton(props) {
         <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
             <button
                 className={btnClass ? `btn outline-primary-btn ${btnClass}` : `btn outline-primary-btn`}
-                onClick={() => click()}
+                onClick={(e) => click(e)}
                 type="button"
                 {...rest}
             >
@@ -92,7 +92,7 @@ export function IconButton(props) {
                     :
                     `icon-button-container`
             }
-            onClick={() => click()}
+            onClick={(e) => click(e)}
         >
             {props.icon}
             {

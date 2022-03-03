@@ -481,6 +481,34 @@
       "search": [
         "logout"
       ]
+    },
+    {
+      "uid": "a2387be469222d40119db78b7a58adec",
+      "css": "heart",
+      "code": 59409,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M500 1000C231.2 800.3 90.2 618.7 32.3 466.7-122.6 59.2 319.9-135.6 500 104.9 680.1-135.6 1122.6 59.1 967.7 466.7 909.8 618.7 768.8 800.3 500 1000Z",
+        "width": 1000
+      },
+      "search": [
+        "heart"
+      ]
+    },
+    {
+      "uid": "abb47b87e46cf58ac4e6dc45d7a3dd9c",
+      "css": "menu",
+      "code": 59424,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M0 833.3H1000V720.8H0V833.3ZM0 554.2H1000V441.7H0V554.2ZM0 166.7V279.2H1000V166.7H0Z",
+        "width": 1000
+      },
+      "search": [
+        "menu"
+      ]
     }
   ]
 }

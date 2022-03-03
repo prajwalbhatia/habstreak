@@ -9,11 +9,21 @@ import { cloneDeep as _cloneDeep } from 'lodash';
 
 //CONSTANTS
 import { theme } from "constants/index";
+import { render } from '@testing-library/react';
 
+//COMPONENTS
+import { OutlinedPrimaryButton } from "components/button/button";
+
+//Redux
+import { useSelector } from "react-redux";
+
+//UTILITIES
+import { dialogForCreateAndUpdateStreak, dialogForCreateAndUpdateReward } from "utilities";
 
 function Table(props) {
-  const { tableHead, tabData, tableData, action, currentTab } = props;
+  const { tableHead, tabData, tableData, action, currentTab, type } = props;
   const history = useHistory();
+  const streaks = useSelector((state) => state.streak.streaks);
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -52,7 +62,10 @@ function Table(props) {
                   })
                 }}
               >
-                <h4 className="font-rob-med">{`${title} (${count})`}</h4>
+                <div className='d-flex'>
+                  <h4 className="font-rob-med">{`${title}`}</h4>
+                  <h4 className="font-rob-med">{`(${count})`}</h4>
+                </div>
                 <div className="center-items">
                   <div className={active ? "active-tab" : ""}></div>
                 </div>
@@ -159,7 +172,7 @@ function Table(props) {
                 },
 
               });
-            }}  
+            }}
             key={index}
             className="s-14-rm-pr table-data c-pointer" >
             {data[headingData.uid].title}
@@ -203,7 +216,7 @@ function Table(props) {
               )
             })
             :
-            <div className='center-items h-100'>
+            <div className='center-items h-100 w-100'>
               <h4>No data available</h4>
             </div>
         }
@@ -212,12 +225,10 @@ function Table(props) {
     )
   }
 
-  //FUNCTIONS
-  return (
-    <div className='table-parent-container'>
-      {renderTableTab()}
-      <div className="flex-dir-col table-container">
 
+  const tableDataForLargeScreen = () => {
+    return (
+      <>
         <div className="flex-dir-col table-head">
           <div className="d-flex table-row">
             {renderTableHeading()}
@@ -229,7 +240,139 @@ function Table(props) {
         >
           {renderTableData()}
         </div>
+      </>
+    )
+  }
+
+
+  const tableDataForSmallScreen = () => {
+    const data = _cloneDeep(tableData);
+    let val = 0;
+    return (
+      <div className='mt-30 d-flex o-scroll table-card-container'>
+
+        {
+          data.length > 0
+            ?
+            data.map((dataInner, index) => {
+              val += 1;
+              if (val === 10) val = 0;
+              return (
+                <div
+                  onClick={() => navigate(dataInner)}
+                  key={index}
+                  className='table-card'>
+                  <div
+                    className='tag'
+                    style={{ background: theme[val] }}
+                  ></div>
+
+                  <h3 className='font-rob-med mt-5'>{dataInner.title}</h3>
+                  <span className='rob-med-14-grey'>
+                    {
+                      type === 'Streak'
+                        ?
+                        (dataInner.running === '--' ? '--' : `${dataInner.running} running`)
+                        :
+                        `${dataInner?.streak?.title}`
+                    }
+                  </span>
+
+                  <div className='table-card-dates mt-10 flex-dir-col'>
+                    {
+                      type === 'Streak'
+                        ?
+                        <>
+                          <div className='d-flex'>
+                            <span className='circle mr-10'>
+                            </span><span className='rob-med-14-black'>Start: {dataInner.startDate}</span>
+                          </div>
+                          <div className='d-flex mt-10'>
+                            <span className='circle mr-10'></span>
+                            <span className='rob-med-14-black '>End: {dataInner.endDate}</span>
+                          </div>
+
+                          <div className='d-flex mt-10'>
+                            <span className='circle mr-10'>
+                            </span><span className='rob-med-14-black'>Rewards: {dataInner.reward}</span>
+                          </div>
+                        </>
+
+                        :
+                        <>
+                          <div className='d-flex'>
+                            <span className='circle mr-10'>
+                            </span><span className='rob-med-14-black'>Date: {dataInner.date}</span>
+                          </div>
+                          <div className='d-flex mt-10'>
+                            <span className='circle mr-10'></span>
+                            <span className='rob-med-14-black '>{`Days left: ${dataInner.running} Days`}</span>
+                          </div>
+
+                          <div className='d-flex mt-10'>
+                            <span className='circle mr-10'>
+                            </span><span className='rob-med-14-black'>Progress: <span className='color-primary'>{dataInner.progress}</span></span>
+                          </div>
+                        </>
+                    }
+                  </div>
+
+                  <div className='d-flex table-card-btns mt-20'>
+                    <OutlinedPrimaryButton
+                      name={'Edit'}
+                      click={(e) => deleteRow(e, dataInner)}
+                      btnContainerClass={'mr-10'}
+                      btnClass={'small-screen-btn'}
+                    />
+
+                    {
+                      currentTab !== 'Unfinished'
+                        ?
+                        <OutlinedPrimaryButton
+                          name={'Delete'}
+                          click={(e) => editRow(e, dataInner)}
+                          btnClass={'small-screen-btn danger-btn'}
+                        />
+                        : 
+                        null
+                    }
+                  </div>
+                </div>
+              )
+            })
+            :
+            <div className='center-items h-100 w-100'>
+              <h4>No data available</h4>
+            </div>
+        }
+
+
       </div>
+
+    )
+  }
+
+  //FUNCTIONS
+  return (
+    <div className='table-parent-container'>
+      {renderTableTab()}
+      <div className="flex-dir-col table-container">
+        {tableDataForLargeScreen()}
+
+        {tableDataForSmallScreen()}
+        
+      </div>
+
+      <OutlinedPrimaryButton
+        name={type === 'Reward' ? 'Add New Reward' : 'Add New Streak'}
+        click={type === 'Reward' ?
+          () => dialogForCreateAndUpdateReward('create', {}, '', streaks)
+          :
+          () => dialogForCreateAndUpdateStreak()
+        }
+        btnContainerClass="mt-30"
+        btnClass='h-60 br-16'
+      />
     </div>
   )
 }
@@ -246,7 +389,8 @@ Table.propTypes = {
   })).isRequired,
   tableData: PropTypes.arrayOf(PropTypes.object).isRequired,
   action: PropTypes.func.isRequired,
-  currentTab: PropTypes.string
+  currentTab: PropTypes.string,
+  type: PropTypes.string
 }
 
 export default Table

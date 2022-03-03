@@ -6,8 +6,7 @@
     border-radius: 20px;
     padding: 0 30px 30px 30px;
 
-    .date-data:not(:first-of-type)
-    {
+    .date-data:not(:first-of-type) {
       margin-top: 30px;
     }
 
@@ -39,13 +38,12 @@
           font-size: 20px;
         }
 
-        .line
-        {
+        .line {
           position: absolute;
           height: 20px;
           width: 2px;
           background: var(--globaBlack);
-          top : 50px;
+          top: 50px;
           opacity: 0.3;
         }
       }
@@ -66,6 +64,15 @@
           color: #8F8F8F;
         }
       }
+    }
+  }
+}
+
+//MEDIA QUERIES
+@media only screen and (max-width: 820px) {
+  .recent-activities {
+    .activities-container {
+      height: calc(100vh - 330px);
     }
   }
 }

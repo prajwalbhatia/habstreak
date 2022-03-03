@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 //Component 
 import { PrimaryButton } from "components/button/button";
 import { TextInputElement, InputElement } from "components/form-elements/form-elements";
-
+import { AiFillHeart } from "react-icons/ai";
+import { IconContext } from "react-icons"
 //CSS
 import "../../index.css";
 import './landingPage.css';
@@ -20,6 +21,8 @@ function LandingPage() {
   const history = useHistory();
   //STATES
   const [selectedNav, setSelectedNav] = useState('home');
+  const [showListing, setShowListing] = useState(false);
+
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -70,7 +73,7 @@ function LandingPage() {
             </div>
 
             {/* Navigation */}
-            <div className='main-navigation'>
+            <div id="home" className='main-navigation'>
               <nav className='landing-navigation'>
                 <ol
                   className='d-flex'
@@ -88,7 +91,7 @@ function LandingPage() {
             <div className='buttons-container'>
               <PrimaryButton
                 name={'Login'}
-                click={() => {jumpToAccount('login')}}
+                click={() => { jumpToAccount('login') }}
                 btnContainerClass="ml-10"
                 btnClass='header-btn landing-login-btn'
               />
@@ -100,13 +103,41 @@ function LandingPage() {
                 btnClass='header-btn landing-get-started'
               />
             </div>
+
+            <div className='d-flex center-items btn-list-container'>
+              {
+                showListing
+                  ?
+                  <i
+                    onClick={() => setShowListing(false)}
+                    className="demo-icon size-30-primary  icon-close" />
+                  :
+                  <i
+                    onClick={() => setShowListing(true)}
+                    className="demo-icon  size-30-primary icon-menu" />
+              }
+              {showListing && <div className='listing'>
+                <ol
+                  className='d-flex flex-dir-col'
+                  onClick={handleLinkClick}
+                >
+                  <li data-value='home'>Home</li>
+                  <li data-value='feature'>Feature</li>
+                  <li data-value='guide'>Guide</li>
+                  <li data-value='pricing'>Pricing</li>
+                </ol>
+
+                <span className='rob-med-10-grey'>Made with
+                  <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
+              </div>}
+            </div>
           </header>
 
           {/* <main> */}
           <section id="hero" className='hero-section padding-global'>
             <div className='hero-container'>
-              <h1 className='h1-50'>Malesuada consectetur posuere proin proin enim</h1>
-              <p className='p-18'>Cras eu elit congue, placerat dui ut, tincidunt nisl. Nulla leo elit, pharetra bibendum justo quis, cursus consectetur erat. Sed nec posuere turpis.</p>
+              <h1 className='h1-50'>Get things done and reward yourself</h1>
+              <p className='p-18'>Are you tired of starting the things and dropping i in between??? Not anymore, try habstreak, record your task and reward yourself on reaching milestones</p>
               <div className='buttons d-flex'>
                 <PrimaryButton
                   name={'Get Started'}
@@ -133,31 +164,31 @@ function LandingPage() {
             <div className="left-section">
               <div className='top-row'>
                 <div className='feature-card'>
-                  <h1>Features</h1>
-                  <p>Cras eu elit congue, placerat dui ut, tincidunt nisl.</p>
+                  <h1>Streak</h1>
+                  <p>Create a streak of your task and keep ourself aware of your progress</p>
                 </div>
 
                 <div className='feature-card'>
-                  <h1>Features</h1>
-                  <p>Cras eu elit congue, placerat dui ut, tincidunt nisl.</p>
+                  <h1>Rewards</h1>
+                  <p>Reward yourself on reaching certain milestones on every streak</p>
                 </div>
               </div>
               <div className='bottom-row'>
                 <div className='feature-card'>
-                  <h1>Features</h1>
-                  <p>Cras eu elit congue, placerat dui ut, tincidunt nisl.</p>
+                  <h1>Progress</h1>
+                  <p>Everyday progress is necessary to keep you going and accomplish more.</p>
                 </div>
 
                 <div className='feature-card'>
-                  <h1>Features</h1>
-                  <p>Cras eu elit congue, placerat dui ut, tincidunt nisl.</p>
+                  <h1>Details</h1>
+                  <p>Keep record of all task you are completing on a particular day and on particular streak</p>
                 </div>
               </div>
             </div>
 
             <div className="right-section">
-              <h1 className='h1-40'>Malesuada consectetur posuere proin proin enim</h1>
-              <p className='p-18'>Cras eu elit congue, placerat dui ut, tincidunt nisl. Nulla leo elit, pharetra bibendum justo quis, cursus consectetur erat. Sed nec posuere turpis.</p>
+              <h1 className='h1-40'>Get things done and reward yourself</h1>
+              <p className='p-18'>Are you tired of starting the things and dropping i in between??? Not anymore, try habstreak, record your task and reward yourself on reaching milestones</p>
 
               <div className='buttons d-flex mt-50'>
                 <PrimaryButton

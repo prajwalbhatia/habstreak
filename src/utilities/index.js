@@ -8,7 +8,7 @@ import moment from 'moment';
 import { createStreakData, updateStreakData, deleteStreakData, deleteStreakAndRewardData } from "redux/actions/streak";
 import { createRewardData, updateRewardData, deleteRewardBulk, deleteRewardData } from "redux/actions/reward";
 import { size } from "lodash";
-import { refreshTokenFun } from "redux/actions/user";
+import { refreshTokenFun , logout } from "redux/actions/user";
 
 //FUNCTIONS
 export const errorHandler = (error, errorInfo) => {
@@ -399,4 +399,9 @@ export const perPerDay = (dateFrom , dateTo) => {
   const perDayPerc = (100 / (daysDiff)).toFixed(2);
 
   return Number(perDayPerc);
+}
+
+export const logoutFun = (history) => {
+  store.dispatch(logout());
+  history.replace('/');
 }

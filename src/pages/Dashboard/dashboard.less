@@ -37,7 +37,8 @@
       .streaks {
         flex: auto;
         margin-left: 25px;
-        flex-wrap: wrap;
+        overflow-x: scroll;
+        min-height: 300px;
 
         .streak-card {
           min-width: 210px;
@@ -152,7 +153,8 @@
 
       .progress-container {
         flex: auto;
-        flex-wrap: wrap;
+        overflow-x: scroll;
+        min-height: 300px;
 
         .progress-card {
           flex: 1;
@@ -162,6 +164,7 @@
           margin-top: 25px;
           padding: 15px;
           min-width: 205px;
+          min-height: 250px;
 
           .title-container {
             align-items: center;
@@ -406,6 +409,12 @@
 @media only screen and (max-width: 1560px) {
 
   /* Styles */
+  .dashboard
+  {
+    height: calc(100vh - (var(--navigationSmallHeight) + 50px));
+  }
+
+
   .dashboard-inner-container {
     .left-container {
       margin-right: 0;

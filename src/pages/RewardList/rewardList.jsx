@@ -265,8 +265,8 @@ function RewardList(props) {
                 tableHead={rewardListTableHeadings}
                 tabData={[...tabData]}
                 tableData={[...tableData]}
-
                 action={tableAction}
+                type='Reward'
               />
             </div>
         }

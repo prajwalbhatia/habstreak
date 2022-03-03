@@ -26,7 +26,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, isSameOrBefore, activityTitle, progressFun, isSame, isBefore } from 'utilities';
+import { errorHandler, isSameOrBefore, activityTitle, isBefore } from 'utilities';
 
 //CONSTANTS
 import { icons, theme } from "constants/index";
@@ -35,7 +35,6 @@ function Dashboard(props) {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [taskCount, setTaskCount] = useState(0);
   const [groupedActivities, setGroupedActivities] = useState({});
   const [percentageData, setPercentageData] = useState({
@@ -124,10 +123,8 @@ function Dashboard(props) {
       return activity;
     })
     const groupedByDate = _groupBy(modifiedActivities, 'date');
-    console.log('🚀 ~ file: dashboard.jsx ~ line 127 ~ useEffect ~ groupedByDate', groupedByDate);
     const currentDate = moment(moment().format()).format('ll');
-    console.log('🚀 ~ file: dashboard.jsx ~ line 129 ~ useEffect ~ currentDate', currentDate);
-    if (groupedActivities[currentDate])
+    if (groupedByDate[currentDate])
       setGroupedActivities({ [currentDate]: groupedByDate[currentDate] });
     else
       setGroupedActivities({})
@@ -137,12 +134,12 @@ function Dashboard(props) {
   const streakCardJsx = () => {
     if (streaks.length > 0) {
       const filterSttreaks = streaks.filter((streak, index) => {
-        if (index <= 3 && isSameOrBefore(streak.dateFrom, Date().now))
+        if (index <= 2 && isSameOrBefore(streak.dateFrom, Date().now))
           return streak
       })
       return (
         filterSttreaks.map((streak, index) => {
-          const { dateFrom, dateTo, days, _id } = streak;
+          const { dateFrom, dateTo, _id } = streak;
           const todayDate = moment(new Date());
           const percPerDay = perPerDay(dateFrom, dateTo);
           const daysDone = todayDate.diff(dateFrom, 'days');
@@ -189,7 +186,6 @@ function Dashboard(props) {
 
   const recentActivityCardJsx = () => {
     const isEmpty = _size(groupedActivities) === 0;
-    console.log('🚀 ~ file: dashboard.jsx ~ line 190 ~ recentActivityCardJsx ~ groupedActivities', groupedActivities);
     if (!isEmpty) {
       return (
         _map(groupedActivities, (value, key) => {
@@ -225,6 +221,117 @@ function Dashboard(props) {
         </div>
       )
     }
+  }
+
+  const progressDataJsx = () => {
+    return (
+      <>
+        <div className='d-flex header-data'>
+          <h2>Data</h2>
+        </div>
+
+        <div className='d-flex progress-container'>
+          <div className='flex-dir-col progress-card'>
+            <div className='flex-dir-col title-container'>
+              <div className='center-items title-icon title-icon-succ'>
+                <i className="demo-icon icon-streak" />
+              </div>
+              <h3 className='d-flex'>Streak Successful</h3>
+            </div>
+            <div className='d-flex progress-bar'>
+              <div className='d-flex bar'>
+                <div
+                  className='bar-complete bar-comp-succ'
+                  style={{ width: `${percentageData.streakSuccess}%` }}
+                ></div>
+              </div>
+              <h4 className='perc prog-succ'>{`${percentageData.streakSuccess}%`}</h4>
+            </div>
+            <div
+              onClick={() => {
+                history.push({
+                  pathname: `/streak-list`,
+                  state: {
+                    goTo: 'Finished',
+                  },
+
+                });
+              }}
+              className='count-container count-container-succ c-pointer'>
+              <h4>{`${percentageData.streakCompleted} Streak completed`}</h4>
+            </div>
+
+          </div>
+
+          <div className='flex-dir-col progress-card'>
+            <div className='flex-dir-col title-container'>
+              <div className='center-items title-icon title-icon-reward'>
+                <i className="demo-icon icon-reward" />
+              </div>
+              <h3 className='d-flex'>Reward Collected</h3>
+            </div>
+            <div className='d-flex progress-bar'>
+              <div className='d-flex bar'>
+                <div
+                  className='bar-complete bar-comp-reward'
+                  style={{ width: `${percentageData.rewardsCollectedPerc}%` }}
+                ></div>
+              </div>
+              <h4 className='perc prog-reward'>{`${percentageData.rewardsCollectedPerc}%`}</h4>
+            </div>
+            <div
+              className='count-container count-container-reward c-pointer'
+              onClick={() => {
+                history.push({
+                  pathname: `/reward-list`,
+                  state: {
+                    goTo: 'Earned',
+                  },
+
+                });
+              }}
+            >
+              <h4>{`${percentageData.rewardsCollected} Rewards completed`}</h4>
+            </div>
+
+          </div>
+
+          <div className='flex-dir-col progress-card'>
+            <div className='flex-dir-col title-container'>
+              <div className='center-items title-icon title-icon-unsucc'>
+                <i className="demo-icon icon-streak" />
+              </div>
+              <h3 className='d-flex'>Streak Unsuccessful</h3>
+            </div>
+            <div className='d-flex progress-bar'>
+              <div className='d-flex bar'>
+                <div
+                  className='bar-complete bar-comp-unsucc'
+                  style={{ width: `${percentageData.streakUnsuccessfulPerc}%` }}
+                ></div>
+              </div>
+              <h4 className='perc prog-unsucc'>{`${percentageData.streakUnsuccessfulPerc}%`}</h4>
+            </div>
+            <div
+              className='count-container count-container-unsucc c-pointer'
+              onClick={() => {
+                history.push({
+                  pathname: `/streak-list`,
+                  state: {
+                    goTo: 'Unfinished',
+                  },
+
+                });
+              }}
+            >
+              <h4>{`${percentageData.streakUnsuccessful} Streak unsuccessful`}</h4>
+            </div>
+
+          </div>
+
+        </div>
+      </>
+    )
   }
 
   return (
@@ -264,111 +371,7 @@ function Dashboard(props) {
                     </div>
                   </div>
                   <div className='flex-dir-col data-container'>
-                    <div className='d-flex header-data'>
-                      <h2>Data</h2>
-                    </div>
-
-                    <div className='d-flex progress-container'>
-                      <div className='flex-dir-col progress-card'>
-                        <div className='flex-dir-col title-container'>
-                          <div className='center-items title-icon title-icon-succ'>
-                            <i className="demo-icon icon-streak" />
-                          </div>
-                          <h3 className='d-flex'>Streak Successful</h3>
-                        </div>
-                        <div className='d-flex progress-bar'>
-                          <div className='d-flex bar'>
-                            <div
-                              className='bar-complete bar-comp-succ'
-                              style={{ width: `${percentageData.streakSuccess}%` }}
-                            ></div>
-                          </div>
-                          <h4 className='perc prog-succ'>{`${percentageData.streakSuccess}%`}</h4>
-                        </div>
-                        <div
-                          onClick={() => {
-                            history.push({
-                              pathname: `/streak-list`,
-                              state: {
-                                goTo: 'Finished',
-                              },
-
-                            });
-                          }}
-                          className='count-container count-container-succ c-pointer'>
-                          <h4>{`${percentageData.streakCompleted} Streak completed`}</h4>
-                        </div>
-
-                      </div>
-
-                      <div className='flex-dir-col progress-card'>
-                        <div className='flex-dir-col title-container'>
-                          <div className='center-items title-icon title-icon-reward'>
-                            <i className="demo-icon icon-reward" />
-                          </div>
-                          <h3 className='d-flex'>Reward Collected</h3>
-                        </div>
-                        <div className='d-flex progress-bar'>
-                          <div className='d-flex bar'>
-                            <div
-                              className='bar-complete bar-comp-reward'
-                              style={{ width: `${percentageData.rewardsCollectedPerc}%` }}
-                            ></div>
-                          </div>
-                          <h4 className='perc prog-reward'>{`${percentageData.rewardsCollectedPerc}%`}</h4>
-                        </div>
-                        <div
-                          className='count-container count-container-reward c-pointer'
-                          onClick={() => {
-                            history.push({
-                              pathname: `/reward-list`,
-                              state: {
-                                goTo: 'Earned',
-                              },
-
-                            });
-                          }}
-                        >
-                          <h4>{`${percentageData.rewardsCollected} Rewards completed`}</h4>
-                        </div>
-
-                      </div>
-
-                      <div className='flex-dir-col progress-card'>
-                        <div className='flex-dir-col title-container'>
-                          <div className='center-items title-icon title-icon-unsucc'>
-                            <i className="demo-icon icon-streak" />
-                          </div>
-                          <h3 className='d-flex'>Streak Unsuccessful</h3>
-                        </div>
-                        <div className='d-flex progress-bar'>
-                          <div className='d-flex bar'>
-                            <div
-                              className='bar-complete bar-comp-unsucc'
-                              style={{ width: `${percentageData.streakUnsuccessfulPerc}%` }}
-                            ></div>
-                          </div>
-                          <h4 className='perc prog-unsucc'>{`${percentageData.streakUnsuccessfulPerc}%`}</h4>
-                        </div>
-                        <div
-                          className='count-container count-container-unsucc c-pointer'
-                          onClick={() => {
-                            history.push({
-                              pathname: `/streak-list`,
-                              state: {
-                                goTo: 'Unfinished',
-                              },
-
-                            });
-                          }}
-                        >
-                          <h4>{`${percentageData.streakUnsuccessful} Streak unsuccessful`}</h4>
-                        </div>
-
-                      </div>
-
-                    </div>
-
+                    {progressDataJsx()}
                   </div>
                 </div>
                 <div className='flex-dir-col right-container'>

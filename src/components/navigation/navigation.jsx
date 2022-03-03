@@ -22,15 +22,16 @@ import { useEffect } from 'react';
 //IMAGES
 import { ReactComponent as Logo } from 'assests/images/Logo.svg';
 
+//UTILITIES
+import { logoutFun } from 'utilities';
+
 
 function Navigation(props) {
-  const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
 
   const [navigation, setNavigation] = useState([...navigationList]);
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
-  console.log('🚀 ~ file: navigation.jsx ~ line 33 ~ Navigation ~ user', user);
 
 
   useEffect(() => {
@@ -70,11 +71,6 @@ function Navigation(props) {
     return icon[0].iconClass;
   }
 
-  const logoutFun = () => {
-    dispatch(logout());
-    history.replace('/');
-  }
-
 
   useEffect(() => {
     const path = location.pathname;
@@ -94,66 +90,114 @@ function Navigation(props) {
   }, [location])
 
   return (
-    <nav className="navigation">
-      <div className="brand-name-container">
-        <Logo />
-      </div>
+    <>
+      <nav className="navigation">
+        <div className="brand-name-container">
+          <Logo />
+        </div>
 
-      <div className='avatar-container'>
-
-      </div>
-
-      <div className='personal-detail-container'>
-        <h4 className='name'>{user?.result?.name}</h4>
-        <h4 className='email'>{user?.result?.email}</h4>
-      </div>
-
-      <div className="navigation-container">
-        <ol>
-          {
-            navigation?.map((list) => {
-              return (
-                <li
-                  key={list._id}
-                  onClick={() => {
-                    linkClick(list)
-                  }}
-                >
-                  <div className="d-flex">
-                    <i
-                      className={
-                        list.active
-                          ?
-                          `demo-icon ${iconDisplay(list)} size-16-8f activeText mr-10`
-                          :
-                          `demo-icon ${iconDisplay(list)} size-16-8f mr-10`
-                      }
-                    />
-                    <h5 onClick={(e) => { e.preventDefault() }}
-                      className={list.active ? "activeText" : ""}>{list.name}
-                    </h5>
-                  </div>
-                  <div className={list.active ? "active" : ""}></div>
-                </li>
-              );
+        <div
+          className='avatar-container c-pointer display-none'
+          style={{
+            backgroundImage: `url(${user?.result?.imageUrl})`
+          }}
+          onClick={() => {
+            history.push({
+              pathname: `/profile`,
             })
-          }
-        </ol>
-      </div>
+          }}
+        >
 
-      <div
-        className='logout-btn-container'
-        onClick={() => logoutFun()}
-      >
-        <i className="demo-icon icon-logout" />
-        <h5 className=''>Logout</h5>
-      </div>
-      <div className="developer-container">
-        <span>Made with
-          <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
-      </div>
-      <div className='vertical-line'></div>
-    </nav>
+        </div>
+
+        <div className='personal-detail-container display-none'>
+          <h4 className='name'>{user?.result?.name}</h4>
+          <h4 className='email'>{user?.result?.email}</h4>
+        </div>
+
+        <div className="navigation-container display-none">
+          <ol>
+            {
+              navigation?.map((list) => {
+                return (
+                  <li
+                    key={list._id}
+                    onClick={() => {
+                      linkClick(list)
+                    }}
+                  >
+                    <div className="d-flex">
+                      <i
+                        className={
+                          list.active
+                            ?
+                            `demo-icon ${iconDisplay(list)} size-16-8f activeText mr-10`
+                            :
+                            `demo-icon ${iconDisplay(list)} size-16-8f mr-10`
+                        }
+                      />
+                      <h5 onClick={(e) => { e.preventDefault() }}
+                        className={list.active ? "activeText" : ""}>{list.name}
+                      </h5>
+                    </div>
+                    <div className={list.active ? "active" : ""}></div>
+                  </li>
+                );
+              })
+            }
+          </ol>
+        </div>
+
+        <div
+          className='logout-btn-container display-none'
+          onClick={() => logoutFun(history)}
+        >
+          <i className="demo-icon icon-logout" />
+          <h5 className=''>Logout</h5>
+        </div>
+        <div className="developer-container display-none">
+          <span>Made with
+            <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
+        </div>
+        <div className='vertical-line display-none'></div>
+      </nav>
+
+      <nav className='navigation-small-screen'>
+        <div className="navigation-container">
+          <ol className='d-flex justify-space-between'>
+            {
+              navigation?.map((list) => {
+                return (
+                  <li
+                    key={list._id}
+                    onClick={() => {
+                      linkClick(list)
+                    }}
+                  >
+                    <div className="d-flex flex-dir-col center-items pos-relative">
+                      <i
+                        className={
+                          list.active
+                            ?
+                            `demo-icon ${iconDisplay(list)} size-16-8f activeText`
+                            :
+                            `demo-icon ${iconDisplay(list)} size-16-8f`
+                        }
+                      />
+                      <h5 onClick={(e) => { e.preventDefault() }}
+                        className={list.active ? "activeText c-pointer" : "c-pointer"}>{list.name}
+                      </h5>
+                    <div className={list.active ? "active" : ""}></div>
+                    </div>
+                  </li>
+                );
+              })
+            }
+          </ol>
+        </div>
+
+      </nav>
+    </>
   );
 }
 

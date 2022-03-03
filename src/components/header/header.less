@@ -4,21 +4,23 @@
     width: 100%;
     height: var(--headerHeight);
 
-    .header-nav-container
+    .small-screen-header
     {
-        i
-        {
+        display: none;
+    }
+
+    .header-nav-container {
+        i {
             font-size: 15px;
-            color : var(--primaryColor);
+            color: var(--primaryColor);
             cursor: pointer;
             margin-right: 10px;
         }
 
-        h5
-        {
+        h5 {
             font-size: 14px;
             font-family: RobotoMedium;
-            color : #8F8F8F;
+            color: #8F8F8F;
             cursor: pointer;
         }
     }
@@ -37,6 +39,45 @@
             color: var(--greyText);
         }
     }
+
+    .list-container {
+        display: none;
+        position: relative;
+
+        .menu-list {
+            height: 214px;
+            width: 210px;
+            border-radius: 20px;
+            box-shadow: 0px 3px 6px var(--boxShadow);
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #FFFFFF;
+            padding: 20px;
+
+            li {
+                margin-bottom: 15px;
+                font-family: RobotoMedium;
+                font-size: 14px;
+            }
+
+            .heart-icon {
+                font-size: 13px;
+                color: var(--primaryColor);
+            }
+
+            .profile {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                box-shadow: 0px 3px 6px var(--boxShadow);
+                background: transparent;
+                background-size: contain;
+            }
+        }
+    }
+
+
 
     .notification-dropdown-container {
         width: 210px;
@@ -69,6 +110,33 @@
 
         li:hover {
             // background-color: #FFEBE6;
+        }
+    }
+
+}
+
+
+//MEDIA QUERIES
+@media only screen and (max-width: 820px) {
+
+    .header {
+        height: calc(var(--headerHeight) + var(--headerHeight) + 30px);
+        flex-direction: column;
+        .small-screen-header
+        {
+            display: flex;
+        }
+
+        .header-btn-container {
+            display: none;
+        }
+
+        .header-text-container {
+            // margin-top: 100px;
+        }
+
+        .list-container {
+            display: flex;
         }
     }
 
