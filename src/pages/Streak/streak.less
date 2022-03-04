@@ -5,6 +5,7 @@
 
         .left-container {
             height: 100%;
+            width: 50%;
             border-radius: 20px;
             background: #FFF7F5;
             flex: 1;
@@ -66,6 +67,7 @@
 
         .right-container {
             flex: 1;
+            width: 50%;
 
             .streak-detail-container {
                 border-radius: 20px;
@@ -103,7 +105,7 @@
 
                     .dates-info {
                         overflow: auto;
-                        width: 600px;
+                        max-width: 100%;
 
                         .days {
                             span {
@@ -293,6 +295,39 @@
 
             .ml-10 {
                 margin-left: 10px;
+            }
+        }
+    }
+}
+
+//MEDIA QUERIES
+@media only screen and (max-width: 1020px) {
+    .streak {
+        height: calc(100vh - (var(--navigationSmallHeight)));
+        overflow: auto;
+
+        .streak-details-container {
+            flex-direction: column-reverse;
+            height: 100vh;
+
+            .right-container,
+            .left-container {
+                width: 100%;
+            }
+
+            .right-container {
+                .streak-detail-container {
+                    margin-bottom: 0;
+                }
+
+                .performance-container
+                {
+                    margin-top: 30px;
+                }
+            }
+
+            .left-container {
+                margin-top: 30px;
             }
         }
     }

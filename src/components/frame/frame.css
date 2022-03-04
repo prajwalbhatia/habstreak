@@ -1,1 +1,1 @@
-.frame{height:100vh;overflow:hidden;margin-left:calc(var(--navigationWidth));padding:var(--pagesPaddingHorizontal) var(--pagesPaddingHorizontal)}@media only screen and (max-width:820px){.frame{margin-left:0}}
+.frame{height:100vh;overflow:hidden;margin-left:calc(var(--navigationWidth));padding:var(--pagesPaddingHorizontal) var(--pagesPaddingHorizontal)}@media only screen and (max-width:820px){.frame{margin-left:0;height:calc(100vh - (var(--navigationSmallHeight) + 50px));overflow:auto}}

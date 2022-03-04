@@ -370,7 +370,7 @@ function Table(props) {
           :
           () => dialogForCreateAndUpdateStreak()
         }
-        btnContainerClass="mt-30"
+        btnContainerClass="mt-30 small-screen-btn"
         btnClass='h-60 br-16'
       />
     </div>

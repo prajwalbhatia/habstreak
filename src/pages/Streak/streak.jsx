@@ -296,7 +296,7 @@ function Streak(props) {
 
     const performanceDetailJsx = () => {
         return (
-            <div className='d-flex flex-1 flex-dir-col'>
+            <div className='d-flex flex-1 flex-dir-col w-100'>
                 <div className='d-flex justify-space-between detail-head-container'>
                     <h3 className='jos-18-primary'>Performance</h3>
                     {/* <div className='btn-container'>
