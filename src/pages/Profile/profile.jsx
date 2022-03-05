@@ -66,11 +66,13 @@ function Profile(props) {
                   <div className='d-flex flex-1 pic-container'>
                     <div className=''>
                       <div
-                        className='picture-box'
+                        className='picture-box d-flex center-items'
                         style={{
                           backgroundImage: `url(${user?.result?.imageUrl})`
                         }}
-                      ></div>
+                      >
+                        {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}
+                      </div>
                       {false && <span className='d-flex mt-20 rob-reg-14-grey'>Recommend size is 256x256px</span>}
                     </div>
                     {false && <div className='flex-1 flex-dir-col btns-container'>
@@ -95,7 +97,7 @@ function Profile(props) {
                       <span className='rob-reg-12-grey mr-10'>Name:</span><span className='rob-reg-12-black'>{user?.result?.name}</span>
                     </div>
 
-                   {false &&  <div className='mt-20'>
+                    {false && <div className='mt-20'>
                       <span className='rob-reg-12-grey mr-10'>DOB:</span><span className='rob-reg-12-black'>01.02.1998</span>
                     </div>}
 
@@ -107,7 +109,7 @@ function Profile(props) {
                   </div>
 
                   <div className='edit-btn-container'>
-                   {false && <OutlinedPrimaryButton
+                    {false && <OutlinedPrimaryButton
                       name='EDIT'
                       // click={}
                       btnContainerClass=""

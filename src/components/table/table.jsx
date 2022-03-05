@@ -236,7 +236,7 @@ function Table(props) {
         </div>
 
         <div
-          className={tableData.length > 0 ? "flex-dir-col table-body" : "flex-dir-col table-body h-100"}
+          className={tableData.length > 0 ? "flex-dir-col table-body c-pointer" : "flex-dir-col table-body h-100"}
         >
           {renderTableData()}
         </div>
@@ -320,7 +320,7 @@ function Table(props) {
                   <div className='d-flex table-card-btns mt-20'>
                     <OutlinedPrimaryButton
                       name={'Edit'}
-                      click={(e) => deleteRow(e, dataInner)}
+                      click={(e) => editRow(e, dataInner)}
                       btnContainerClass={'mr-10'}
                       btnClass={'small-screen-btn'}
                     />
@@ -330,7 +330,7 @@ function Table(props) {
                         ?
                         <OutlinedPrimaryButton
                           name={'Delete'}
-                          click={(e) => editRow(e, dataInner)}
+                          click={(e) => deleteRow(e, dataInner)}
                           btnClass={'small-screen-btn danger-btn'}
                         />
                         : 

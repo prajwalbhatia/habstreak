@@ -147,9 +147,10 @@ function Dashboard(props) {
           return (
             <div
               key={_id} className='flex-dir-col streak-card'
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 history.push({
-                  pathname: `/streak-list/${_id}`,
+                  pathname: `/streak/${_id}`,
                   state: {
                     from: 'Dashboard',
                   },

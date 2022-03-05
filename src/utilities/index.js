@@ -8,7 +8,7 @@ import moment from 'moment';
 import { createStreakData, updateStreakData, deleteStreakData, deleteStreakAndRewardData } from "redux/actions/streak";
 import { createRewardData, updateRewardData, deleteRewardBulk, deleteRewardData } from "redux/actions/reward";
 import { size } from "lodash";
-import { refreshTokenFun , logout } from "redux/actions/user";
+import { refreshTokenFun, logout } from "redux/actions/user";
 
 //FUNCTIONS
 export const errorHandler = (error, errorInfo) => {
@@ -16,7 +16,7 @@ export const errorHandler = (error, errorInfo) => {
 }
 
 export const refreshToken = (token) => {
-  store.dispatch(refreshTokenFun({refreshToken : token}));
+  store.dispatch(refreshTokenFun({ refreshToken: token }));
 }
 
 /**
@@ -229,6 +229,35 @@ export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewar
   });
 };
 
+
+
+export const dialogForMessage = (history) => {
+  const contentData =
+    [{
+      eleType: "text",
+      text: 'Please create some streak before creating reward'
+    }]
+
+  Modal.show({
+    title: 'Warning',
+    icon: '',
+    primaryButtonText: "Go to streak",
+    secondaryButtonText: "Cancel",
+
+
+    content: [
+      ...contentData
+    ],
+
+    btnClickHandler: (data) => {
+      if (data.type === "primary") {
+        history.push('/streak-list');
+      }
+      Modal.hide();
+    }
+  });
+};
+
 /**
  * 
  * @param {Object} data - Object of data (either streak or reward)
@@ -267,10 +296,8 @@ export const dialogBeforDeletng = (data, type) => {
           store.dispatch(deleteStreakAndRewardData(data._id))
         }
       }
-      else
-      {
-        if(modalData.type === "primary")
-        {
+      else {
+        if (modalData.type === "primary") {
           store.dispatch(deleteRewardData(data._id));
         }
       }
@@ -381,9 +408,9 @@ export const activityTitle = (type, title = '', from) => {
  * @returns 
  */
 export const progressFun = (dateFrom, dateTo, days) => {
-  let from = moment(new Date(dateFrom))
+  let from = moment(new Date(dateFrom));
   let to = moment(new Date(dateTo));
-  const daysDiff = to.diff(from, 'days') + 1;
+  const daysDiff = to.diff(from, 'days');
   const perDayPerc = (100 / (daysDiff)).toFixed(2);
   const daysCompleted = Number(daysDiff) - Number(days);
   const progress = daysCompleted * perDayPerc;
@@ -392,7 +419,7 @@ export const progressFun = (dateFrom, dateTo, days) => {
 }
 
 
-export const perPerDay = (dateFrom , dateTo) => {
+export const perPerDay = (dateFrom, dateTo) => {
   let from = moment(dateFrom)
   let to = moment(dateTo);
   const daysDiff = to.diff(from, 'days') + 1;

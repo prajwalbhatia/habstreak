@@ -20,19 +20,34 @@ import { AiFillHeart } from "react-icons/ai";
 import { IconContext } from "react-icons"
 
 //UTILITIES
-import { dialogForCreateAndUpdateStreak, dialogForCreateAndUpdateReward, logoutFun } from "utilities";
+import {
+    dialogForCreateAndUpdateStreak,
+    dialogForCreateAndUpdateReward,
+    dialogForMessage,
+    logoutFun,
+    activityTitle
+} from "utilities";
 
 function Header(props) {
     const history = useHistory();
 
     const streaks = useSelector((state) => state.streak.streaks);
+    const activities = useSelector((state) => state.recentActivities.activities);
+
     const [showListing, setShowListing] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('profile')));
 
     const { internalNavigation, headerText } = props;
 
     const notification = () => {
+        setShowNotification(!showNotification)
+    }
 
+    const goToActivities = () => {
+        history.push({
+            pathname: '/recent-activities',
+        });
     }
 
     return (
@@ -59,18 +74,19 @@ function Header(props) {
                     {showListing && <div className="menu-list">
                         <div className="d-flex center-items profile-container">
                             <div
-                                className="profile"
+                                className="profile d-flex center-items"
                                 style={{
                                     backgroundImage: `url(${user?.result?.imageUrl})`
                                 }}
                             >
+                                {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}
                             </div>
                             <h4 className="text-center ml-10">{user?.result?.name}</h4>
                         </div>
                         <ol className='d-flex flex-dir-col mt-20'>
                             <li
-                                onClick={() => notification()}>
-                                <i className="demo-icon icon-notifications" />
+                                onClick={goToActivities} className="c-pointer">
+                                <i className="demo-icon icon-notifications c-pointer" />
                                 Notification
                             </li>
                             <li
@@ -116,27 +132,48 @@ function Header(props) {
 
                 <div className="pos-relative">
                     <IconButton
-                        click={() => { }}
+                        click={notification}
                         icon={<i className="demo-icon icon-notifications" />}
                         btnContainerClass={'mr-30'}
                     />
 
-                    {/* <div className='notification-dropdown-container' style={{ height: 'calc(3 * 40px )' }}>
-                        <ol>
-                            <div className="d-flex"><li>Streak 1 dsadsdsa</li>  <span className="pointer ml-10"></span></div>
-                            <li>Streak 1</li>
-                            <li>Streak 1</li>
+                    {showNotification && <div className='notification-dropdown-container d-flex flex-dir-col' style={{ height: 'calc(3 * 40px )' }}>
+                        <ol className="flex-auto">
+                            {
+                                activities.map((activity, index) => {
+                                    if (index < 3) {
+                                        return (
+                                            <div key={index}>
+                                                <li>{activityTitle(activity.type, activity.title, 'dashboard')}</li>  <span className="pointer ml-10"></span></div>
+
+                                        )
+                                    }
+                                })
+                            }
+                            {/* <li>Streak 1</li> */}
+                            {/* <li>Streak 1</li> */}
                         </ol>
-                    </div> */}
+
+                        <div className="d-flex center-items mb-10">
+                            <span onClick={goToActivities} className="color-primary c-pointer">See all</span></div>
+                    </div>}
                 </div>
 
 
                 <OutlinedPrimaryButton
                     name={headerText === 'Rewards' ? 'Add New Reward' : 'Add New Streak'}
-                    click={headerText === 'Rewards' ?
-                        () => dialogForCreateAndUpdateReward('create', {}, '', streaks)
-                        :
-                        () => dialogForCreateAndUpdateStreak()
+                    click={
+                        () => {
+                            if (headerText === 'Rewards') {
+                                if (streaks.length === 0)
+                                    dialogForMessage(history)
+                                else
+                                    dialogForCreateAndUpdateReward('create', {}, '', streaks);
+                            }
+                            else {
+                                dialogForCreateAndUpdateStreak();
+                            }
+                        }
                     }
                     btnContainerClass=""
                     btnClass='h-40'

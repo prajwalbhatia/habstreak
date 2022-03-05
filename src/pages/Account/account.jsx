@@ -121,7 +121,10 @@ function Dashboard(props) {
     setFormData(initialState);
     setErrMsg({});
     setSuccessMsg({});
-    // setShowPassword(false);
+  }
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
   }
 
   const validation = (e) => {
@@ -207,7 +210,7 @@ function Dashboard(props) {
     //VALIDATION
     if (Object.keys(errMsg).length === 0)
       setIsValid(true);
-      
+
   }
   //FUNCTIONS
 
@@ -283,7 +286,10 @@ function Dashboard(props) {
             onBlur={isSignup ? validation : null}
             errMsg={isSignup ? errMsg['password'] : null}
             successMsg={isSignup ? successMsg['password'] : null}
-            icon={<i className="demo-icon icon-lock size-16-8f" />}
+            icon={<i
+              onClick={togglePassword}
+              className="demo-icon icon-lock size-16-8f c-pointer"
+            />}
           />
 
           {
@@ -300,7 +306,7 @@ function Dashboard(props) {
               onBlur={validation}
               errMsg={errMsg['confirmPassword']}
               successMsg={successMsg['confirmPassword']}
-              icon={<i className="demo-icon icon-lock size-16-8f" />}
+              icon={<i className="demo-icon icon-lock size-16-8f c-pointer" />}
             />
           }
 

@@ -38,7 +38,6 @@ import { rewardListTableHeadings } from "constants/index";
 
 function RewardList(props) {
   const dispatch = useDispatch();
-  const history = useHistory();
   const location = useLocation();
 
   const [tabData, setTabData] = useState(

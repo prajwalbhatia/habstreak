@@ -2,14 +2,7 @@ import React, { useState } from 'react';
 import { AiFillHeart } from "react-icons/ai";
 import { IconContext } from "react-icons"
 import { useHistory } from "react-router";
-
 import { useLocation } from 'react-router-dom';
-
-//REDUX
-import { useDispatch } from "react-redux";
-
-//Actions
-import { logout } from "redux/actions/user";
 
 //Navigation list
 import { navigationList, navigationIcons } from './navigationList';
@@ -87,19 +80,27 @@ function Navigation(props) {
     });
 
     setNavigation([...modifiedNavigationList]);
-  }, [location])
+  }, [location]);
+
+  const goToDashboard = () => {
+    history.push({
+      pathname: `/dashboard`,
+    })
+  }
 
   return (
     <>
       <nav className="navigation">
-        <div className="brand-name-container">
+        <div
+          onClick={goToDashboard}
+          className="brand-name-container c-pointer">
           <Logo />
         </div>
 
         <div
-          className='avatar-container c-pointer display-none'
+          className='avatar-container c-pointer display-none d-flex center-items'
           style={{
-            backgroundImage: `url(${user?.result?.imageUrl})`
+            backgroundImage: `url(${user?.result?.imageUrl})`,
           }}
           onClick={() => {
             history.push({
@@ -107,7 +108,7 @@ function Navigation(props) {
             })
           }}
         >
-
+          {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}
         </div>
 
         <div className='personal-detail-container display-none'>
@@ -156,8 +157,8 @@ function Navigation(props) {
           <h5 className=''>Logout</h5>
         </div>
         <div className="developer-container display-none">
-          <span>Made with
-            <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
+          <span>Made with<i className="demo-icon icon-heart color-red" />
+            by PRAJWAL BHATIA</span>
         </div>
         <div className='vertical-line display-none'></div>
       </nav>
@@ -187,7 +188,7 @@ function Navigation(props) {
                       <h5 onClick={(e) => { e.preventDefault() }}
                         className={list.active ? "activeText c-pointer" : "c-pointer"}>{list.name}
                       </h5>
-                    <div className={list.active ? "active" : ""}></div>
+                      <div className={list.active ? "active" : ""}></div>
                     </div>
                   </li>
                 );

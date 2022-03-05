@@ -3,8 +3,11 @@
   top: 0;
   bottom: 0;
   padding: var(--pagesPaddingHorizontal) 40px;
-  // left: var(--navigationAroundSpace);
   width: var(--navigationWidth);
+  background-image: url('../../assests/images/menu_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
   display: flex;
   flex-direction: column;
@@ -34,6 +37,14 @@
     box-shadow: 0px 3px 6px var(--boxShadow);
     background: transparent;
     margin-top: 40px;
+    background-color: var(--primaryColor);
+
+    span
+    {
+      font-family: RobotoBold;
+      font-size: 50px;
+      color: #fff;
+    }
   }
 
   .personal-detail-container {
