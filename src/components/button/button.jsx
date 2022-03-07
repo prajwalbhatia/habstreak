@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import './button.css';
 
 export function PrimaryButton(props) {
-    const { btnContainerClass, btnClass, click, tooltip, tooltipData, ...rest } = props;
+    const { btnContainerClass, btnClass, click, tooltip, tooltipData, index , ...rest } = props;
     return (
-        <div className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
+        <div key={index} className={btnContainerClass ? `button-container ${btnContainerClass}` : `button-container`}>
             <button
                 className={btnClass ? `btn primary-btn ${btnClass}` : `btn primary-btn`}
                 onClick={(e) => click(e)}
@@ -20,7 +20,7 @@ export function PrimaryButton(props) {
                     tooltip
                         ?
                         <div>
-                            <span class="tooltip" data-tooltip={tooltipData}></span>
+                            <span className="tooltip" data-tooltip={tooltipData}></span>
                         </div >
                         :
                         null
@@ -44,7 +44,7 @@ export function SecondaryButton(props) {
                     tooltip
                         ?
                         <div>
-                            <span class="tooltip" data-tooltip={tooltipData}></span>
+                            <span className="tooltip" data-tooltip={tooltipData}></span>
                         </div >
                         :
                         null
@@ -70,7 +70,7 @@ export function OutlinedPrimaryButton(props) {
                     tooltip
                         ?
                         <div>
-                            <span class="tooltip" data-tooltip={tooltipData}></span>
+                            <span className="tooltip" data-tooltip={tooltipData}></span>
                         </div >
                         :
                         null
@@ -99,7 +99,7 @@ export function IconButton(props) {
                 tooltip
                     ?
                     <div>
-                        <span class="tooltip" data-tooltip={tooltipData}></span>
+                        <span className="tooltip" data-tooltip={tooltipData}></span>
                     </div >
                     :
                     null

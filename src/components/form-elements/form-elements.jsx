@@ -12,7 +12,7 @@ export function InputElement({ lable, type, uid, placeholder, containerClass, ic
   return (
     <div key={uid} className={`element input-container ${containerClass}`}>
       <div className='d-flex justify-space-between mb-10'>
-        <label className='label' for={uid}>{lable}</label>
+        <label className='label' htmlFor={uid}>{lable}</label>
         <label className='label' style={errMsg ? { color: '#FF0000' } : { color: '#267A08' }}>
           {errMsg ? errMsg : (successMsg ? successMsg : '')}
         </label>
@@ -32,10 +32,10 @@ export function InputElement({ lable, type, uid, placeholder, containerClass, ic
   );
 }
 
-export function TextInputElement({ lable, type, uid, placeholder, containerClass, ...rest }) {
+export function TextInputElement({ lable, type,key , uid, placeholder, containerClass, ...rest }) {
   return (
-    <div key={uid} className={`element textArea-input-container ${containerClass}`}>
-      <label for={uid}>{lable}</label>
+    <div key={key} className={`element textArea-input-container ${containerClass}`}>
+      <label htmlFor={uid}>{lable}</label>
       <textarea
         className={lable?.length > 0 ? 'textArea-input-element mt-5' : 'textArea-input-element'}
         type={type}
@@ -49,9 +49,9 @@ export function TextInputElement({ lable, type, uid, placeholder, containerClass
   );
 }
 
-export function Dropdown({ labelName, options, optionSelect, value, ...rest }) {
+export function Dropdown({ labelName, key ,  options, optionSelect, value, ...rest }) {
   return (
-    <div className="dropdown">
+    <div key={key} className="dropdown">
       <FormControl variant="outlined">
         <InputLabel htmlFor="outlined-age-native-simple">{labelName}</InputLabel>
         <Select

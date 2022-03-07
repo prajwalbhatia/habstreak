@@ -180,11 +180,12 @@
                                 top: 0;
                                 bottom: 0;
                                 height: 30px;
-                                min-width: 30px;
+                                min-width: 34px;
                                 max-width: 30px;
                                 box-shadow: 0px 3px 6px var(--boxShadow);
                                 border-radius: 50%;
                                 transition: all 0.5s ease-in-out;
+                                background: #fff;
 
                                 i {
                                     font-size: 16px;
@@ -301,7 +302,7 @@
 }
 
 //MEDIA QUERIES
-@media only screen and (max-width: 1020px) {
+@media only screen and (max-width: 1340px) {
     .streak {
         height: calc(100vh - (var(--navigationSmallHeight)));
         overflow: auto;
@@ -309,7 +310,7 @@
         .streak-details-container {
             flex-direction: column-reverse;
             height: 100vh;
-
+            margin-top: calc(var(--headerHeight) * 2 + (30px * 3));
             .right-container,
             .left-container {
                 width: 100%;

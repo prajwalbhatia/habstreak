@@ -410,7 +410,7 @@ export const activityTitle = (type, title = '', from) => {
 export const progressFun = (dateFrom, dateTo, days) => {
   let from = moment(new Date(dateFrom));
   let to = moment(new Date(dateTo));
-  const daysDiff = to.diff(from, 'days');
+  const daysDiff = to.diff(from, 'days') + 1;
   const perDayPerc = (100 / (daysDiff)).toFixed(2);
   const daysCompleted = Number(daysDiff) - Number(days);
   const progress = daysCompleted * perDayPerc;

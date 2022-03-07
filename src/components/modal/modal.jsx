@@ -68,37 +68,42 @@ function Modal(props) {
     //FUNCTIONS
 
     const content = (dataArr) => {
-        return dataArr.map((data) => {
+        return dataArr.map((data, index) => {
             if (data.eleType === 'text') {
                 return (
-                    <h3 className="font-rob-med font-18">{data.text}</h3>
+                    <h3 key={index} className="font-rob-med font-18">{data.text}</h3>
                 )
             }
             else if (data.eleType === 'input') {
                 return (
-                    <InputElement
-                        lable={data?.label}
-                        uid={data.uid}
-                        placeholder={data?.placeholder}
-                        value={formData?.[data.uid]}
-                        onChange={changeHandler}
-                        type={data.type}
-                        min={data?.min}
-                        icon={data.icon ? <i className={`{demo-icon ${data.icon} size-16-8f}`} /> : null}
-                        autoFocus={data.autoFocus ? data.autoFocus : false}
-                    />)
+                    <div key={index}>
+                        <InputElement
+                            lable={data?.label}
+                            uid={data.uid}
+                            placeholder={data?.placeholder}
+                            value={formData?.[data.uid]}
+                            onChange={changeHandler}
+                            type={data.type}
+                            min={data?.min}
+                            icon={data.icon ? <i className={`{demo-icon ${data.icon} size-16-8f}`} /> : null}
+                            autoFocus={data.autoFocus ? data.autoFocus : false}
+                        />
+                    </div>
+                )
             }
             else if (data.eleType === 'textArea') {
                 return (
-                    <TextInputElement
-                        lable={data.label}
-                        uid={data.uid}
-                        placeholder={data?.placeholder}
-                        onChange={changeHandler}
-                        value={formData?.[data.uid]}
-                        type={data.type}
-                        autofocus={data.autoFocus ? data.autoFocus : false}
-                    />
+                    <div key={index}>
+                        <TextInputElement
+                            lable={data.label}
+                            uid={data.uid}
+                            placeholder={data?.placeholder}
+                            onChange={changeHandler}
+                            value={formData?.[data.uid]}
+                            type={data.type}
+                            autoFocus={data.autoFocus ? data.autoFocus : false}
+                        />
+                    </div>
                 )
             }
             else if (data.eleType === 'dropdown') {
@@ -108,7 +113,6 @@ function Modal(props) {
                         options={data.options}
                         value={formData?.[data.uid]}
                         placeholder={'data?.placeholder'}
-
                         optionSelect={(value) => {
                             setDropDown(data.uid, value)
                             props.dropdownHandler(data.uid, value)
@@ -122,28 +126,30 @@ function Modal(props) {
             }
             else if (data.group) {
                 return (
-                    <div className="d-flex pos-relative">
+                    <div key={index} className="d-flex pos-relative">
                         <div className="d-flex flex-1">
                             {
                                 data?.items.map((dataInner, index) => {
                                     return (
-                                        <InputElement
-                                            lable={dataInner?.label}
-                                            uid={dataInner.uid}
-                                            placeholder={dataInner?.placeholder}
-                                            containerClass={data.items && data?.items.length > 1 ? 'd-flex flex-1 mr-10' : 'd-flex flex-1'}
-                                            value={formData?.[dataInner.uid]}
-                                            onChange={changeHandler}
-                                            type={dataInner.type}
-                                            disabled
-                                            icon={dataInner.icon
-                                                ?
-                                                <i
-                                                    className={`{demo-icon ${dataInner.icon} size-16-8f}`}
-                                                    onClick={() => setShowCalendar((prop) => !prop)}
-                                                />
-                                                : null}
-                                        />
+                                        <div className="w-100" key={index}>
+                                            <InputElement
+                                                lable={dataInner?.label}
+                                                uid={dataInner.uid}
+                                                placeholder={dataInner?.placeholder}
+                                                containerClass={data.items && data?.items.length > 1 ? 'd-flex flex-1 mr-10' : 'd-flex flex-1'}
+                                                value={formData?.[dataInner.uid]}
+                                                onChange={changeHandler}
+                                                type={dataInner.type}
+                                                disabled
+                                                icon={dataInner.icon
+                                                    ?
+                                                    <i
+                                                        className={`{demo-icon ${dataInner.icon} size-16-8f}`}
+                                                        onClick={() => setShowCalendar((prop) => !prop)}
+                                                    />
+                                                    : null}
+                                            />
+                                        </div>
                                     )
                                 })
 
@@ -152,7 +158,7 @@ function Modal(props) {
                         {
                             showCalendar
                                 ?
-                                <div className="react-calendar-container">
+                                <div key={index} className="react-calendar-container">
                                     <Calendar
                                         returnValue={data.range ? "range" : "start"}
                                         selectRange={data.range}
@@ -224,21 +230,24 @@ function Modal(props) {
                 </div>
                 <div className="buttons-part">
                     {
-                        props.extraButtons && props.extraButtons.map((btn) => {
+                        props.extraButtons && props.extraButtons.map((btn, index) => {
                             return (
-                                <PrimaryButton
-                                    name={btn.text}
-                                    click={() => handleClick(btn.uid)}
-                                    btnContainerClass={btn.btnContainerClass ? btn.btnContainerClass : ''}
-                                    btnClass={btn.btnClass ? btn.btnClass : ''}
-                                    style={btn.style ? { ...btn.style } : {}}
-                                    tooltip={btn.tooltip}
-                                    tooltipData={btn.tooltipData}
-                                />
+                                <div key={index} className='w-100 mr-10'>
+                                    <PrimaryButton
+                                        name={btn.text}
+                                        click={() => handleClick(btn.uid)}
+                                        btnContainerClass={btn.btnContainerClass ? btn.btnContainerClass : ''}
+                                        btnClass={btn.btnClass ? btn.btnClass : ''}
+                                        style={btn.style ? { ...btn.style } : {}}
+                                        tooltip={btn.tooltip}
+                                        tooltipData={btn.tooltipData}
+                                    />
+                                </div>
                             );
                         })
                     }
 
+    
                     <OutlinedPrimaryButton
                         name={props.primaryButtonText}
                         click={() => handleClick('primary')}

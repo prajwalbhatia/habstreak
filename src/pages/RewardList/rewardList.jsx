@@ -27,7 +27,9 @@ import {
   dialogForCreateAndUpdateReward, errorHandler, dialogBeforDeletng, progressFun, isBefore,
   isSameOrAfter,
   isSameOrBefore,
-  isAfter} from 'utilities';
+  isAfter,
+  isSame
+} from 'utilities';
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
@@ -117,12 +119,10 @@ function RewardList(props) {
     const currentDate = moment().format();
     const streakEndDate = moment(streak.dateTo).format();
 
-    if(streak.tag === 'unfinished')
-    {
+    if (streak.tag === 'unfinished') {
       return 'Unfinished';
     }
-    else if (isBefore(streakEndDate, currentDate) && !streak.tag)
-    {
+    else if (isBefore(streakEndDate, currentDate) && !streak.tag) {
       return 'Finished';
     }
     else if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
@@ -144,8 +144,8 @@ function RewardList(props) {
         const streakStartDate = moment(streakAssociated[0].dateFrom);
         const currentDate = moment(new Date()).format();
 
-        const daysLeft = rewardDate.diff(currentDate, 'days') + 1;
-        const progress = progressFun(streakStartDate, rewardDate, daysLeft);
+        const daysLeft = rewardDate.diff(currentDate, 'days');
+        const progress = isSame(streakStartDate, currentDate) ? 0 : progressFun(streakStartDate, rewardDate, daysLeft);
 
         let rewardObj = {};
         rewardObj._id = reward._id;
@@ -153,7 +153,7 @@ function RewardList(props) {
         rewardObj.associated = streakAssociated.length > 0 && ({
           title: streakAssociated[0].title,
           id: streakAssociated[0]._id,
-          state : streakState(streakAssociated[0])
+          state: streakState(streakAssociated[0])
         } || '');
         rewardObj.date = moment(reward.date).format('L');
         rewardObj.running = streakAssociated[0].dateFrom > currentDate ? '-' : daysLeft;
@@ -207,7 +207,6 @@ function RewardList(props) {
   * @param {Object} actionObj
   */
   const tableAction = (actionObj) => {
-    console.log('🚀 ~ file: reward.jsx ~ line 326 ~ tableAction ~ actionObj', actionObj);
     if (actionObj.actionType === 'tabClicked') {
       if (actionObj.data === 'To Buy') {
         const tab = [...tabData];

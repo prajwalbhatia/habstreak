@@ -137,14 +137,16 @@ function Header(props) {
                         btnContainerClass={'mr-30'}
                     />
 
-                    {showNotification && <div className='notification-dropdown-container d-flex flex-dir-col' style={{ height: 'calc(3 * 40px )' }}>
+                    {showNotification && <div className='notification-dropdown-container d-flex flex-dir-col' style={{ height: 'calc(4 * 40px )' }}>
                         <ol className="flex-auto">
                             {
                                 activities.map((activity, index) => {
                                     if (index < 3) {
                                         return (
-                                            <div key={index}>
-                                                <li>{activityTitle(activity.type, activity.title, 'dashboard')}</li>  <span className="pointer ml-10"></span></div>
+                                            <div className="d-flex" key={index}>
+                                                <li>{activityTitle(activity.type, activity.title, 'dashboard')}</li>
+                                                {/* <span className="pointer ml-10"></span> */}
+                                            </div>
 
                                         )
                                     }

@@ -145,7 +145,7 @@ function RecentActivities() {
       return (
         _map(groupedActivities, (value, key) => {
           return (
-            <div key={value._id} className='date-data'>
+            <div key={key} className='date-data'>
               <span className='date-content'>{key}</span>
               {
                 _map(value, (val, index) => {

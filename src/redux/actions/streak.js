@@ -113,7 +113,7 @@ export const getStreakData = (streakId) => async (dispatch) => {
         const action = { type: GET_A_STREAK, payload: streak.data }
         dispatch(action);
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
         // const action = { type: GET_STREAK_FAIL, error: error }
         // dispatch(action);
     }

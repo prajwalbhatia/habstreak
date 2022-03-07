@@ -2,7 +2,7 @@
     .modal {
         position: absolute;
         min-height: 180px;
-        min-width: 400px;
+        min-width: 500px;
         border-radius: 30px;
         background: white;
         z-index: 1000;
@@ -79,7 +79,7 @@
 
         .buttons-part {
             display: flex;
-            justify-content: flex-end;
+            // justify-content: flex-end;
             flex: 1;
             padding: 0 40px 30px 40px;
             align-items: center;
@@ -96,8 +96,7 @@
                 font-size: 16px;
             }
 
-            .danger-btn
-            {
+            .danger-btn {
                 border: 1px solid var(--dangerColor);
                 color: var(--dangerColor);
             }
@@ -157,4 +156,14 @@
         }
     }
 
+}
+
+
+//MEDIA QUERIES
+@media only screen and (max-width: 860px) {
+    .modal-container {
+        .modal {
+            min-width: 360px;
+        }
+    }
 }

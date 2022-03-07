@@ -15,6 +15,10 @@ import { useHistory } from 'react-router-dom';
 
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
+import { ReactComponent as Hero } from './img/hero.svg';
+import { ReactComponent as Video } from './img/video.svg';
+
+
 import { useEffect } from 'react';
 
 function LandingPage() {
@@ -82,7 +86,7 @@ function LandingPage() {
                   <li className={selectedNav === 'home' ? 'list-active' : ''} data-value='home'>Home</li>
                   <li className={selectedNav === 'feature' ? 'list-active' : ''} data-value='feature'>Feature</li>
                   <li className={selectedNav === 'guide' ? 'list-active' : ''} data-value='guide'>Guide</li>
-                  <li className={selectedNav === 'pricing' ? 'list-active' : ''} data-value='pricing'>Pricing</li>
+                  <li className={selectedNav === 'contact' ? 'list-active' : ''} data-value='contact'>Contact</li>
                 </ol>
               </nav>
             </div>
@@ -124,7 +128,7 @@ function LandingPage() {
                   <li data-value='home'>Home</li>
                   <li data-value='feature'>Feature</li>
                   <li data-value='guide'>Guide</li>
-                  <li data-value='pricing'>Pricing</li>
+                  <li data-value='contact'>Contact</li>
                 </ol>
 
                 <span className='rob-med-10-grey'>Made with
@@ -134,7 +138,7 @@ function LandingPage() {
           </header>
 
           {/* <main> */}
-          <section id="hero" className='hero-section padding-global'>
+          <section id="hero" className='hero-section padding-global d-flex justify-space-between'>
             <div className='hero-container'>
               <h1 className='h1-50'>Get things done and reward yourself</h1>
               <p className='p-18'>Are you tired of starting the things and dropping i in between??? Not anymore, try habstreak, record your task and reward yourself on reaching milestones</p>
@@ -154,6 +158,11 @@ function LandingPage() {
                 />
               </div>
             </div>
+
+            <div className='hero-image d-flex justify-end'>
+              <Hero />
+            </div>
+
           </section>
         </div>
 
@@ -206,15 +215,15 @@ function LandingPage() {
         <section id="guide" className='guide-section guide-background padding-global'>
           <header className='guide-heading mt-30'>Guide</header>
 
-          <div className='d-flex mt-40' style={{ height: 'inherit' }}>
+          <div className='d-flex mt-40 guide-container' >
             <div className="left-section">
               <h1 className='h1-40'>Malesuada consectetur posuere proin proin enim</h1>
               <p className='p-18'>Cras eu elit congue, placerat dui ut, tincidunt nisl. Nulla leo elit, pharetra bibendum justo quis, cursus consectetur erat. Sed nec posuere turpis.</p>
             </div>
 
-            {/* <div className="right-section">
-                <VideoImage />
-              </div> */}
+            <div className="right-section">
+              <Video />
+            </div>
           </div>
         </section>
 
@@ -222,7 +231,7 @@ function LandingPage() {
           <header></header>
         </section>
 
-        <section id="pricing" className='contact-section contact-background padding-global'>
+        <section id="contact" className='contact-section contact-background padding-global'>
           {/* <hr></hr>
             <div className='h-1'></div> */}
           <div className='container'>
@@ -273,7 +282,7 @@ function LandingPage() {
         {/* </main> */}
 
         {/* Footer */}
-        <div className='d-flex justify-center mt-50'>
+        <div className='d-flex justify-center mt-50 footer-container'>
           <footer className="footer">
             <div className='d-flex'>
               <div className='footer-navigation'>
@@ -284,7 +293,7 @@ function LandingPage() {
                   <li className='home color-fff' data-value='home'>Home</li>
                   <li className='feature color-fff' data-value='feature'>Feature</li>
                   <li className='guide color-fff' data-value='guide'>Guide</li>
-                  <li className='pricing color-fff' data-value='pricing'>Pricing</li>
+                  <li className='contact color-fff' data-value='contact'>Contact</li>
                 </ol>
               </div>
 
@@ -294,6 +303,10 @@ function LandingPage() {
 
             </div>
           </footer>
+
+          <div className='d-flex flex-1 justify-center small-screen-footer-text'>
+            <p className='rob-reg-10-grey'>Copyright © by Habstreak 2022</p>
+          </div>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ export const createRewardData = (reward) => async (dispatch) => {
     await createReward(reward);
     dispatch(getRewardsData());
   } catch (error) {
-    console.log('create reward ->' , error);
+    console.log('create reward ->', error.message);
   }
 }
 

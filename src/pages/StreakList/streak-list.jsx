@@ -85,6 +85,9 @@ function StreakList(props) {
   const streakListTypeData = useSelector((state) => state.streak.streaksListType);
 
   const loading = useSelector((state) => state.streak.loading);
+  const error = useSelector((state) => state.streak.error);
+  console.log('🚀 ~ file: streak-list.jsx ~ line 89 ~ StreakList ~ error', error);
+
 
   useEffect(() => {
     dispatch(getStreaksData());
@@ -127,16 +130,7 @@ function StreakList(props) {
   useEffect(() => {
     const currentDate = moment().format();
     const unfinished = streaks.filter((streak) => streak.tag === 'unfinished');
-
-    const finished = streaks.filter((streak) => {
-      const streakEndDate = moment(streak.dateTo).format();
-
-      if (isBefore(streakEndDate, currentDate) && !streak.tag) {
-        return streak;
-      }
-      else
-        return null;
-    });
+    const finished = streaks.filter((streak) => streak.tag === 'finished');
 
     const running = streaks.filter((streak) => {
       if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {

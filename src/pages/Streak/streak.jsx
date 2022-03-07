@@ -94,7 +94,12 @@ function Streak(props) {
             const weekDaysArr = [];
             const daysArr = [];
             const perDayPerc = (100 / (Number(days))).toFixed(2);
-            const daysCompleted = streakDetail.length > 0 ? streakDetail.length - 1 : 0;
+            const daysCompleted =
+                streakDetail.length > 0
+                    ?
+                    (streak[0]?.tag === 'finished' ? streakDetail.length : streakDetail.length - 1)
+                    :
+                    0;
             const progress = daysCompleted * perDayPerc;
 
             for (let i = 0; i < days; i++) {
@@ -110,7 +115,7 @@ function Streak(props) {
                 let rewardDate = moment(new Date(reward.date));
                 const daysDiffOfReward = rewardDate.diff(from, 'days') + 1;
                 const perDayPerc = perPerDay(dateFrom, dateTo);
-                return { perc: perDayPerc * daysDiffOfReward , title : reward.title }
+                return { perc: Number(perDayPerc) * daysDiffOfReward, title: reward.title, date: rewardDate.format('DD-MM-YYYY')}
             })
 
             let progressData = {
@@ -166,83 +171,89 @@ function Streak(props) {
         return (
             <div>
                 {
-                    streakDetail.map((detail, index) => {
-                        const status = checkingStatus(detail.date);
-                        return (
-                            <>
-                                <div key={index} className='d-flex justify-space-between mt-30 date-data'>
-                                    <span className='rob-bold-12-black'>{moment(detail.date).format('ll')}</span>
-                                    <div onClick={() => collapseContainer(detail._id)}>
-                                        {
-                                            collapseState[detail._id]
-                                                ?
-                                                <i className="demo-icon icon-expand-more" />
-                                                :
-                                                <i className="demo-icon icon-expand-less" />
-                                        }
-                                    </div>
-                                </div>
-
-                                {
-                                    !collapseState[detail._id]
-                                        ?
-                                        <div className='d-flex flex-dir-col mt-16 day-represent'>
-                                            <div className='left-line'></div>
-                                            <div className='d-flex justify-space-between flex-1 day-data'>
-                                                <h4>{`Day ${index + 1}`}</h4>
-
-                                                {
-                                                    status === 'Past'
-                                                        ?
-                                                        <i className="demo-icon icon-check-circle circle-icon" />
-                                                        :
-                                                        <div className='circle'>
-                                                        </div>
-                                                }
-                                            </div>
-
-                                            <div className='today-task'>
-                                                {
-                                                    status === 'Past'
-                                                        ?
-                                                        <p className='size-14 mt-10'>{desc?.[detail?._id]}</p>
-                                                        :
-                                                        <InputElement
-                                                            placeholder={'Write details about today\'s task...'}
-                                                            uid={'fullName'}
-                                                            type="text"
-                                                            value={desc?.[detail?._id]}
-                                                            containerClass={'mt-10'}
-                                                            onChange={(e) => {
-                                                                setDesc({ ...desc, [detail?._id]: e.target.value })
-                                                            }}
-                                                        />
-                                                }
-
-                                                {
-                                                    desc?.[detail._id] && desc?.[detail._id].length > 0 && status === 'Active'
-                                                        ?
-                                                        <div className='center-items btn-container'>
-                                                            <OutlinedPrimaryButton
-                                                                name={'OK'}
-                                                                click={() => updateStreakDetail(detail)}
-                                                                btnContainerClass="okay-btn mt-20"
-                                                                btnClass=''
-                                                            />
-                                                        </div>
-                                                        :
-                                                        null
-                                                }
-                                            </div>
-
+                    streakDetail.length > 0
+                        ?
+                        streakDetail.map((detail, index) => {
+                            const status = checkingStatus(detail.date);
+                            return (
+                                <div key={index}>
+                                    <div className='d-flex justify-space-between mt-30 date-data'>
+                                        <span className='rob-bold-12-black'>{moment(detail.date).format('ll')}</span>
+                                        <div onClick={() => collapseContainer(detail._id)}>
+                                            {
+                                                collapseState[detail._id]
+                                                    ?
+                                                    <i className="demo-icon icon-expand-more" />
+                                                    :
+                                                    <i className="demo-icon icon-expand-less" />
+                                            }
                                         </div>
-                                        :
-                                        null
-                                }
+                                    </div>
 
-                            </>
-                        )
-                    })
+                                    {
+                                        !collapseState[detail._id]
+                                            ?
+                                            <div className='d-flex flex-dir-col mt-16 day-represent'>
+                                                <div className='left-line'></div>
+                                                <div className='d-flex justify-space-between flex-1 day-data'>
+                                                    <h4>{`Day ${index + 1}`}</h4>
+
+                                                    {
+                                                        status === 'Past'
+                                                            ?
+                                                            <i className="demo-icon icon-check-circle circle-icon" />
+                                                            :
+                                                            <div className='circle'>
+                                                            </div>
+                                                    }
+                                                </div>
+
+                                                <div className='today-task'>
+                                                    {
+                                                        status === 'Past'
+                                                            ?
+                                                            <p className='size-14 mt-10'>{desc?.[detail?._id]}</p>
+                                                            :
+                                                            <InputElement
+                                                                placeholder={'Write details about today\'s task...'}
+                                                                uid={'fullName'}
+                                                                type="text"
+                                                                value={desc?.[detail?._id]}
+                                                                containerClass={'mt-10'}
+                                                                onChange={(e) => {
+                                                                    setDesc({ ...desc, [detail?._id]: e.target.value })
+                                                                }}
+                                                            />
+                                                    }
+
+                                                    {
+                                                        desc?.[detail._id] && desc?.[detail._id].length > 0 && status === 'Active'
+                                                            ?
+                                                            <div className='center-items btn-container'>
+                                                                <OutlinedPrimaryButton
+                                                                    name={'OK'}
+                                                                    click={() => updateStreakDetail(detail)}
+                                                                    btnContainerClass="okay-btn mt-20"
+                                                                    btnClass=''
+                                                                />
+                                                            </div>
+                                                            :
+                                                            null
+                                                    }
+                                                </div>
+
+                                            </div>
+                                            :
+                                            null
+                                    }
+
+                                </div>
+                            )
+                        })
+                        :
+                        <div className='h-100 w-100 d-flex center-items'>
+                            <span className='rob-med-14-black' >Streak is not started yet</span>
+                        </div>
                 }
 
             </div>
@@ -329,18 +340,31 @@ function Streak(props) {
                             {
                                 progressData.daysArr.map((day, index) => {
                                     return (
-                                        <>
+                                        <div key={index}>
                                             <div
                                                 key={index} className='center-items back-circle'
-                                                style={index < streakDetail.length - 1
-                                                    ?
-                                                    { background: 'var(--primaryColor)' }
-                                                    :
-                                                    {}}
+                                                style={
+                                                    index <
+                                                        (streak[0]?.tag === 'finished'
+                                                            ?
+                                                            streakDetail.length
+                                                            :
+                                                            streakDetail.length - 1
+                                                        )
+                                                        ?
+                                                        { background: 'var(--primaryColor)' }
+                                                        :
+                                                        {}}
                                             >
                                                 <div
                                                     className='center-items circle'
-                                                    style={index >= streakDetail.length - 1
+                                                    style={index >=
+                                                        (streak[0]?.tag === 'finished'
+                                                            ?
+                                                            streakDetail.length
+                                                            :
+                                                            streakDetail.length - 1
+                                                        )
                                                         ?
                                                         { background: '#E8EEF2', minWidth: '40px', height: '40px' }
                                                         :
@@ -349,7 +373,7 @@ function Streak(props) {
                                                     <span className='rob-med-12-black'>{day}</span>
                                                 </div>
                                             </div>
-                                        </>
+                                        </div>
                                     );
                                 })
                             }
@@ -374,15 +398,16 @@ function Streak(props) {
 
                             {
                                 progressData.rewards.length > 0
-                                    ?
-                                    progressData.rewards.map((reward, index) => {
+                                ?
+                                progressData.rewards.map((reward, index) => {
+                                        console.log('🚀 ~ file: streak.jsx ~ line 414 ~ progressData.rewards.map ~ reward', reward);
                                         return (
                                             <div
                                                 key={index}
                                                 className='center-items trophy-container'
                                                 style={{ left: `calc(${reward.perc}% - 30px)` }}
                                             >
-                                                <span className='rob-med-10-primary title'>{reward.title}</span>
+                                                <span className='rob-med-10-primary title'>{reward.date}</span>
                                                 <i className="demo-icon icon-reward" />
                                             </div>
                                         );
@@ -426,7 +451,8 @@ function Streak(props) {
                             <div className='left-container'>
                                 <div className='d-flex justify-space-between container-heading'>
                                     <h3 className='jos-18-primary task-heading'>Tasks</h3>
-                                    <span className='rob-med-12-primary streak-status'>State: {location?.state?.status}</span>
+                                    <span className='rob-med-12-primary streak-status'>State:
+                                        {streak[0]?.tag ? streak[0]?.tag : checkingStatus(streak[0]?.dateFrom)}</span>
                                 </div>
 
                                 <div className='task-container  mt-20'>

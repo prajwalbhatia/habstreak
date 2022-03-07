@@ -49,15 +49,13 @@
         background: #FFFFFF;
         padding: 20px;
 
-        li
-        {
+        li {
           margin-bottom: 15px;
           font-family: RobotoMedium;
           font-size: 14px;
         }
 
-        .heart-icon
-        {
+        .heart-icon {
           font-size: 13px;
           color: var(--primaryColor);
         }
@@ -68,7 +66,7 @@
   }
 
   .hero-section {
-    height: 980px;
+    height: auto;
     padding-top: 145px;
 
     .buttons {
@@ -87,10 +85,11 @@
   }
 
   .features-section {
-    padding-top: 50px;
-    height: 1076px;
+    padding-top: 150px;
+    height: auto;
     display: flex;
     flex-direction: column;
+    // margin-top: 180px;
 
     .section-container {
       height: inherit;
@@ -123,6 +122,8 @@
         background-color: #ffffff;
         margin: 20px;
         padding: 10px;
+        box-shadow: 0px 3px 6px var(--boxShadow);
+
         p {
           text-align: center;
           margin-top: 5px;
@@ -229,6 +230,12 @@
     }
   }
 
+  .footer-container {
+    .small-screen-footer-text {
+      display: none;
+    }
+  }
+
   .footer {
     height: 60px;
     width: 840px;
@@ -263,23 +270,32 @@
   }
 
   .hero-background {
-    background-image: url('./img/hero.png');
+    background-image: url('./img/Section1.png');
     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 926px;
   }
 
   .feature-background {
-    background-image: url('./img/feature.png');
+    background-image: url('./img/Section2.png');
     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .guide-background {
-    background-image: url('./img/guide.png');
+    background-image: url('./img/Section3.png');
     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .contact-background {
-    background-image: url('./img/contact.png');
+    // background-image: url('./img/Section4.png');
     // background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .h1-50,
@@ -331,6 +347,62 @@
   }
 }
 
+//MEDIA QUERIES
+@media only screen and (max-width: 1420px) {
+  .landing-page {
+    .hero-section {
+      flex-direction: column;
+      align-items: center;
+      padding-top: 75px;
+
+      .hero-container {
+        max-width: 100%;
+      }
+
+      .hero-image {
+        margin-top: 75px;
+      }
+    }
+
+    .features-section {
+      margin-top: 0;
+      padding-top: 50px;
+
+      .section-container {
+        flex-direction: column;
+
+        .left-section {
+          justify-content: center;
+          align-items: center;
+          padding-left: 0;
+          padding-top: 45px;
+        }
+
+        .right-section {
+          max-width: 100%;
+        }
+      }
+    }
+
+    .guide-section {
+      padding-top: 100px;
+
+      .guide-container {
+        flex-direction: column;
+
+        .left-section {
+          max-width: 100%;
+        }
+
+        .right-section {
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+
 
 //MEDIA QUERIES
 @media only screen and (max-width: 1024px) {
@@ -338,6 +410,16 @@
   /* Styles */
   .landing-page {
     overflow: hidden;
+
+    .padding-global {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    .features-section
+    {
+      padding-top: 150px;
+    }
 
     .landing-page-header {
 
@@ -350,6 +432,7 @@
         display: flex;
       }
     }
+
   }
 }
 
@@ -364,6 +447,11 @@
     .hero-section {
       padding-top: 60px;
       height: 660px;
+
+      .hero-image {
+        width: 100%;
+        margin-top: 50px;
+      }
     }
 
 
@@ -401,7 +489,10 @@
         }
 
         .buttons {
-          justify-content: center;
+          .button-container {
+            display: flex;
+            justify-content: center;
+          }
         }
       }
     }
@@ -414,7 +505,7 @@
 
     .contact-section {
       height: auto;
-      padding-top: 150px;
+      padding-top: 200px;
 
       .container {
         flex-direction: column;
@@ -443,5 +534,18 @@
         }
       }
     }
+
+    .footer-container {
+      .footer {
+        display: none;
+      }
+
+      .small-screen-footer-text {
+        display: flex;
+        margin-bottom: 20px;
+      }
+
+    }
+
   }
 }

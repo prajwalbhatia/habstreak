@@ -10,7 +10,7 @@ import { groupBy as _groupBy, size as _size, map as _map } from "lodash";
 //COMPONENTS
 import Frame from "components/frame/frame";
 import { OutlinedPrimaryButton } from "components/button/button";
-import { dialogForCreateAndUpdateStreak, perPerDay } from "utilities";
+import { dialogForCreateAndUpdateStreak, isSame, perPerDay } from "utilities";
 
 //Actions
 import { getStreaksData } from "redux/actions/streak";
@@ -26,7 +26,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, isSameOrBefore, activityTitle, isBefore } from 'utilities';
+import { errorHandler, isSameOrBefore, activityTitle, isSameOrAfter } from 'utilities';
 
 //CONSTANTS
 import { icons, theme } from "constants/index";
@@ -60,17 +60,12 @@ function Dashboard(props) {
 
   useEffect(() => {
     const currentDate = moment().format();
-    const finished = streaks.filter((streak) => {
-      const streakEndDate = moment(streak.dateTo).format();
-      if (isBefore(streakEndDate, currentDate) && !streak.tag) {
-        return streak;
-      }
-      else
-        return null;
-    });
+
+    const finished = streaks.filter((streak) => streak.tag === 'finished');
+    const unfinishedStreak = streaks.filter((streak) => streak.tag === 'unfinished');
 
     const running = streaks.filter((streak) => {
-      if (isSameOrBefore(streak.dateFrom, Date().now)) {
+      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
         return streak;
       }
       else
@@ -78,7 +73,6 @@ function Dashboard(props) {
     });
 
     const earned = rewards.filter(reward => reward.rewardEarned);
-    const unfinishedStreak = streaks.filter((streak) => streak.tag === 'unfinished');
 
     const totalStreak = [...streaks].length;
     const totalRewards = [...rewards].length;
@@ -139,44 +133,48 @@ function Dashboard(props) {
       })
       return (
         filterSttreaks.map((streak, index) => {
-          const { dateFrom, dateTo, _id } = streak;
-          const todayDate = moment(new Date());
-          const percPerDay = perPerDay(dateFrom, dateTo);
-          const daysDone = todayDate.diff(dateFrom, 'days');
-          const progress = percPerDay * daysDone;
-          return (
-            <div
-              key={_id} className='flex-dir-col streak-card'
-              onClick={(e) => {
-                e.stopPropagation()
-                history.push({
-                  pathname: `/streak/${_id}`,
-                  state: {
-                    from: 'Dashboard',
-                  },
+          if (streak.tag !== 'unfinished') {
+            const { dateFrom, dateTo, _id } = streak;
+            const todayDate = moment(new Date());
+            const percPerDay = perPerDay(dateFrom, dateTo);
 
-                })
-              }}
-            >
+            const daysDone = isSame(todayDate, dateFrom) ? 0 : todayDate.diff(dateFrom, 'days') + 1;
+            const progress = percPerDay * daysDone;
+            return (
               <div
-                className='center-items card-icon'
-                style={{ background: theme[index] }}
+                key={index} className='flex-dir-col streak-card'
+                onClick={(e) => {
+                  e.stopPropagation()
+                  history.push({
+                    pathname: `/streak/${_id}`,
+                    state: {
+                      from: 'Dashboard',
+                    },
+
+                  })
+                }}
               >
-                <i className={`demo-icon ${icons[index]}`} />
+                <div
+                  className='center-items card-icon'
+                  style={{ background: theme[index] }}
+                >
+                  <i className={`demo-icon ${icons[index]}`} />
+                </div>
+                <h4>{streak.title}</h4>
+                <h6 className='mt-10'>Running</h6>
+                <h1 style={{ color: theme[index] }} >{`${progress}%`}</h1>
+                <span>{`${streak.days} day to go`}</span>
+                <div
+                  className='d-flex go-btn'
+                  style={{ background: theme[index] }}
+                >
+                  <i className="demo-icon icon-going-in" />
+                </div>
               </div>
-              <h4>{streak.title}</h4>
-              <h6 className='mt-10'>Running</h6>
-              <h1 style={{ color: theme[index] }} >{`${progress}%`}</h1>
-              <span>{`${streak.days} day to go`}</span>
-              <div
-                className='d-flex go-btn'
-                style={{ background: theme[index] }}
-              >
-                <i className="demo-icon icon-going-in" />
-              </div>
-            </div>
-          )
+            )
+          }
         })
+
       )
     }
     else
@@ -191,12 +189,12 @@ function Dashboard(props) {
       return (
         _map(groupedActivities, (value, key) => {
           return (
-            <div key={value._id} className='date-data'>
+            <div key={key} className='date-data'>
               <span className='date-content'>{key}</span>
               {
-                _map(value, (val) => {
+                _map(value, (val, index) => {
                   return (
-                    <div className='info-container'>
+                    <div key={index} className='info-container'>
                       <h3 className='time'>{val.time}</h3>
                       <div
                         className='hr-line'
