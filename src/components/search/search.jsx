@@ -4,9 +4,17 @@ import { useState } from 'react';
 import { IconButton } from "components/button/button";
 import { InputElement } from "components/form-elements/form-elements";
 
+//Redux
+import { useDispatch } from "react-redux";
+
+//Actions
+import { search } from "redux/actions/streak";
+
 import "./search.css";
 
 function Search(props) {
+    const dispatch = useDispatch();
+
     const [iconClicked, setIconClicked] = useState(false);
     const [blurred, setBlurred] = useState(false);
     const [searchedContent, setSearchedContent] = useState('');
@@ -36,11 +44,12 @@ function Search(props) {
                                 setTimeout(() => {
                                     setIconClicked(false);
                                     setBlurred(false);
+                                    dispatch(search(''));
                                 }, 1000);
                             }}
                         />
 
-                        {
+                        {/* {
                             !blurred && searchedContent.length > 0
                             &&
                             <div className='dropdown-container' style={{ height: 'calc(3 * 40px )' }}>
@@ -51,7 +60,7 @@ function Search(props) {
                                 </ol>
                             </div>
 
-                        }
+                        } */}
                     </>
                     :
                     <IconButton

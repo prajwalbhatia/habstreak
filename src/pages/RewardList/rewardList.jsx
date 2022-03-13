@@ -28,7 +28,9 @@ import {
   isSameOrAfter,
   isSameOrBefore,
   isAfter,
-  isSame
+  isSame,
+  activeTab,
+  rewardTabData
 } from 'utilities';
 
 //COMPONENTS
@@ -42,31 +44,31 @@ function RewardList(props) {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const [tabData, setTabData] = useState(
-    [
-      {
-        title: 'To Buy',
-        count: 0,
-        active: true
-      },
-      {
-        title: 'Earned',
-        count: 0,
-        active: false
-      }
-    ]
-  );
+  const [tabData, setTabData] = useState([...rewardTabData()]);
+  const [tabDataClone, setTabDataClone] = useState([...rewardTabData()]);
 
   const [tableData, setTableData] = useState([]);
   const [currentTab, setCurrentTab] = useState('To Buy');
+  const [rewards, setRewards] = useState([]);
 
   const [rewardsEarned, setRewardsEarned] = useState([]);
   const [rewardsToBuy, setRewardsToBuy] = useState([]);
 
+  const rewardsData = useSelector((state) => state.reward.rewards);
+  const rewardsClone = useSelector((state) => state.reward.rewards);
 
-  const rewards = useSelector((state) => state.reward.rewards);
-  const streaks = useSelector((state) => state.streak.streaks);
-  const { loading, error } = useSelector((state) => state.streak);
+  const { loading, error, searchText, streaks } = useSelector((state) => state.streak);
+
+  const tabDataFun = () => {
+    return [...tabDataClone].map((tab) => {
+      if (tab.title === currentTab)
+        tab.active = true;
+      else
+        tab.active = false;
+
+      return tab;
+    });
+  }
 
   //Getting initial data
   useEffect(() => {
@@ -77,9 +79,7 @@ function RewardList(props) {
       setCurrentTab(location.state.goTo)
 
       if (location.state.goTo === 'Earned') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = true;
+        const tab = activeTab('Earned', [ ...tabData]);
         setTabData([...tab]);
       }
     }
@@ -88,31 +88,66 @@ function RewardList(props) {
   }, []);
 
   useEffect(() => {
-    const earned = [];
-    const toBuy = [];
+    setRewards([...rewardsData]);
+  }, [rewardsData])
 
-    [...rewards].forEach((reward) => {
-      if (!reward.rewardEarned)
-        toBuy.push(reward);
-      else
-        earned.push(reward);
-    });
+  useEffect(() => {
+    if (searchText == '') {
+      setRewards(rewardsClone);
+      const tabDataModified = tabDataFun();
+      setTabData(tabDataModified);
+    }
+    else {
+      const rewardsData = [...rewardsClone];
+      const filterRewards = rewardsData.filter(reward => reward.title.toLowerCase().includes(searchText.toLowerCase()));
 
-    setRewardsEarned([...earned]);
-    setRewardsToBuy([...toBuy]);
+      setRewards(filterRewards);
 
-    const dataOfTabs = [...tabData];
-    dataOfTabs[0].count = toBuy.length;
-    dataOfTabs[1].count = earned.length;
-    setTabData([...dataOfTabs]);
+      setTabData([
+        {
+          title: 'Searched items',
+          count: 0,
+          active: true
+        }])
 
+    }
+  }, [searchText])
 
-    updateTableData();
+  useEffect(() => {
+    if (searchText === "") {
+      const earned = [];
+      const toBuy = [];
+
+      // setCurrentTab('To buy');
+
+      [...rewards].forEach((reward) => {
+        if (!reward.rewardEarned)
+          toBuy.push(reward);
+        else
+          earned.push(reward);
+      });
+
+      setRewardsEarned([...earned]);
+      setRewardsToBuy([...toBuy]);
+
+      const dataOfTabs = [...tabData];
+      dataOfTabs[0].count = toBuy.length;
+      dataOfTabs[1].count = earned.length;
+      setTabData([...dataOfTabs]);
+
+      updateTableData();
+    }
+    else {
+      updateTableData(true);
+    }
 
   }, [rewards])
 
   useEffect(() => {
-    updateTableData();
+    if (searchText === '')
+      updateTableData();
+    else
+      updateTableData(true)
   }, [tabData])
 
   const streakState = (streak) => {
@@ -131,7 +166,6 @@ function RewardList(props) {
     else if (isAfter(streak.dateFrom, currentDate) && !streak.tag) {
       return 'Upcoming';
     }
-
   }
 
   const modifyReward = (rewards) => {
@@ -182,13 +216,18 @@ function RewardList(props) {
   }
 
 
-  const updateTableData = () => {
+  const updateTableData = (searchData = false) => {
     let selectedData = [];
-    if (currentTab === 'To Buy')
-      selectedData = [...rewardsToBuy];
-    else if (currentTab === 'Earned')
-      selectedData = [...rewardsEarned];
 
+    if (searchData) {
+      selectedData = [...rewards]
+    }
+    else {
+      if (currentTab === 'To Buy')
+        selectedData = [...rewardsToBuy];
+      else if (currentTab === 'Earned')
+        selectedData = [...rewardsEarned];
+    }
     const modifiedData = modifyReward([...selectedData]);
     setTableData([...modifiedData]);
   }
@@ -209,18 +248,14 @@ function RewardList(props) {
   const tableAction = (actionObj) => {
     if (actionObj.actionType === 'tabClicked') {
       if (actionObj.data === 'To Buy') {
-        const tab = [...tabData];
-        tab[0].active = true;
-        tab[1].active = false;
+        const tab = activeTab('To Buy', [ ...tabData])
         setTabData([...tab]);
         const modifiedData = modifyReward([...rewardsToBuy]);
         setTableData([...modifiedData]);
         setCurrentTab('To Buy');
       }
       else if (actionObj.data === 'Earned') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = true;
+        const tab = activeTab('Earned', [ ...tabData])
         setTabData([...tab]);
 
 
@@ -246,7 +281,7 @@ function RewardList(props) {
   return (
     <Frame
       withHeader={true}
-      withSearchBox={false}
+      withSearchBox={true}
       headerTitle="Rewards"
       containerClass="rewards"
     >

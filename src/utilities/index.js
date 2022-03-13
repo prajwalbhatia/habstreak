@@ -8,15 +8,12 @@ import moment from 'moment';
 import { createStreakData, updateStreakData, deleteStreakData, deleteStreakAndRewardData } from "redux/actions/streak";
 import { createRewardData, updateRewardData, deleteRewardBulk, deleteRewardData } from "redux/actions/reward";
 import { size } from "lodash";
-import { refreshTokenFun, logout } from "redux/actions/user";
+import { logoutCall } from "redux/actions/user";
+
 
 //FUNCTIONS
 export const errorHandler = (error, errorInfo) => {
   console.log('LOGGING', error, errorInfo)
-}
-
-export const refreshToken = (token) => {
-  store.dispatch(refreshTokenFun({ refreshToken: token }));
 }
 
 /**
@@ -428,7 +425,63 @@ export const perPerDay = (dateFrom, dateTo) => {
   return Number(perDayPerc);
 }
 
-export const logoutFun = (history) => {
-  store.dispatch(logout());
+export const logoutFun = (history, refreshToken) => {
+  store.dispatch(logoutCall(refreshToken));
   history.replace('/');
+}
+
+export const streakTabData = () => {
+  return [
+    {
+      title: 'Running',
+      count: 0,
+      active: true
+    },
+    {
+      title: 'Upcoming',
+      count: 0,
+      active: false
+    },
+    {
+      title: 'Finished',
+      count: 0,
+      active: false
+    },
+    {
+      title: 'Unfinished',
+      count: 0,
+      active: false
+    }
+
+  ]
+}
+
+export const rewardTabData = () => {
+  return [
+    {
+      title: 'To Buy',
+      count: 0,
+      active: true
+    },
+    {
+      title: 'Earned',
+      count: 0,
+      active: false
+    }
+  ]
+}
+
+export const activeTab = (activeTabText, tabData = [...streakTabData()]) => {
+  const tab = [...tabData];
+
+  const modifiedTabData = tab.map((item) => {
+    if (item.title === activeTabText)
+      item.active = true
+    else
+      item.active = false
+
+    return item;
+  })
+
+  return modifiedTabData;
 }

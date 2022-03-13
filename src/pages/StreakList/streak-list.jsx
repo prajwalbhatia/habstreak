@@ -12,7 +12,7 @@ import { ClipLoader } from "react-spinners";
 import { cloneDeep as _cloneDeep } from "lodash";
 
 //Actions
-import { getStreaksData, streakListType } from "../../redux/actions/streak";
+import { getStreaksData, streakListType, search } from "../../redux/actions/streak";
 
 //COMPONENTS
 import Frame from "components/frame/frame";
@@ -31,10 +31,11 @@ import {
   errorHandler,
   dialogForCreateAndUpdateStreak,
   dialogBeforDeletng,
-  isBefore,
   isSameOrAfter,
   isSameOrBefore,
-  isAfter
+  isAfter,
+  streakTabData,
+  activeTab
 } from 'utilities';
 
 //CONSTANTS
@@ -43,57 +44,31 @@ import { streakListTableHeadings } from "constants/index";
 function StreakList(props) {
   const dispatch = useDispatch();
   const location = useLocation();
+  const history = useHistory();
 
-  const [tabData, setTabData] = useState(
-    [
-      {
-        title: 'Running',
-        count: 0,
-        active: true
-      },
-      {
-        title: 'Upcoming',
-        count: 0,
-        active: false
-      },
-      {
-        title: 'Finished',
-        count: 0,
-        active: false
-      },
-      {
-        title: 'Unfinished',
-        count: 0,
-        active: false
-      }
-
-    ]
-  );
-
+  //STATES
+  const [tabData, setTabData] = useState([...streakTabData()]);
+  const [tabDataClone] = useState([...streakTabData()]);
   const [currentTab, setCurrentTab] = useState('Running');
   const [tableData, setTableData] = useState([]);
-
+  const [streaks, setStreaks] = useState([]);
   const [running, setRunning] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [finished, setFinished] = useState([]);
   const [unfinished, setUnfinished] = useState([]);
 
-  const history = useHistory();
-
   //Getting the data from the state
-  const streaks = useSelector((state) => state.streak.streaks);
+  const streaksData = useSelector((state) => state.streak.streaks);
+  const streaksClone = useSelector((state) => state.streak.streaks);
   const streakListTypeData = useSelector((state) => state.streak.streaksListType);
 
   const loading = useSelector((state) => state.streak.loading);
   const error = useSelector((state) => state.streak.error);
-  console.log('🚀 ~ file: streak-list.jsx ~ line 89 ~ StreakList ~ error', error);
+  const searchText = useSelector((state) => state.streak.searchText);
 
-
-  useEffect(() => {
-    dispatch(getStreaksData());
-    setCurrentTab(streakListTypeData);
-
-    const data = [...tabData].map((tab) => {
+  //FUNCTIONS
+  const tabDataFun = () => {
+    return [...tabDataClone].map((tab) => {
       if (tab.title === streakListTypeData)
         tab.active = true;
       else
@@ -101,26 +76,75 @@ function StreakList(props) {
 
       return tab;
     });
+  }
 
-    setTabData(...data)
+  const runningStreaks = () => {
+    const currentDate = moment().format();
+    return [...streaks].filter((streak) => {
+      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
+        return streak;
+      }
+      else
+        return null;
+    });
+  }
+
+  const upcomingStreak = () => {
+    const currentDate = moment().format();
+    return [...streaks].filter((streak) => {
+      if (isAfter(streak.dateFrom, currentDate) && !streak.tag) {
+        return streak;
+      }
+      else
+        return null;
+    });
+  }
+
+  //WHEN STREAK TEXT IS CHANGED
+  useEffect(() => {
+    if (searchText == '') {
+      setStreaks(streaksClone);
+
+      const tabDataModified = tabDataFun();
+      setTabData(tabDataModified)
+    }
+    else {
+      const streaksData = [...streaksClone];
+      const filterStreaks = streaksData.filter(streak => streak.title.toLowerCase().includes(searchText.toLowerCase()));
+
+      setStreaks(filterStreaks);
+
+      setTabData([
+        {
+          title: 'Searched items',
+          count: 0,
+          active: true
+        }])
+
+    }
+  }, [searchText])
+
+  useEffect(() => {
+    setStreaks([...streaksData]);
+  }, [streaksData])
+
+  useEffect(() => {
+    dispatch(getStreaksData());
+    dispatch(search(''));
+
+    setCurrentTab(streakListTypeData);
+    const data = tabDataFun();
+    setTabData([...data])
 
     if (location.state && location.state.goTo) {
       setCurrentTab(location.state.goTo)
 
       if (location.state.goTo === 'Finished') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = false;
-        tab[2].active = true;
-        tab[3].active = false;
+        const tab = activeTab('Finished');
         setTabData([...tab]);
       }
       if (location.state.goTo === 'Unfinished') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = false;
-        tab[2].active = false;
-        tab[3].active = true;
+        const tab = activeTab('Unfinished');
         setTabData([...tab]);
       }
     }
@@ -128,54 +152,52 @@ function StreakList(props) {
 
 
   useEffect(() => {
-    const currentDate = moment().format();
-    const unfinished = streaks.filter((streak) => streak.tag === 'unfinished');
-    const finished = streaks.filter((streak) => streak.tag === 'finished');
+    if (searchText === "") {
+      const unfinished = streaks.filter((streak) => streak.tag === 'unfinished');
+      const finished = streaks.filter((streak) => streak.tag === 'finished');
 
-    const running = streaks.filter((streak) => {
-      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
-        return streak;
-      }
-      else
-        return null;
-    });
+      const running = runningStreaks();
+      const upcoming = upcomingStreak();
 
-    const upcoming = streaks.filter((streak) => {
-      if (isAfter(streak.dateFrom, currentDate) && !streak.tag) {
-        return streak;
-      }
-      else
-        return null;
-    });
+      setRunning([...running]);
+      setUpcoming([...upcoming]);
+      setFinished([...finished]);
+      setUnfinished([...unfinished])
 
-    setRunning([...running]);
-    setUpcoming([...upcoming]);
-    setFinished([...finished]);
-    setUnfinished([...unfinished])
+      const dataOfTabs = [...tabDataClone];
+      dataOfTabs[0].count = running.length;
+      dataOfTabs[1].count = upcoming.length;
+      dataOfTabs[2].count = finished.length;
+      dataOfTabs[3].count = unfinished.length;
 
-    const dataOfTabs = [...tabData];
-    dataOfTabs[0].count = running.length;
-    dataOfTabs[1].count = upcoming.length;
-    dataOfTabs[2].count = finished.length;
-    dataOfTabs[3].count = unfinished.length;
+      setTabData([...dataOfTabs]);
 
-    setTabData([...dataOfTabs]);
-
-    updateTableData();
+      updateTableData();
+    }
+    else {
+      updateTableData(true);
+    }
 
   }, [streaks]);
 
 
   useEffect(() => {
-    updateTableData();
+    if (searchText === '')
+      updateTableData();
+    else
+      updateTableData(true)
   }, [tabData])
 
 
 
   const modifyStreaks = (streaks) => {
     const streakData = _cloneDeep(streaks);
+    const currentDate = moment().format();
 
     const modified = streakData.map((streak) => {
+      let status = '';
+      if (isAfter(streak.dateFrom, currentDate) && !streak.tag)
+        status = 'Upcoming';
       const totalRewardsCount = streak.rewards.length;
       const rewardEarned = streak.rewards.filter((reward) => reward.rewardEarned).length
       let streakObj = {};
@@ -183,10 +205,10 @@ function StreakList(props) {
       streakObj.title = streak.title;
       streakObj.startDate = moment(streak.dateFrom).format('L');;
       streakObj.endDate = moment(streak.dateTo).format('L');;
-      streakObj.running = currentTab === 'Upcoming'
+      streakObj.running = status === 'Upcoming'
         ? '--'
         :
-        (currentTab === 'Unfinished' ? 'DROPPED' : `${streak.days} days`);
+        (streak.tag === 'unfinished' ? 'DROPPED' : `${streak.days} days`);
       streakObj.reward = `${rewardEarned}/${totalRewardsCount}`;
       streakObj.description = streak.description
 
@@ -197,16 +219,21 @@ function StreakList(props) {
   }
 
 
-  const updateTableData = () => {
+  const updateTableData = (searchData = false) => {
     let selectedData = [];
-    if (currentTab === 'Running')
-      selectedData = [...running];
-    else if (currentTab === 'Upcoming')
-      selectedData = [...upcoming];
-    else if (currentTab === 'Unfinished')
-      selectedData = [...unfinished];
-    else
-      selectedData = [...finished];
+    if (searchData) {
+      selectedData = [...streaks]
+    }
+    else {
+      if (currentTab === 'Running')
+        selectedData = [...running];
+      else if (currentTab === 'Upcoming')
+        selectedData = [...upcoming];
+      else if (currentTab === 'Unfinished')
+        selectedData = [...unfinished];
+      else
+        selectedData = [...finished];
+    }
 
     const modifiedData = modifyStreaks([...selectedData]);
     setTableData([...modifiedData]);
@@ -252,11 +279,7 @@ function StreakList(props) {
     if (actionObj.actionType === 'tabClicked') {
       dispatch(streakListType(actionObj.data));
       if (actionObj.data === 'Running') {
-        const tab = [...tabData];
-        tab[0].active = true;
-        tab[1].active = false;
-        tab[2].active = false;
-        tab[3].active = false;
+        const tab = activeTab('Running' , tabDataClone);
         setTabData([...tab]);
 
         const modifiedData = modifyStreaks([...running]);
@@ -264,14 +287,8 @@ function StreakList(props) {
         setCurrentTab('Running');
       }
       else if (actionObj.data === 'Upcoming') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = true;
-        tab[2].active = false;
-        tab[3].active = false;
-
+        const tab = activeTab('Upcoming', tabDataClone)
         setTabData([...tab]);
-
 
         const modifiedData = modifyStreaks([...upcoming]);
         setTableData([...modifiedData]);
@@ -279,12 +296,7 @@ function StreakList(props) {
 
       }
       else if (actionObj.data === 'Finished') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = false;
-        tab[2].active = true;
-        tab[3].active = false;
-
+        const tab = activeTab('Finished', tabDataClone)
         setTabData([...tab]);
 
         const modifiedData = modifyStreaks([...finished]);
@@ -293,11 +305,7 @@ function StreakList(props) {
 
       }
       else if (actionObj.data === 'Unfinished') {
-        const tab = [...tabData];
-        tab[0].active = false;
-        tab[1].active = false;
-        tab[2].active = false;
-        tab[3].active = true;
+        const tab = activeTab('Unfinished', tabDataClone)
 
         setTabData([...tab]);
 

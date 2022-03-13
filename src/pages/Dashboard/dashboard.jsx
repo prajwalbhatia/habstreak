@@ -138,7 +138,7 @@ function Dashboard(props) {
             const todayDate = moment(new Date());
             const percPerDay = perPerDay(dateFrom, dateTo);
 
-            const daysDone = isSame(todayDate, dateFrom) ? 0 : todayDate.diff(dateFrom, 'days') + 1;
+            const daysDone = isSame(todayDate, dateFrom) ? 0 : todayDate.diff(dateFrom, 'days');
             const progress = percPerDay * daysDone;
             return (
               <div

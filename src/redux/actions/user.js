@@ -4,8 +4,12 @@ import {
     createUser,
     signIn,
     signUp,
-    refreshToken
+    refreshToken,
 } from '../api/user';
+
+import {
+    logout
+} from '../api';
 
 export const auth = (data) => async (dispatch) => {
     try {
@@ -39,9 +43,19 @@ export const signup = (formData, history) => async dispatch => {
     }
 }
 
-export const refreshTokenFun = (token) => async dispatch => {
+export const refreshTokenFunApiCall = (token) => async dispatch => {
     try {
         const { data } = await refreshToken(token);
+        return data;
+        // const action = { type: REFRESH_TOKEN, data }
+        // dispatch(action);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const storeRefreshToken = (data) => async dispatch => {
+    try {
         const action = { type: REFRESH_TOKEN, data }
         dispatch(action);
     } catch (error) {
@@ -49,8 +63,9 @@ export const refreshTokenFun = (token) => async dispatch => {
     }
 }
 
-export const logout = () => async (dispatch) => {
+export const logoutCall = (refreshToken) => async (dispatch) => {
     try {
+        await logout({refreshToken});
         const action = { type: LOGOUT }
         dispatch(action);
     } catch (error) {

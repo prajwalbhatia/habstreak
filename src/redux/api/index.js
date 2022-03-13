@@ -1,12 +1,35 @@
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+
+
+import { refreshTokenFunApiCall , storeRefreshToken } from "redux/actions/user";
+
+import {
+  refreshToken,
+} from './user';
 
 const API = axios.create({ baseURL: process.env.REACT_APP_ENV === 'development' ? 'http://localhost:5000' : 'https://habstreak.herokuapp.com/' });
 
-API.interceptors.request.use((req) => {
+
+API.interceptors.request.use(async (req) => {
   if (localStorage.getItem('profile')) {
-    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+    const user = JSON.parse(localStorage.getItem('profile'));
+    let currentDate = new Date();
+    const decodeToken = jwt_decode(user.token);
+    if(decodeToken.exp * 1000  < currentDate.getTime())
+    {
+      const {data} = await refreshToken({refreshToken : user.refreshToken});
+      storeRefreshToken(data);
+      req.headers.Authorization = `Bearer ${data.token}`
+    }
+    else
+    {
+      req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+    }
   }
   return req;
+} , (error) => {
+  console.log('INTERSEPTOR ERROR' , error)
 });
 
 //REWARDS
@@ -32,3 +55,6 @@ export const deleteStreakDetail = (id) => API.delete(`/streakDetail/${id}`);
 
 //RECENT ACTIVITIES
 export const getRecentActivities = () => API.get(`/recentActivities`);
+
+//AUTH
+export const logout = (token) => API.post('/user/logout' , token); 

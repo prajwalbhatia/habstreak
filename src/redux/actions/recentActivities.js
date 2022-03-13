@@ -18,7 +18,7 @@ export const getRecentActivitiesData = () => async (dispatch) => {
     dispatch(action);
   } catch (error) {
     console.log(error);
-    const action = { type: GET_ACTIVITIES_FAIL, error: error }
+    const action = { type: GET_ACTIVITIES_FAIL, error: error.response.data.error.message }
     dispatch(action);
   }
 }

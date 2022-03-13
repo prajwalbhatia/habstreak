@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 //Third party libraries
 import {
@@ -26,15 +27,32 @@ import "./fontello/css/habstreak.css"
 import './App.css';
 
 function App(props) {
-  const [user] = useState(JSON.parse(localStorage.getItem('profile')));
+  const [user , setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  const authData = useSelector((state) => state.user.authData);
 
-  useEffect(() => {
-    const token = user?.refreshToken;
-    if (token)
-      setInterval(() => {
-        refreshToken(token);
-      }, 50000);
-  }, [])
+
+  // useEffect(() => {
+  //   const token = user?.refreshToken;
+  //   console.log('🚀 ~ file: App.js ~ line 33 ~ useEffect ~ token', token);
+  //   let intervalId = '';
+  //   if (token) {
+  //     intervalId = setInterval(() => {
+  //       refreshToken(token);
+  //     }, 5000);
+
+
+  //     return () => {
+  //       clearInterval(intervalId)
+  //     }
+  //   }
+
+  // }, [user])
+
+
+  // useEffect(() => {
+  //   setUser(authData)
+  // } , [])
+
 
 
   return (

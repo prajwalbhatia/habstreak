@@ -64,7 +64,7 @@ function Table(props) {
               >
                 <div className='d-flex'>
                   <h4 className="font-rob-med">{`${title}`}</h4>
-                  <h4 className="font-rob-med">{`(${count})`}</h4>
+                  {title !== 'Searched items' && <h4 className="font-rob-med">{`(${count})`}</h4>}
                 </div>
                 <div className="center-items">
                   <div className={active ? "active-tab" : ""}></div>

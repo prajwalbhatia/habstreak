@@ -151,7 +151,7 @@ function Navigation(props) {
 
         <div
           className='logout-btn-container display-none'
-          onClick={() => logoutFun(history)}
+          onClick={() => logoutFun(history , user?.refreshToken)}
         >
           <i className="demo-icon icon-logout" />
           <h5 className=''>Logout</h5>

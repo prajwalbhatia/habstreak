@@ -12,7 +12,9 @@ import {
 
     EMPTY_STREAK_DETAIL,
 
-    STREAK_LIST_TYPE
+    STREAK_LIST_TYPE,
+
+    SEARCH
 
 } from '../constants/action-type';
 const initialState = {
@@ -21,7 +23,8 @@ const initialState = {
     streakDetail: [],
     streaksListType : 'Running',
     loading : true,
-    error : ''
+    error : '',
+    searchText : ''
 }
 
 const streakReducer = (state = initialState, action) => {
@@ -51,6 +54,9 @@ const streakReducer = (state = initialState, action) => {
         case CREATE_STREAK_FAIL:
             return { ...state, error: action.payload, loading: false }
 
+        //SEARCH
+        case SEARCH:
+            return { ...state , searchText : action.payload}
         default:
             return state;
     }

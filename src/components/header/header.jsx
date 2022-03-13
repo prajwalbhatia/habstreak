@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import "./header.css";
 
 //Redux
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 //LIBRARIES
 import moment from 'moment';
@@ -28,8 +28,12 @@ import {
     activityTitle
 } from "utilities";
 
+//Actions
+import { search } from "redux/actions/streak";
+
 function Header(props) {
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const streaks = useSelector((state) => state.streak.streaks);
     const activities = useSelector((state) => state.recentActivities.activities);
@@ -90,7 +94,7 @@ function Header(props) {
                                 Notification
                             </li>
                             <li
-                                onClick={() => logoutFun(history)}
+                                onClick={() => logoutFun(history, user?.refreshToken)}
                                 className="c-pointer"
                             >
                                 <i className="demo-icon icon-logout " />
@@ -122,7 +126,8 @@ function Header(props) {
                         ?
                         <Search
                             data={(searchText) => {
-
+                                console.log('🚀 ~ file: header.jsx ~ line 127 ~ Header ~ searchText', searchText);
+                                dispatch(search(searchText));
                             }}
                             containerClass={'mr-30'}
                         />

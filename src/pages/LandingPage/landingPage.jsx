@@ -196,8 +196,8 @@ function LandingPage() {
             </div>
 
             <div className="right-section">
-              <h1 className='h1-40'>Get things done and reward yourself</h1>
-              <p className='p-18'>Are you tired of starting the things and dropping i in between??? Not anymore, try habstreak, record your task and reward yourself on reaching milestones</p>
+              <h1 className='h1-40'>Reward yourself and make the road of success exciting</h1>
+              <p className='p-18'>Most good things take time and alot of effort, so why only wait for the end result?? Reward youself on small success and make your journey more exciting</p>
 
               <div className='buttons d-flex mt-50'>
                 <PrimaryButton
@@ -217,8 +217,8 @@ function LandingPage() {
 
           <div className='d-flex mt-40 guide-container' >
             <div className="left-section">
-              <h1 className='h1-40'>Malesuada consectetur posuere proin proin enim</h1>
-              <p className='p-18'>Cras eu elit congue, placerat dui ut, tincidunt nisl. Nulla leo elit, pharetra bibendum justo quis, cursus consectetur erat. Sed nec posuere turpis.</p>
+              <h1 className='h1-40'>Enjoying the process is important</h1>
+              <p className='p-18'>Take baby steps daily to complete the impossible looking tasks and make impossible task says I M POSSIBLE.</p>
             </div>
 
             <div className="right-section">
@@ -237,7 +237,7 @@ function LandingPage() {
           <div className='container'>
             <div className='left-section'>
               <Logo />
-              <p className='mt-20'>Cras eu elit congue, placerat dui ut, tincidunt nisl. Nulla leo elit, pharetra bibendum justo quis, cursus consectetur erat.pharetra bibendum justo quis, cursus consectetur erat.</p>
+              <p className='mt-20'>When you will rewards yourself on small small milestones than you will feel exciting and motivated to complete that task and you will not break the streak.</p>
 
               <div className='socials mt-30'>
                 <i className="demo-icon icon-facebook mr-20 contact-icon" />

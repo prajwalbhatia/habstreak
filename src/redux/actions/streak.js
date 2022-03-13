@@ -27,6 +27,8 @@ import {
     EMPTY_STREAK_DETAIL,
 
     STREAK_LIST_TYPE,
+
+    SEARCH
 } from '../constants/action-type';
 
 //UTILITIES
@@ -56,8 +58,8 @@ export const createStreakData = (streak) => async (dispatch) => {
         dispatch(getStreaksData());
         dispatch(getRecentActivitiesData());
     } catch (error) {
-        console.log(error);
-        const action = { type: CREATE_STREAK_FAIL, payload: error }
+        console.log(error.response.data.error.message);
+        const action = { type: CREATE_STREAK_FAIL, payload: error.response.data.error.message }
         dispatch(action);
     }
 
@@ -68,7 +70,7 @@ export const deleteStreakData = (streakId) => async (dispatch) => {
         await deleteStreak(streakId);
         dispatch(getStreaksData());
     } catch (error) {
-        console.log(error);
+        console.log(error.response.data.error.message);
     }
 }
 
@@ -77,7 +79,7 @@ export const deleteStreakAndRewardData = (streakId) => async (dispatch) => {
         await deleteStreakAndReward(streakId);
         dispatch(getStreaksData());
     } catch (error) {
-        console.log(error);
+        console.log(error.response.data.error.message);
     }
 }
 
@@ -87,7 +89,7 @@ export const updateStreakData = (streak, streakId) => async (dispatch) => {
         dispatch(getStreaksData());
         dispatch(getStreakData(streakId));
     } catch (error) {
-        console.log(error);
+        console.log(error.response.data.error.message);
     }
 }
 
@@ -99,8 +101,8 @@ export const getStreaksData = () => async (dispatch) => {
         const action = { type: GET_STREAK_SUCCESS, payload: streaks.data }
         dispatch(action);
     } catch (error) {
-        console.log(error);
-        const action = { type: GET_STREAK_FAIL, error: error }
+        console.log(error.response.data.error.message);
+        const action = { type: GET_STREAK_FAIL, error: error?.response?.data?.error?.message }
         dispatch(action);
     }
 }
@@ -113,7 +115,7 @@ export const getStreakData = (streakId) => async (dispatch) => {
         const action = { type: GET_A_STREAK, payload: streak.data }
         dispatch(action);
     } catch (error) {
-        console.log(error.message);
+        console.log(error.response.data.error.message);
         // const action = { type: GET_STREAK_FAIL, error: error }
         // dispatch(action);
     }
@@ -130,7 +132,7 @@ export const emptyStreaksDetail = () => async (dispatch) => {
         const action = { type: EMPTY_STREAK_DETAIL }
         dispatch(action);
     } catch (error) {
-        console.log(error);
+        console.log(error.response.data.error.message);
     }
 }
 
@@ -138,7 +140,7 @@ export const createStreakDetailData = (streakDetail) => async () => {
     try {
         await createStreakDetail(streakDetail);
     } catch (error) {
-        console.log(error);
+        console.log(error.response.data.error.message);
     }
 }
 
@@ -150,8 +152,8 @@ export const getStreaksDetailData = (id) => async (dispatch) => {
         const action = { type: GET_STREAK_DETAIL_SUCCESS, payload: streakDetail.data }
         dispatch(action);
     } catch (error) {
-        console.log(error);
-        const action = { type: GET_STREAK_DETAIL_FAIL, error: error }
+        console.log(error.response.data.error.message);
+        const action = { type: GET_STREAK_DETAIL_FAIL, error: error.response.data.error.message }
         dispatch(action);
     }
 }
@@ -170,5 +172,15 @@ export const deleteStreakDetailData = (streakId) => async (dispatch) => {
         await deleteStreakDetail(streakId);
     } catch (error) {
         console.log(error);
+    }
+}
+
+//SEARCH
+export const search = (searchText) => async (dispatch) => {
+    try {
+        const action = { type: SEARCH , payload : searchText}
+        dispatch(action);
+    } catch (error) {
+        console.log(error.response.data.error.message);
     }
 }

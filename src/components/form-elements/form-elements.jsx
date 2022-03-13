@@ -11,7 +11,7 @@ import { noop } from 'lodash';
 export function InputElement({ lable, type, uid, placeholder, containerClass, icon, errMsg, successMsg, ...rest }) {
   return (
     <div key={uid} className={`element input-container ${containerClass}`}>
-      <div className='d-flex justify-space-between mb-10'>
+      <div className='d-flex justify-space-between mb-10 label-container'>
         <label className='label' htmlFor={uid}>{lable}</label>
         <label className='label' style={errMsg ? { color: '#FF0000' } : { color: '#267A08' }}>
           {errMsg ? errMsg : (successMsg ? successMsg : '')}

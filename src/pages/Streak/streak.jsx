@@ -115,7 +115,7 @@ function Streak(props) {
                 let rewardDate = moment(new Date(reward.date));
                 const daysDiffOfReward = rewardDate.diff(from, 'days') + 1;
                 const perDayPerc = perPerDay(dateFrom, dateTo);
-                return { perc: Number(perDayPerc) * daysDiffOfReward, title: reward.title, date: rewardDate.format('DD-MM-YYYY')}
+                return { perc: Number(perDayPerc) * daysDiffOfReward, title: reward.title, date: rewardDate.format('DD-MM-YYYY') }
             })
 
             let progressData = {
@@ -398,8 +398,8 @@ function Streak(props) {
 
                             {
                                 progressData.rewards.length > 0
-                                ?
-                                progressData.rewards.map((reward, index) => {
+                                    ?
+                                    progressData.rewards.map((reward, index) => {
                                         console.log('🚀 ~ file: streak.jsx ~ line 414 ~ progressData.rewards.map ~ reward', reward);
                                         return (
                                             <div
@@ -452,7 +452,7 @@ function Streak(props) {
                                 <div className='d-flex justify-space-between container-heading'>
                                     <h3 className='jos-18-primary task-heading'>Tasks</h3>
                                     <span className='rob-med-12-primary streak-status'>State:
-                                        {streak[0]?.tag ? streak[0]?.tag : checkingStatus(streak[0]?.dateFrom)}</span>
+                                        {streak[0]?.tag ? streak[0]?.tag.toUpperCase() : checkingStatus(streak[0]?.dateFrom).toUpperCase()}</span>
                                 </div>
 
                                 <div className='task-container  mt-20'>
