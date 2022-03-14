@@ -201,7 +201,13 @@ function Streak(props) {
                                                     {
                                                         status === 'Past'
                                                             ?
-                                                            <i className="demo-icon icon-check-circle circle-icon" />
+                                                            (
+                                                                streak[0]?.tag === 'unfinished'
+                                                                    ?
+                                                                    <i className="demo-icon icon-close-circle circle-icon" />
+                                                                    :
+                                                                    <i className="demo-icon icon-check-circle circle-icon" />
+                                                            )
                                                             :
                                                             <div className='circle'>
                                                             </div>

@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'habstreak';
-  src: url('../font/habstreak.eot?12536283');
-  src: url('../font/habstreak.eot?12536283#iefix') format('embedded-opentype'),
-       url('../font/habstreak.woff2?12536283') format('woff2'),
-       url('../font/habstreak.woff?12536283') format('woff'),
-       url('../font/habstreak.ttf?12536283') format('truetype'),
-       url('../font/habstreak.svg?12536283#habstreak') format('svg');
+  src: url('../font/habstreak.eot?99772204');
+  src: url('../font/habstreak.eot?99772204#iefix') format('embedded-opentype'),
+       url('../font/habstreak.woff2?99772204') format('woff2'),
+       url('../font/habstreak.woff?99772204') format('woff'),
+       url('../font/habstreak.ttf?99772204') format('truetype'),
+       url('../font/habstreak.svg?99772204#habstreak') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'habstreak';
-    src: url('../font/habstreak.svg?12536283#habstreak') format('svg');
+    src: url('../font/habstreak.svg?99772204#habstreak') format('svg');
   }
 }
 */
@@ -90,3 +90,4 @@
 .icon-notifications:before { content: '\e821'; } /* '' */
 .icon-activity:before { content: '\e822'; } /* '' */
 .icon-logout:before { content: '\e823'; } /* '' */
+.icon-close-circle:before { content: '\e824'; } /* '' */

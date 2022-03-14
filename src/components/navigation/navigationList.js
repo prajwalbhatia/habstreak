@@ -1,8 +1,3 @@
-import { AiFillFire, AiFillTrophy } from "react-icons/ai";
-import { RiDashboardFill } from "react-icons/ri";
-import { FiActivity } from "react-icons/fi";
-
-
 export const navigationList = [
     {
         _id: "1",
@@ -12,7 +7,7 @@ export const navigationList = [
     },
     {
         _id: "2",
-        name: "Streak",
+        name: "Streaks",
         active: false,
         url: "/streak-list",
     },
