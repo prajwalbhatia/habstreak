@@ -163,6 +163,72 @@
     }
   }
 
+  .pricing-section {
+    height: 1061px !important;
+    padding-top: 50px;
+
+    .pack-container {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 100px;
+
+      .price-box {
+        height: 800px;
+        min-width: 350px;
+        border-radius: 20px;
+        box-shadow: 0px 3px 6px var(--boxShadow);
+        flex: 1;
+      }
+
+      .free-pricing-container {
+        margin-right: 20px;
+      }
+
+      .price-heading-box {
+        height: 101px;
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0px 3px 6px var(--boxShadow);
+        padding: 25px;
+
+        .icon-container {
+          height: 50px;
+          width: 50px;
+        }
+
+        .price-container {
+          min-width: 200px;
+        }
+      }
+
+
+      .free-box {
+        background-color: #FFE5A2;
+      }
+
+      .prime-box {
+        background-color: #8BE5C1;
+      }
+
+      .plan-info {
+        padding: 0 20px;
+        justify-content: space-between;
+      }
+
+      .plan-btn-container {
+        width: 160px;
+        height: 50px;
+        background: #FFE5A2;
+        border-radius: 10px;
+        padding: 20px;
+      }
+
+      .prime-btn {
+        background: #8BE5C1;
+      }
+    }
+  }
+
   .contact-section {
     height: 500px;
     padding-top: 150px;
@@ -264,32 +330,35 @@
   }
 
   .feature-heading,
-  .guide-heading {
+  .guide-heading,
+  .price-heading {
     font-size: 60px;
     font-family: RobotoBold;
     text-align: center;
   }
 
-  .hero-background {
-    background-image: url('./img/Section1.png');
+  .global-background {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+  }
+
+  .hero-background {
+    background-image: url('./img/Section1.png');
     height: 926px;
   }
 
   .feature-background {
     background-image: url('./img/Section2.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
   }
 
   .guide-background {
     background-image: url('./img/Section3.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+  }
+
+  .price-background {
+    background-image: url('./img/Section4.png');
+    height: 926px;
   }
 
   .contact-background {
@@ -400,10 +469,13 @@
         }
       }
     }
+
+    .pricing-section {
+      padding-top: 100px;
+    }
+
   }
 }
-
-
 
 //MEDIA QUERIES
 @media only screen and (max-width: 1024px) {
@@ -417,8 +489,7 @@
       padding-right: 30px;
     }
 
-    .features-section
-    {
+    .features-section {
       padding-top: 150px;
     }
 
@@ -431,6 +502,32 @@
 
       .btn-list-container {
         display: flex;
+      }
+    }
+
+    .pricing-section {
+      padding-top: 50px;
+    }
+
+  }
+}
+
+@media only screen and (max-width : 800px) {
+  .landing-page {
+    .pricing-section {
+      height: auto !important;
+
+      .pack-container {
+        flex-wrap: wrap;
+
+        .prime-pricing-container {
+          margin-top: 50px;
+        }
+
+        .free-pricing-container {
+          margin-right: 0px;
+        }
+
       }
     }
 
@@ -546,6 +643,10 @@
         margin-bottom: 20px;
       }
 
+    }
+
+    .pricing-section {
+      padding-top: 250px;
     }
 
   }

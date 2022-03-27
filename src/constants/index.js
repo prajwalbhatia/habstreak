@@ -80,3 +80,17 @@ export const rewardListTableHeadings = [
   },
 ];
 
+
+export const plansFeatures = {
+  "free" : {
+    streaks : 2,
+    rewards : 2,
+    activities : false
+  },
+  "prime": {
+    streaks: 100,
+    rewards: 100,
+    activities: true
+  }
+}
+

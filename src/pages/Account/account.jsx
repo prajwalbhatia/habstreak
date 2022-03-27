@@ -12,8 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 //Actions
 import {
   auth,
-  signup, signin
-} from "../../redux/actions/user";
+  signup,
+  signin,
+  emptyError
+} from "redux/actions/user";
 
 //CSS
 import './account.css';
@@ -24,6 +26,9 @@ import { ReactComponent as Logo } from './img/Logo.svg';
 import { ReactComponent as Signup } from './img/Signup.svg';
 import { ReactComponent as Login } from './img/Login.svg';
 
+//UTILITIES
+import { dialogForError } from "utilities/index";
+
 const initialState = {
   fullName: '',
   email: '',
@@ -31,12 +36,14 @@ const initialState = {
   confirmPassword: ''
 }
 
-function Dashboard(props) {
+function Account(props) {
   //HOOKS
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
   const authData = useSelector((state) => state.user.authData);
+  let error = useSelector((state) => state.user.error);
+  console.log('🚀 ~ file: account.jsx ~ line 42 ~ Dashboard ~ error', error);
   //HOOKS
 
   //STATES
@@ -50,6 +57,14 @@ function Dashboard(props) {
   //STATES
 
   //USE EFFECTS
+  useEffect(() => {
+    if (error.length > 0) {
+      dialogForError(error);
+      dispatch(emptyError());
+    }
+  }, [dispatch, error])
+
+
   useEffect(() => {
     const token = user?.token;
     if (token)
@@ -207,9 +222,13 @@ function Dashboard(props) {
       }
     }
 
+    console.log('VALIDATION', Object.keys(errMsg))
+
     //VALIDATION
     if (Object.keys(errMsg).length === 0)
       setIsValid(true);
+    else
+      setIsValid(false);
 
   }
   //FUNCTIONS
@@ -345,4 +364,4 @@ function Dashboard(props) {
   );
 }
 
-export default Dashboard;
+export default Account;

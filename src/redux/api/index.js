@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
 
-import { refreshTokenFunApiCall , storeRefreshToken } from "redux/actions/user";
+import { storeRefreshToken } from "redux/actions/user";
 
 import {
   refreshToken,
@@ -58,3 +58,5 @@ export const getRecentActivities = () => API.get(`/recentActivities`);
 
 //AUTH
 export const logout = (token) => API.post('/user/logout' , token); 
+
+export const updateUser = (userData , email) => API.patch(`/user/${email}` , userData);

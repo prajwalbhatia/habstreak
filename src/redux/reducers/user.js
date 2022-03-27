@@ -1,7 +1,8 @@
-import { AUTH, LOGOUT, REFRESH_TOKEN } from '../constants/action-type';
+import { AUTH, LOGOUT, REFRESH_TOKEN, SIGNIN_FAIL, EMPTY_ERROR} from '../constants/action-type';
 
 const initialState = {
-    authData: null
+    authData: JSON.parse(localStorage.getItem('profile')),
+    error : ''
 }
 
 const userReducer = (state = initialState, action) => {
@@ -16,6 +17,10 @@ const userReducer = (state = initialState, action) => {
             localStorage.clear();
             // localStorage.removeItem('profile');
             return { ...state, authData: null }
+        case SIGNIN_FAIL:
+            return {...state , error : action.data }    
+        case EMPTY_ERROR:
+            return { ...state, error: "" }    
         default:
             return state;
     }

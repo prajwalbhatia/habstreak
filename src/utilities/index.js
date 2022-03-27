@@ -255,6 +255,58 @@ export const dialogForMessage = (history) => {
   });
 };
 
+export const dialogForError = (message) => {
+  const contentData =
+    [{
+      eleType: "text",
+      text: message
+    }]
+
+  Modal.show({
+    title: 'Error',
+    type: 'delete',
+    icon: '',
+    primaryButtonText: "OKAY",
+    primaryButtonColor: '#d7443e',
+
+
+    content: [
+      ...contentData
+    ],
+
+    btnClickHandler: (data) => {
+      Modal.hide();
+    }
+  });
+};
+
+export const dialogForUpgrade = () => {
+  const contentData =
+    [{
+      eleType: "text",
+      text: 'Upgrade plan to enjoy prime features'
+    }]
+
+  Modal.show({
+    title: 'Information',
+    icon: '',
+    primaryButtonText: "Change Plan",
+    secondaryButtonText: "Cancel",
+
+
+    content: [
+      ...contentData
+    ],
+
+    btnClickHandler: (data) => {
+      // if (data.type === "primary") {
+      //   history.push('/streak-list');
+      // }
+      Modal.hide();
+    }
+  });
+};
+
 /**
  * 
  * @param {Object} data - Object of data (either streak or reward)
@@ -484,4 +536,15 @@ export const activeTab = (activeTabText, tabData = [...streakTabData()]) => {
   })
 
   return modifiedTabData;
+}
+
+export const planDetail = () => {
+  switch (store.getState().user.authData.result.planType) {
+    case "free":
+      return "free"
+    case "prime":
+      return "prime"  
+    default:
+      return ""
+  }
 }

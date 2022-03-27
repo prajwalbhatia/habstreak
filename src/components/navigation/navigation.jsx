@@ -103,9 +103,9 @@ function Navigation(props) {
             backgroundImage: `url(${user?.result?.imageUrl})`,
           }}
           onClick={() => {
-            // history.push({
-            //   pathname: `/profile`,
-            // })
+            history.push({
+              pathname: `/profile`,
+            })
           }}
         >
           {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}

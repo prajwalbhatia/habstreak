@@ -11,7 +11,7 @@ import Frame from "../../components/frame/frame";
 import Card from "../../components/card/card";
 
 //Actions
-import { getRecentActivitiesData } from "../../redux/actions/recentActivities";
+import { getRecentActivitiesData, stopLoading } from "../../redux/actions/recentActivities";
 
 //CSS
 import './recentActivities.css';
@@ -22,7 +22,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler } from 'utilities';
+import { errorHandler, planDetail, dialogForUpgrade } from 'utilities';
 
 //CONSTANTS
 import { theme } from "constants/index";
@@ -30,15 +30,28 @@ import { theme } from "constants/index";
 function RecentActivities() {
   const dispatch = useDispatch();
   const [groupedActivities, setGroupedActivities] = useState({});
+  const [planType, setPlanType] = useState("");
+  console.log('🚀 ~ file: recentActivities.jsx ~ line 34 ~ RecentActivities ~ planType', planType);
 
   //Getting the data from the state
   const activities = useSelector((state) => state.recentActivities.activities);
-
+  const authData = useSelector((state) => state.user.authData);
   const loading = useSelector((state) => state.recentActivities.loading);
 
   useEffect(() => {
-    dispatch(getRecentActivitiesData());
-  }, [dispatch])
+    if (planType.length > 0 && planType !== "free") {
+      dispatch(getRecentActivitiesData());
+    }
+    else if(planType === 'prime') {
+      dialogForUpgrade();
+    }
+    dispatch(stopLoading());
+  }, [dispatch, planType])
+
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
 
 
   useEffect(() => {
@@ -141,7 +154,7 @@ function RecentActivities() {
   const recentActivityCardJsx = () => {
     const isEmpty = _size(groupedActivities) === 0;
 
-    if (!isEmpty) {
+    if (!isEmpty && planType.length > 0 && planType !== "free") {
       return (
         _map(groupedActivities, (value, key) => {
           return (
@@ -186,6 +199,7 @@ function RecentActivities() {
       containerClass="recent-activities"
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
+        <div className='subscription-overlay'></div>
         {
           loading
             ?

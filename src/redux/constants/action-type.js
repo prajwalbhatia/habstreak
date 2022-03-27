@@ -40,6 +40,12 @@ export const GET_ACTIVITIES_FAIL = "GET_ACTIVITIES_FAIL";
 export const AUTH = 'AUTH';
 export const LOGOUT = 'LOGOUT';
 export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+export const SIGNIN_FAIL = 'SIGNIN_FAIL';
 
 //SEARCH 
 export const SEARCH = 'SEARCH';
+
+
+//COMMON
+export const STOP_LOADING = 'STOP_LOADING';
+export const EMPTY_ERROR = 'EMPTY_ERROR';

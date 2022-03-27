@@ -23,24 +23,38 @@ import { IconContext } from "react-icons"
 import {
     dialogForCreateAndUpdateStreak,
     dialogForCreateAndUpdateReward,
+    dialogForUpgrade,
     dialogForMessage,
     logoutFun,
-    activityTitle
+    activityTitle,
+    planDetail
 } from "utilities";
+
+//CONSTANTS
+import { plansFeatures } from "constants/index";
 
 //Actions
 import { search } from "redux/actions/streak";
+import { useEffect } from "react";
 
 function Header(props) {
     const history = useHistory();
     const dispatch = useDispatch();
 
     const streaks = useSelector((state) => state.streak.streaks);
+    const rewards = useSelector((state) => state.reward.rewards);
+
     const activities = useSelector((state) => state.recentActivities.activities);
+    const authData = useSelector((state) => state.user.authData);
+
 
     const [showListing, setShowListing] = useState(false);
     const [showNotification, setShowNotification] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('profile')));
+    const [streakCount, setStreakCount] = useState(0);
+    const [rewardCount, setRewardCount] = useState(0);
+    const [planType, setPlanType] = useState("");
+    console.log('🚀 ~ file: header.jsx ~ line 57 ~ Header ~ planType', planType);
 
     const { internalNavigation, headerText } = props;
 
@@ -53,6 +67,19 @@ function Header(props) {
             pathname: '/recent-activities',
         });
     }
+
+    useEffect(() => {
+        setStreakCount(streaks.length);
+    }, [streaks]);
+
+    useEffect(() => {
+        setRewardCount(rewards.length);
+    }, [rewards]);
+
+    useEffect(() => {
+        if (authData)
+            setPlanType(planDetail());
+    }, [authData]);
 
     return (
         <header className="header">
@@ -174,11 +201,18 @@ function Header(props) {
                             if (headerText === 'Rewards') {
                                 if (streaks.length === 0)
                                     dialogForMessage(history)
-                                else
-                                    dialogForCreateAndUpdateReward('create', {}, '', streaks);
+                                else {
+                                    if (rewardCount < plansFeatures[planType].rewards)
+                                        dialogForCreateAndUpdateReward('create', {}, '', streaks);
+                                    else
+                                        dialogForUpgrade();
+                                }
                             }
                             else {
-                                dialogForCreateAndUpdateStreak();
+                                if (streakCount < plansFeatures[planType].streaks)
+                                    dialogForCreateAndUpdateStreak();
+                                else
+                                    dialogForUpgrade();
                             }
                         }
                     }

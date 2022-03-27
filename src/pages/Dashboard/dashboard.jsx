@@ -26,10 +26,17 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, isSameOrBefore, activityTitle, isSameOrAfter } from 'utilities';
+import {
+  errorHandler,
+  isSameOrBefore,
+  activityTitle,
+  isSameOrAfter,
+  planDetail,
+  dialogForUpgrade
+} from 'utilities';
 
 //CONSTANTS
-import { icons, theme } from "constants/index";
+import { icons, theme, plansFeatures } from "constants/index";
 
 function Dashboard(props) {
   const dispatch = useDispatch();
@@ -37,6 +44,9 @@ function Dashboard(props) {
 
   const [taskCount, setTaskCount] = useState(0);
   const [groupedActivities, setGroupedActivities] = useState({});
+  const [streakCount, setStreakCount] = useState(0);
+  const [planType, setPlanType] = useState("");
+
   const [percentageData, setPercentageData] = useState({
     streakSuccess: 0,
     rewardCollected: 0,
@@ -47,7 +57,7 @@ function Dashboard(props) {
   const streaks = useSelector((state) => state.streak.streaks);
   const rewards = useSelector((state) => state.reward.rewards);
   const activities = useSelector((state) => state.recentActivities.activities);
-
+  const authData = useSelector((state) => state.user.authData);
   const loading = useSelector((state) => state.streak.loading);
 
   useEffect(() => {
@@ -59,8 +69,8 @@ function Dashboard(props) {
   }, [dispatch])
 
   useEffect(() => {
+    setStreakCount(streaks.length);
     const currentDate = moment().format();
-
     const finished = streaks.filter((streak) => streak.tag === 'finished');
     const unfinishedStreak = streaks.filter((streak) => streak.tag === 'unfinished');
 
@@ -73,7 +83,6 @@ function Dashboard(props) {
     });
 
     const earned = rewards.filter(reward => reward.rewardEarned);
-
     const totalStreak = [...streaks].length;
     const totalRewards = [...rewards].length;
     let successfulStreak = 0;
@@ -103,6 +112,11 @@ function Dashboard(props) {
 
     setTaskCount(running.length);
   }, [streaks, rewards]);
+
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
 
 
   useEffect(() => {
@@ -359,7 +373,12 @@ function Dashboard(props) {
                       </h4>
                       <OutlinedPrimaryButton
                         name={'Add New Streak'}
-                        click={() => dialogForCreateAndUpdateStreak()}
+                        click={() => {
+                          if (streakCount < plansFeatures[planType].streaks)
+                            dialogForCreateAndUpdateStreak();
+                          else
+                            dialogForUpgrade();
+                        }}
                         btnContainerClass="add-btn"
                         btnClass='h-40'
                       />

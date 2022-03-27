@@ -5,7 +5,8 @@ import {
 import {
   GET_ACTIVITIES,
   GET_ACTIVITIES_SUCCESS,
-  GET_ACTIVITIES_FAIL
+  GET_ACTIVITIES_FAIL,
+  STOP_LOADING
 } from '../constants/action-type';
 
 //Action Creators
@@ -21,4 +22,9 @@ export const getRecentActivitiesData = () => async (dispatch) => {
     const action = { type: GET_ACTIVITIES_FAIL, error: error.response.data.error.message }
     dispatch(action);
   }
+}
+
+export const stopLoading = () => async (dispatch) => {
+  const action = { type: STOP_LOADING }
+  dispatch(action);
 }

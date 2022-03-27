@@ -1,7 +1,8 @@
 import {
   GET_ACTIVITIES,
   GET_ACTIVITIES_SUCCESS,
-  GET_ACTIVITIES_FAIL
+  GET_ACTIVITIES_FAIL,
+  STOP_LOADING
 } from "../constants/action-type";
 
 const initialState = {
@@ -18,6 +19,8 @@ const recentActivityReducer = (state = initialState, action) => {
       return { ...state, activities : [...action.payload].reverse(), loading: false }
     case GET_ACTIVITIES_FAIL:
       return { ...state, error: action.payload, loading: false }
+    case STOP_LOADING:
+      return { ...state, loading: false }
     default:
       return state;
   }

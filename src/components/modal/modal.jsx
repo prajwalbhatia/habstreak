@@ -247,18 +247,22 @@ function Modal(props) {
                         })
                     }
 
-    
+
                     <OutlinedPrimaryButton
                         name={props.primaryButtonText}
                         click={() => handleClick('primary')}
                         btnClass={modalType === 'delete' ? 'primary-btn danger-btn' : 'primary-btn'}
                     />
 
-                    <SecondaryButton
-                        name={props.secondaryButtonText}
-                        click={() => handleClick('secondary')}
-                        btnClass={'secondary-btn'}
-                    />
+                    {
+                        props.secondaryButtonText &&
+                        <SecondaryButton
+                            name={props.secondaryButtonText}
+                            click={() => handleClick('secondary')}
+                            btnClass={'secondary-btn'}
+                        />
+                    }
+
 
                 </div>
             </div>

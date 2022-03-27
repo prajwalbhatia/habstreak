@@ -15,6 +15,8 @@ import { dialogForCreateAndUpdateStreak, perPerDay } from "utilities";
 import { getStreaksData } from "redux/actions/streak";
 import { getRewardsData } from "redux/actions/reward";
 import { getRecentActivitiesData } from "redux/actions/recentActivities";
+import { updateuser } from "redux/actions/user";
+
 
 //CSS
 import './profile.css';
@@ -25,7 +27,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, isSameOrBefore, activityTitle, progressFun, isSame, isBefore } from 'utilities';
+import { errorHandler, isSameOrBefore, activityTitle, progressFun, isSame, isBefore, planDetail } from 'utilities';
 
 //CONSTANTS
 import { icons, theme } from "constants/index";
@@ -33,14 +35,89 @@ import { icons, theme } from "constants/index";
 function Profile(props) {
   const dispatch = useDispatch();
   const history = useHistory();
+  const authData = useSelector((state) => state.user.authData);
+  console.log('🚀 ~ file: profile.jsx ~ line 39 ~ Profile ~ authData', authData);
+
 
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
-  console.log('🚀 ~ file: profile.jsx ~ line 38 ~ Profile ~ user', user);
+  const [planType, setPlanType] = useState("");
+
 
   //Getting the data from the state
 
   // const loading = useSelector((state) => state.streak.loading);
   const loading = false;
+
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
+
+  const loadScript = (src) => {
+    return new Promise(resolve => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      }
+      script.onError = () => {
+        resolve(false);
+      }
+
+      document.body.appendChild(script);
+
+    })
+  }
+
+  const displayRazorpay = async () => {
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+    if (!res) {
+      alert('Razorpay SDK failed to load');
+    }
+
+    const data = await fetch('http://localhost:5000/razorpay', { method: 'POST' }).then(res => res.json());
+
+    console.log('AUTH DATA' , authData)
+
+    var options = {
+      "key": "rzp_test_DbnzOWdcdHf2N0",
+      "amount": data.amount,
+      "currency": data.currency,
+      "name": "Habstreak",
+      "description": "",
+      "image": "http://localhost:5000/logo.svg",
+      "order_id": data.id,
+      "handler": function (response) {
+        dispatch(updateuser({ planType: 'prime' }, authData.result.email))
+
+        // alert(response.razorpay_payment_id);
+        // alert(response.razorpay_order_id);
+        // alert(response.razorpay_signature)
+      },
+      // "prefill": {
+      //   "name": "Gaurav Kumar",
+      //   "email": "gaurav.kumar@example.com",
+      //   "contact": "9999999999"
+      // },
+    };
+    const paymentObject = new window.Razorpay(options);
+
+    paymentObject.open();
+    // paymentObject.on('payment.failed', function (response) {
+    //   alert(response.error.code);
+    //   alert(response.error.description);
+    //   alert(response.error.source);
+    //   alert(response.error.step);
+    //   alert(response.error.reason);
+    //   alert(response.error.metadata.order_id);
+    //   alert(response.error.metadata.payment_id);
+    // });
+    // document.getElementById('rzp-button1').onclick = function (e) {
+    //   rzp1.open();
+    //   e.preventDefault();
+    // }
+  }
+
 
 
   return (
@@ -120,51 +197,85 @@ function Profile(props) {
                 <div className='flex-dir-col flex-1 right-container'>
                   <h3 className='jos-18-primary'>Current Plan</h3>
 
-                  <div className='flex-dir-col flex-auto plan-container mt-20'>
-                    <div className='plan-details'>
-                      <div className='plan-type'>
-                        <div></div>
-                        <div>
-                          <h2 className='jos-primary'>Prime</h2>
-                          <span className='rob-bold-12-primary'>$</span><span className='jos-primary' style={{ fontSize: '36px' }}>49</span><span className='rob-reg-12-primary'>/PER MONTH</span>
+                  {
+                    planType === "free"
+                      ?
+                      <div className='flex-dir-col flex-auto plan-container mt-20'>
+                        <div className='plan-details'>
+                          <div className='plan-type'>
+                            <div>
+                              <h2 className='jos-primary'>INTRO</h2>
+                              <span className='jos-primary size-36'>FREE</span>
+                            </div>
+                          </div>
+
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>No of streaks</span>
+                            <span className='rob-reg-14-black'>2</span>
+                          </div>
+
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>No of rewards</span>
+                            <span className='rob-reg-14-black'>2</span>
+                          </div>
+
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>Dashboard Summary</span>
+                            <span className='rob-reg-14-black'>Yes</span>
+                          </div>
+
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>Recent Activities</span>
+                            <span className='rob-reg-14-black'>No</span>
+                          </div>
+
                         </div>
                       </div>
+                      :
+                      <div className='flex-dir-col flex-auto plan-container mt-20'>
+                        <div className='plan-details'>
+                          <div className='plan-type'>
+                            <div></div>
+                            <div>
+                              <h2 className='jos-primary'>Prime</h2>
+                              <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>90</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
+                            </div>
+                          </div>
 
-                      <div className='mt-20 plan-info d-flex '>
-                        <span className='rob-reg-10-black'>ETIAM CURABITUR MAURIS</span>
-                        <span className='rob-reg-10-black'>UNLIMITED</span>
-                      </div>
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>No of streaks</span>
+                            <span className='rob-reg-14-black'>Unimited</span>
+                          </div>
 
-                      <div className='mt-20 plan-info d-flex '>
-                        <span className='rob-reg-10-black'>ETIAM CURABITUR MAURIS</span>
-                        <span className='rob-reg-10-black'>UNLIMITED</span>
-                      </div>
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>No of rewards</span>
+                            <span className='rob-reg-14-black'>Unlimited</span>
+                          </div>
 
-                      <div className='mt-20 plan-info d-flex '>
-                        <span className='rob-reg-10-black'>ETIAM CURABITUR MAURIS</span>
-                        <span className='rob-reg-10-black'>UNLIMITED</span>
-                      </div>
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>Dashboard Summary</span>
+                            <span className='rob-reg-14-black'>Yes</span>
+                          </div>
 
-                      <div className='mt-20 plan-info d-flex '>
-                        <span className='rob-reg-10-black'>ETIAM CURABITUR MAURIS</span>
-                        <span className='rob-reg-10-black'>UNLIMITED</span>
+                          <div className='mt-20 plan-info d-flex '>
+                            <span className='rob-reg-14-black'>Recent Activities</span>
+                            <span className='rob-reg-14-black'>Yes</span>
+                          </div>
+                        </div>
                       </div>
+                  }
 
-                      <div className='mt-20 plan-info d-flex '>
-                        <span className='rob-reg-10-black'>ETIAM CURABITUR MAURIS</span>
-                        <span className='rob-reg-10-black'>UNLIMITED</span>
-                      </div>
+                  {
+                    planType === 'free' &&
+                    <div className='d-flex plan-btn-container center-items'>
+                      <OutlinedPrimaryButton
+                        name='Change Plan'
+                        click={displayRazorpay}
+                        btnContainerClass="change-plan-btn"
+                        btnClass='h-40'
+                      />
                     </div>
-                  </div>
-
-                  <div className='d-flex plan-btn-container center-items'>
-                    <OutlinedPrimaryButton
-                      name='Change Plan'
-                      // click={}
-                      btnContainerClass="change-plan-btn"
-                      btnClass='h-40'
-                    />
-                  </div>
+                  }
                 </div>
               </div>
             </>
