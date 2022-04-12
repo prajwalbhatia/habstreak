@@ -78,7 +78,7 @@ function Profile(props) {
     const data = await fetch('http://localhost:5000/razorpay', { method: 'POST' }).then(res => res.json());
 
     var options = {
-      "key": "rzp_test_DbnzOWdcdHf2N0",
+      "key": "",
       "amount": data.amount,
       "currency": data.currency,
       "name": "Habstreak",
@@ -264,15 +264,15 @@ function Profile(props) {
                   }
 
                   {
-                    planType === 'free' &&
-                    <div className='d-flex plan-btn-container center-items'>
-                      <OutlinedPrimaryButton
-                        name='Change Plan'
-                        click={displayRazorpay}
-                        btnContainerClass="change-plan-btn"
-                        btnClass='h-40'
-                      />
-                    </div>
+                    // planType === 'free' &&
+                    // <div className='d-flex plan-btn-container center-items'>
+                    //   <OutlinedPrimaryButton
+                    //     name='Change Plan'
+                    //     click={displayRazorpay}
+                    //     btnContainerClass="change-plan-btn"
+                    //     btnClass='h-40'
+                    //   />
+                    // </div>
                   }
                 </div>
               </div>
