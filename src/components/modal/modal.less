@@ -3,7 +3,7 @@
         position: absolute;
         min-height: 180px;
         min-width: 500px;
-        border-radius: 30px;
+        border-radius: 3rem;
         background: white;
         z-index: 1000;
         left: 50%;
@@ -14,26 +14,26 @@
         flex-direction: column;
 
         .header-part {
-            border-bottom: 1px solid #E8EEF2;
+            border-bottom: .1rem solid #E8EEF2;
 
             .header-content-part {
                 display: flex;
                 justify-content: space-between;
                 flex: 1;
-                padding: 30px 40px 20px 40px;
+                padding: 3em 4em 2em 4em;
 
                 h2 {
                     color: var(--primaryColor);
-                    margin-right: 10px;
+                    margin-right: 1em;
                 }
 
                 .streak-icon {
-                    font-size: 24px;
+                    font-size: 2.4rem;
                     color: var(--primaryColor);
                 }
 
                 .close-icon {
-                    margin-top: 4px;
+                    margin-top: .4em;
                     cursor: pointer;
                 }
             }
@@ -41,18 +41,18 @@
 
         .content-part {
             flex: 12;
-            padding: 30px 40px 30px 40px;
+            padding: 3em 4em 3em 4em;
             text-align: center;
 
             .element {
-                margin-bottom: 10px;
-                font-size: 20px;
+                margin-bottom: 1em;
+                font-size: 2rem;
             }
 
             .input-container .input-element {
                 background-color: #F6F8F9;
-                border-radius: 10px;
-                height: 60px;
+                border-radius: 1rem;
+                height: 6rem;
                 border: none;
             }
 
@@ -62,12 +62,12 @@
 
             .icon-container {
                 color: var(--primaryColor);
-                bottom: 18px;
+                bottom: 1.8rem;
             }
 
             .textArea-input-container .textArea-input-element {
                 background-color: #F6F8F9;
-                border-radius: 10px;
+                border-radius: 1rem;
                 border: none;
             }
 
@@ -81,23 +81,23 @@
             display: flex;
             // justify-content: flex-end;
             flex: 1;
-            padding: 0 40px 30px 40px;
+            padding: 0 4em 3em 4em;
             align-items: center;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
+            border-bottom-left-radius: 3rem;
+            border-bottom-right-radius: 3rem;
 
             .button-container:not(:last-child) {
-                margin-right: 10px;
+                margin-right: 1em;
             }
 
             .primary-btn,
             .secondary-btn {
-                height: 60px;
-                font-size: 16px;
+                height: 6rem;
+                font-size: 1.6rem;
             }
 
             .danger-btn {
-                border: 1px solid var(--dangerColor);
+                border: .1rem solid var(--dangerColor);
                 color: var(--dangerColor);
             }
         }
@@ -119,17 +119,17 @@
     .react-calendar-container {
         position: absolute;
         z-index: 1;
-        top: 50px;
+        top: 5rem;
 
         .react-calendar {
             width: 475px;
-            box-shadow: 0px 3px 6px #00000029;
-            border: 1px solid #E8EEF2;
-            border-radius: 6px;
+            box-shadow: 0px .3rem .6rem #00000029;
+            border: .1rem solid #E8EEF2;
+            border-radius: .6rem;
             font-family: RobotoRegular;
             z-index: 1;
             background-color: #fff;
-            top: 50px;
+            top: 5rem;
 
             .react-calendar__tile--now {
                 background: var(--primaryColor);

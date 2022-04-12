@@ -10,14 +10,14 @@
 
     .header-nav-container {
         i {
-            font-size: 15px;
+            font-size: 1.5rem;
             color: var(--primaryColor);
             cursor: pointer;
-            margin-right: 10px;
+            margin-right: 1em;
         }
 
         h5 {
-            font-size: 14px;
+            font-size: 1.4rem;
             font-family: RobotoMedium;
             color: #8F8F8F;
             cursor: pointer;
@@ -34,7 +34,7 @@
 
         .date {
             font-family: RobotoMedium;
-            font-size: 14px;
+            font-size: 1.4rem;
             color: var(--greyText);
         }
     }
@@ -44,39 +44,39 @@
         position: relative;
 
         .menu-list {
-            height: 214px;
-            width: 210px;
-            border-radius: 20px;
-            box-shadow: 0px 3px 6px var(--boxShadow);
+            height: 21.4rem;
+            width: 21rem;
+            border-radius: 2rem;
+            box-shadow: 0px .3rem .6rem var(--boxShadow);
             position: absolute;
-            top: 40px;
+            top: 4rem;
             right: 0;
             background: #FFFFFF;
-            padding: 20px;
+            padding: 2em;
 
             li {
-                margin-bottom: 15px;
+                margin-bottom: 1.5em;
                 font-family: RobotoMedium;
-                font-size: 14px;
+                font-size: 1.4rem;
             }
 
             .heart-icon {
-                font-size: 13px;
+                font-size: 1.3rem;
                 color: var(--primaryColor);
             }
 
             .profile {
-                width: 50px;
-                height: 50px;
+                width: 5rem;
+                height: 5rem;
                 border-radius: 50%;
-                box-shadow: 0px 3px 6px var(--boxShadow);
+                box-shadow: 0px .3rem .6rem var(--boxShadow);
                 background: transparent;
                 background-size: contain;
                 background-color: var(--primaryColor);
 
                 span {
                     font-family: RobotoBold;
-                    font-size: 20px;
+                    font-size: 2rem;
                     color: #fff;
                 }
             }
@@ -86,27 +86,25 @@
 
 
     .notification-dropdown-container {
-        width: 210px;
+        width: 21rem;
         position: absolute;
-        left: 0px;
-        top: 50px;
+        left: 0rem;
+        top: 5rem;
         bottom: 0;
-        box-shadow: 0px 3px 6px var(--boxShadow);
-        border-radius: 6px;
+        box-shadow: 0px .3rem .6rem var(--boxShadow);
+        border-radius: .6rem;
         z-index: 1;
         background-color: #fff;
 
-        ol
-        {
-            height: 80px;
+        ol {
+            height: 8rem;
             overflow: auto;
         }
 
         li {
-            // height: 40px;
-            padding: 15px 15px 0 15px;
+            padding: 1.5em 1.5em 0 1.5em;
             display: flex;
-            max-width: 180px;
+            max-width: 18rem;
             align-items: center;
             white-space: nowrap;
             overflow: hidden;
@@ -114,16 +112,13 @@
         }
 
         .pointer {
-            width: 6px;
-            height: 6px;
-            border-radius: 3px;
+            width: .6rem;
+            height: .6rem;
+            border-radius: .3rem;
             background-color: var(--primaryColor);
-            margin-top: 20px;
+            margin-top: 2em;
         }
 
-        li:hover {
-            // background-color: #FFEBE6;
-        }
     }
 
 }
@@ -133,7 +128,7 @@
 @media only screen and (max-width: 860px) {
 
     .header {
-        height: calc(var(--headerHeight) + var(--headerHeight) + 30px);
+        height: calc(var(--headerHeight) + var(--headerHeight) + 3rem);
         flex-direction: column;
 
         .small-screen-header {
@@ -142,10 +137,6 @@
 
         .header-btn-container {
             display: none;
-        }
-
-        .header-text-container {
-            // margin-top: 100px;
         }
 
         .list-container {

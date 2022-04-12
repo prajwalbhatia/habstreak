@@ -14,22 +14,25 @@ const API = axios.create({ baseURL: process.env.REACT_APP_ENV === 'development' 
 API.interceptors.request.use(async (req) => {
   if (localStorage.getItem('profile')) {
     const user = JSON.parse(localStorage.getItem('profile'));
-    let currentDate = new Date();
-    const decodeToken = jwt_decode(user.token);
-    if(decodeToken.exp * 1000  < currentDate.getTime())
-    {
-      const {data} = await refreshToken({refreshToken : user.refreshToken});
-      storeRefreshToken(data);
-      req.headers.Authorization = `Bearer ${data.token}`
-    }
-    else
-    {
+    if (user.result.googleId) {
       req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+    }
+    else {
+      let currentDate = new Date();
+      const decodeToken = jwt_decode(user.token);
+      if (decodeToken.exp * 1000 < currentDate.getTime()) {
+        const { data } = await refreshToken({ refreshToken: user.refreshToken });
+        storeRefreshToken(data);
+        req.headers.Authorization = `Bearer ${data.token}`
+      }
+      else {
+        req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
+      }
     }
   }
   return req;
-} , (error) => {
-  console.log('INTERSEPTOR ERROR' , error)
+}, (error) => {
+  console.log('INTERSEPTOR ERROR', error)
 });
 
 //REWARDS
@@ -57,6 +60,6 @@ export const deleteStreakDetail = (id) => API.delete(`/streakDetail/${id}`);
 export const getRecentActivities = () => API.get(`/recentActivities`);
 
 //AUTH
-export const logout = (token) => API.post('/user/logout' , token); 
+export const logout = (token) => API.post('/user/logout', token);
 
-export const updateUser = (userData , email) => API.patch(`/user/${email}` , userData);
+export const updateUser = (userData, email) => API.patch(`/user/${email}`, userData);

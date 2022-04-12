@@ -140,7 +140,17 @@ function Dashboard(props) {
 
 
   const streakCardJsx = () => {
-    if (streaks.length > 0) {
+    const currentDate = moment().format();
+
+    const running = streaks.filter((streak) => {
+      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
+        return streak;
+      }
+      else
+        return null;
+    });
+
+    if (running.length > 0) {
       const filterSttreaks = streaks.filter((streak, index) => {
         if (index <= 2 && isSameOrBefore(streak.dateFrom, Date().now))
           return streak
@@ -193,7 +203,7 @@ function Dashboard(props) {
     }
     else
       return (
-        <h2>No Streaks</h2>
+        <h2>No Current Tasks</h2>
       )
   }
 
@@ -369,7 +379,7 @@ function Dashboard(props) {
                   <div className='d-flex task-container'>
                     <div className='flex-dir-col summary'>
                       <h2>Tasks for today</h2>
-                      <h4>You have <span className='color-primary'>{taskCount}</span> task to complete today
+                      <h4>You have <span onClick={() => history.push('/streak-list')} className='color-primary c-pointer'>{taskCount} task</span> to complete today
                       </h4>
                       <OutlinedPrimaryButton
                         name={'Add New Streak'}

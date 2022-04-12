@@ -112,6 +112,7 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
  * @param {Array} streaks - streaks for dropdown options
  */
 export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewardId = '', streaks) => {
+console.log('🚀 ~ file: index.js ~ line 115 ~ dialogForCreateAndUpdateReward ~ data', data);
 
   if (data && size(data) > 0) {
     var dataObj = {
@@ -206,7 +207,7 @@ export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewar
         let rewardObj = {};
         rewardObj.userId = data?.streakName?.userId;
         rewardObj.title = data?.title
-        rewardObj.streakId = (data.streakName && data?.streakName?._id) || '';
+        rewardObj.streakId = (data.streakName && (data?.streakName?.id || data?.streakName?._id)) || '';
         rewardObj.date = data?.pickDate;
         rewardObj.rewardEarned = false
 

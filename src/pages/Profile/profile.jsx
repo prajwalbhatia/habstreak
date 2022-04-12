@@ -77,8 +77,6 @@ function Profile(props) {
 
     const data = await fetch('http://localhost:5000/razorpay', { method: 'POST' }).then(res => res.json());
 
-    console.log('AUTH DATA' , authData)
-
     var options = {
       "key": "rzp_test_DbnzOWdcdHf2N0",
       "amount": data.amount,

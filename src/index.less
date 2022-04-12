@@ -33,9 +33,13 @@
   box-sizing: border-box;
 }
 
+html
+{
+  font-size: 10px;
+}
+
 :root {
-  --navigationWidth: 300px;
-  --navigationAroundSpace: 1.5rem;
+  --navigationWidth: 30rem;
   --secondaryColor: #FAFF00;
   --lightColor: #C4C4C4;
   --superLight: #DFDADA;
@@ -46,9 +50,9 @@
   --primaryColor: #F96E46;
   --boxShadow: #00000029;
   --greyText: #8F8F8F;
-  --pagesPaddingHorizontal: 50px;
-  --headerHeight: 60px;
-  --navigationSmallHeight : 80px;
+  --pagesPaddingHorizontal: 5em;
+  --headerHeight: 6rem;
+  --navigationSmallHeight : 8rem;
   --secondaryBtnColor: #F6F8F9;
   --dangerColor: #D63E3E;
 
@@ -70,10 +74,35 @@ li {
   color: var(--globaBlack);
 }
 
+h1
+{
+  font-size: 1.8rem;
+}
+
+h2
+{
+  font-size: 2.4em;
+}
+
+h4
+{
+  font-size: 1.6em;
+}
+
+h3
+{
+  font-size: 1.8em;
+}
+
 ol {
   list-style: none;
   width: 100%;
   padding: 0;
+}
+
+li
+{
+  font-size: 1.8rem;
 }
 
 a,
@@ -87,23 +116,23 @@ a:active {
 //LESS
 //MARGINS
 .mt-1 {
-  margin-top: 1rem;
+  margin-top: 1em;
 }
 
 .mr-10 {
-  margin-right: 10px;
+  margin-right: 1em;
 }
 
 .mr-20 {
-  margin-right: 20px;
+  margin-right: 2em;
 }
 
 .mt-10 {
-  margin-top: 10px;
+  margin-top: 1em;
 }
 
 .mt-16 {
-  margin-top: 16px;
+  margin-top: 1.6em;
 }
 
 .mr-0 {
@@ -111,47 +140,47 @@ a:active {
 }
 
 .mr-30 {
-  margin-right: 30px !important;
+  margin-right: 3em !important;
 }
 
 .mt-20 {
-  margin-top: 20px;
+  margin-top: 2em;
 }
 
 .mt-25 {
-  margin-top: 25px;
+  margin-top: 2.5em;
 }
 
 .mt-30 {
-  margin-top: 30px;
+  margin-top: 3em;
 }
 
 .mt-40 {
-  margin-top: 40px;
+  margin-top: 4em;
 }
 
 .mt-50 {
-  margin-top: 50px;
+  margin-top: 5em;
 }
 
 .ml-10 {
-  margin-left: 10px;
+  margin-left: 1em;
 }
 
 .ml-5 {
-  margin-left: 5px;
+  margin-left: 0.5em;
 }
 
 .ml-30 {
-  margin-left: 30px;
+  margin-left: 3em;
 }
 
 .mt-35 {
-  margin-top: 35px;
+  margin-top: 3.5em;
 }
 
 .mb-10 {
-  margin-bottom: 10px;
+  margin-bottom: 1em;
 }
 
 //MARGINS
@@ -199,43 +228,43 @@ a:active {
 //FLEXBOX
 
 .h-1 {
-  height: 1px;
+  height: .1rem;
 }
 
 .h-40 {
-  height: 40px;
+  height: 4rem;
 }
 
 .h-60 {
-  height: 60px;
+  height: 6rem;
 }
 
 .br-16
 {
-  border-radius: 16px !important;
+  border-radius: 1.6rem !important;
 }
 
 .size-14 {
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 
 .size-36 {
-  font-size: 36px;
+  font-size: 3.6rem;
 }
 
 .size-16-8f {
-  font-size: 16px;
+  font-size: 1.6rem;
   color: var(--greyText);
 }
 
 .size-10-8f {
-  font-size: 10px;
+  font-size: 1rem;
   color: var(--greyText);
 }
 
 .size-30-primary
 {
-  font-size: 30px;
+  font-size: 3rem;
   color: var(--primaryColor);
 }
 
@@ -273,7 +302,7 @@ a:active {
 }
 
 .font-18 {
-  font-size: 18px;
+  font-size: 1.8rem;
 }
 
 .font-rob-bold {
@@ -291,7 +320,7 @@ a:active {
 
 .jos-18-primary {
   font-family: JosefinSansRegular;
-  font-size: 18px;
+  font-size: 1.8rem;
   color: var(--primaryColor);
 }
 
@@ -303,7 +332,7 @@ a:active {
 .rob-med-12-primary,
 .rob-med-10-primary {
   font-family: RobotoMedium;
-  font-size: 12px;
+  font-size: 1.2rem;
   color: var(--primaryColor);
 }
 
@@ -312,25 +341,25 @@ a:active {
 .rob-med-10-grey
  {
   font-family: RobotoMedium;
-  font-size: 12px;
+  font-size: 1.2rem;
   color: var(--globaBlack);
 }
 
 .rob-med-10-primary,
 .rob-med-10-black {
-  font-size: 10px;
+  font-size: 1rem;
 }
 
 .rob-med-10-grey
 {
   color: var(--greyText);
-  font-size: 10px;
+  font-size: 1rem;
 }
 
 .rob-bold-12-black,
 .rob-bold-12-primary {
   font-family: RobotoBold;
-  font-size: 12px;
+  font-size: 1.2rem;
   color: var(--globalBlack);
 }
 
@@ -341,7 +370,7 @@ a:active {
 .rob-reg-14-grey,
 .rob-reg-14-black {
   font-family: RobotoRegular;
-  font-size: 14px;
+  font-size: 1.4rem;
   color: var(--greyText);
 }
 
@@ -353,7 +382,7 @@ a:active {
 .rob-reg-12-black,
 .rob-reg-12-primary {
   font-family: RobotoRegular;
-  font-size: 12px;
+  font-size: 1.2rem;
   color: var(--greyText);
 }
 
@@ -364,7 +393,7 @@ a:active {
 .rob-med-14-grey,
 .rob-med-14-black {
   font-family: RobotoMedium;
-  font-size: 14px;
+  font-size: 1.4rem;
   color: var(--greyText);
 }
 
@@ -374,13 +403,13 @@ a:active {
 
 .rob-reg-10-black {
   font-family: RobotoRegular;
-  font-size: 10px;
+  font-size: 1rem;
   color: var(--globaBlack);
 }
 
 .rob-reg-10-grey {
   font-family: RobotoRegular;
-  font-size: 10px;
+  font-size: 1rem;
   color: var(--greyText);
 }
 

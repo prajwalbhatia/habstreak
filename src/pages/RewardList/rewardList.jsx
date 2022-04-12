@@ -12,7 +12,7 @@ import { forEach as _forEach } from "lodash";
 
 
 //Actions
-import { getRewardsData } from "redux/actions/reward";
+import { getRewardsData, emptyError } from "redux/actions/reward";
 import { getStreaksData } from "redux/actions/streak";
 
 //CSS
@@ -30,7 +30,8 @@ import {
   isAfter,
   isSame,
   activeTab,
-  rewardTabData
+  rewardTabData,
+  dialogForError
 } from 'utilities';
 
 //COMPONENTS
@@ -56,8 +57,11 @@ function RewardList(props) {
 
   const rewardsData = useSelector((state) => state.reward.rewards);
   const rewardsClone = useSelector((state) => state.reward.rewards);
+  let { error, loading } = useSelector((state) => state.reward);
 
-  const { loading, error, searchText, streaks } = useSelector((state) => state.streak);
+
+
+  const { searchText, streaks } = useSelector((state) => state.streak);
 
   const tabDataFun = () => {
     return [...tabDataClone].map((tab) => {
@@ -72,6 +76,14 @@ function RewardList(props) {
 
   //Getting initial data
   useEffect(() => {
+    if (error.length > 0) {
+      dialogForError(error);
+      dispatch(emptyError());
+    }
+  }, [dispatch, error])
+
+
+  useEffect(() => {
     dispatch(getStreaksData());
     dispatch(getRewardsData());
 
@@ -79,7 +91,7 @@ function RewardList(props) {
       setCurrentTab(location.state.goTo)
 
       if (location.state.goTo === 'Earned') {
-        const tab = activeTab('Earned', [ ...tabData]);
+        const tab = activeTab('Earned', [...tabData]);
         setTabData([...tab]);
       }
     }
@@ -248,14 +260,14 @@ function RewardList(props) {
   const tableAction = (actionObj) => {
     if (actionObj.actionType === 'tabClicked') {
       if (actionObj.data === 'To Buy') {
-        const tab = activeTab('To Buy', [ ...tabData])
+        const tab = activeTab('To Buy', [...tabData])
         setTabData([...tab]);
         const modifiedData = modifyReward([...rewardsToBuy]);
         setTableData([...modifiedData]);
         setCurrentTab('To Buy');
       }
       else if (actionObj.data === 'Earned') {
-        const tab = activeTab('Earned', [ ...tabData])
+        const tab = activeTab('Earned', [...tabData])
         setTabData([...tab]);
 
 
@@ -270,7 +282,9 @@ function RewardList(props) {
     }
 
     else if (actionObj.actionType === 'editRow') {
-      dialogForCreateAndUpdateReward('update', actionObj.data, actionObj.data._id, [...streaks]);
+      const filterStreak = [...streaks].filter(streak => streak.tag !== 'unfinished')
+
+      dialogForCreateAndUpdateReward('update', actionObj.data, actionObj.data._id, filterStreak);
     }
 
     else if (actionObj.actionType === 'navigate') {

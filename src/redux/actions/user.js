@@ -4,7 +4,6 @@ import {
     createUser,
     signIn,
     signUp,
-    refreshToken,
 } from '../api/user';
 
 import {
@@ -68,17 +67,6 @@ export const signup = (formData, history) => async dispatch => {
         const action = { type: AUTH, data }
         dispatch(action);
         history.push('/dashboard');
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const refreshTokenFunApiCall = (token) => async dispatch => {
-    try {
-        const { data } = await refreshToken(token);
-        return data;
-        // const action = { type: REFRESH_TOKEN, data }
-        // dispatch(action);
     } catch (error) {
         console.log(error);
     }

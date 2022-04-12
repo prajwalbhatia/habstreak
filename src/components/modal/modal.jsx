@@ -50,8 +50,8 @@ function Modal(props) {
 
     const calendarDate = (rangeArr) => {
         if (Array.isArray(rangeArr)) {
-            const dateFrom = moment(rangeArr[0]).format('YYYY-MM-DD');
-            const dateTo = moment(rangeArr[1]).format('YYYY-MM-DD');
+            const dateFrom = moment(rangeArr[0]).format('YYYY-MM-DD').toString();
+            const dateTo = moment(rangeArr[1]).format('YYYY-MM-DD').toString();
 
             let from = moment(rangeArr[0]);
             let to = moment(rangeArr[1]);

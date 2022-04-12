@@ -52,7 +52,7 @@ function Search(props) {
                         {/* {
                             !blurred && searchedContent.length > 0
                             &&
-                            <div className='dropdown-container' style={{ height: 'calc(3 * 40px )' }}>
+                            <div className='dropdown-container' style={{ height: 'calc(3 * 4rem )' }}>
                                 <ol>
                                     <li>Streak 1</li>
                                     <li>Streak 1</li>

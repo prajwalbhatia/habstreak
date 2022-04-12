@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
 
 //Third party libraries
 import {
@@ -7,9 +6,6 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-
-//UTILITIES
-import { refreshToken } from 'utilities';
 
 //Paged
 import DashboardPage from 'pages/Dashboard/dashboard';
@@ -27,34 +23,6 @@ import "./fontello/css/habstreak.css"
 import './App.css';
 
 function App(props) {
-  const [user , setUser] = useState(JSON.parse(localStorage.getItem('profile')));
-  const authData = useSelector((state) => state.user.authData);
-
-
-  // useEffect(() => {
-  //   const token = user?.refreshToken;
-  //   console.log('🚀 ~ file: App.js ~ line 33 ~ useEffect ~ token', token);
-  //   let intervalId = '';
-  //   if (token) {
-  //     intervalId = setInterval(() => {
-  //       refreshToken(token);
-  //     }, 5000);
-
-
-  //     return () => {
-  //       clearInterval(intervalId)
-  //     }
-  //   }
-
-  // }, [user])
-
-
-  // useEffect(() => {
-  //   setUser(authData)
-  // } , [])
-
-
-
   return (
     <Router>
       <div id="modal-container-id"></div>

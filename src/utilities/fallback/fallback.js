@@ -13,7 +13,7 @@ function fallback({ error, resetErrorBoundary }) {
       <PrimaryButton
         name={'Try again'}
         click={resetErrorBoundary}
-        style={{marginTop : '10px'}}
+        style={{marginTop : '1rem'}}
       />
     </div>
   )

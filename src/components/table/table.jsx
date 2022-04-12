@@ -333,7 +333,7 @@ function Table(props) {
                           click={(e) => deleteRow(e, dataInner)}
                           btnClass={'small-screen-btn danger-btn'}
                         />
-                        : 
+                        :
                         null
                     }
                   </div>
@@ -360,13 +360,16 @@ function Table(props) {
         {tableDataForLargeScreen()}
 
         {tableDataForSmallScreen()}
-        
+
       </div>
 
       <OutlinedPrimaryButton
         name={type === 'Reward' ? 'Add New Reward' : 'Add New Streak'}
         click={type === 'Reward' ?
-          () => dialogForCreateAndUpdateReward('create', {}, '', streaks)
+          () => {
+            const filterStreak = streaks.filter(streak => streak.tag !== 'unfinished')
+            dialogForCreateAndUpdateReward('create', {}, '', filterStreak)
+          }
           :
           () => dialogForCreateAndUpdateStreak()
         }

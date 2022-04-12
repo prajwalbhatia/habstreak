@@ -372,7 +372,7 @@ function Streak(props) {
                                                             streakDetail.length - 1
                                                         )
                                                         ?
-                                                        { background: '#E8EEF2', minWidth: '40px', height: '40px' }
+                                                        { background: '#E8EEF2', minWidth: '4rem', height: '4rem' }
                                                         :
                                                         {}}
                                                 >
@@ -411,7 +411,7 @@ function Streak(props) {
                                             <div
                                                 key={index}
                                                 className='center-items trophy-container'
-                                                style={{ left: `calc(${reward.perc}% - 30px)` }}
+                                                style={{ left: `calc(${reward.perc}% - 3rem)` }}
                                             >
                                                 <span className='rob-med-10-primary title'>{reward.date}</span>
                                                 <i className="demo-icon icon-reward" />

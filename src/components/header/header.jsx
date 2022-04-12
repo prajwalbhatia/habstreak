@@ -169,7 +169,7 @@ function Header(props) {
                         btnContainerClass={'mr-30'}
                     />
 
-                    {showNotification && <div className='notification-dropdown-container d-flex flex-dir-col' style={{ height: 'calc(4 * 40px )' }}>
+                    {showNotification && <div className='notification-dropdown-container d-flex flex-dir-col' style={{ height: 'calc(4 * 4rem )' }}>
                         <ol className="flex-auto">
                             {
                                 activities.map((activity, index) => {
@@ -198,12 +198,13 @@ function Header(props) {
                     name={headerText === 'Rewards' ? 'Add New Reward' : 'Add New Streak'}
                     click={
                         () => {
+                            const filterStreak = streaks.filter(streak => streak.tag !== 'unfinished')
                             if (headerText === 'Rewards') {
                                 if (streaks.length === 0)
                                     dialogForMessage(history)
                                 else {
                                     if (rewardCount < plansFeatures[planType].rewards)
-                                        dialogForCreateAndUpdateReward('create', {}, '', streaks);
+                                        dialogForCreateAndUpdateReward('create', {}, '', filterStreak);
                                     else
                                         dialogForUpgrade();
                                 }

@@ -9,16 +9,31 @@ import {
 import {
   GET_REWARDS,
   GET_REWARDS_SUCCESS,
-  GET_REWARDS_FAIL
+  GET_REWARDS_FAIL,
+  CREATE_REWARD,
+  CREATE_REWARD_SUCCESS,
+  ERROR,
+  EMPTY_ERROR
 } from '../constants/action-type';
 
 //Action Creators
+export const emptyError = () => async (dispatch) => {
+  const action = { type: EMPTY_ERROR }
+  dispatch(action);
+}
+
 export const createRewardData = (reward) => async (dispatch) => {
+  const action = { type: CREATE_REWARD }
+  dispatch(action);
   try {
     await createReward(reward);
     dispatch(getRewardsData());
+    const action = { type: CREATE_REWARD_SUCCESS }
+    dispatch(action);
   } catch (error) {
     console.log('create reward ->', error.response.data.error.message);
+    const action = { type: ERROR, data: error.response.data.error.message }
+    dispatch(action);
   }
 }
 

@@ -43,7 +43,6 @@ function Account(props) {
   const location = useLocation();
   const authData = useSelector((state) => state.user.authData);
   let error = useSelector((state) => state.user.error);
-  console.log('🚀 ~ file: account.jsx ~ line 42 ~ Dashboard ~ error', error);
   //HOOKS
 
   //STATES

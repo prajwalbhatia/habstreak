@@ -3,17 +3,17 @@
 }
 
 .dashboard-inner-container {
-  height: calc(100vh - (60px + 50px + 50px));
+  height: calc(100vh - (6rem + 5rem + 5rem));
   .left-container {
-    margin-right: 30px;
-    margin-top: 30px;
+    margin-right: 3em;
+    margin-top: 3em;
     flex: 2;
 
     .task-container {
       background-color: #FFF7F5;
-      border-radius: 20px;
-      padding: 30px;
-      min-height: calc((100vh - (60px + 50px + 50px + 30px + 60px)) / 2);
+      border-radius: 2rem;
+      padding: 3em;
+      min-height: calc((100vh - (6rem + 5rem + 5rem + 3rem + 6rem)) / 2);
 
       .summary {
         flex: 1;
@@ -24,45 +24,45 @@
         }
 
         h4 {
-          margin-top: 12px;
+          margin-top: 1.2em;
           text-align: center;
         }
 
         .add-btn {
-          margin-top: 34px;
-          width: 140px;
+          margin-top: 3.4em;
+          width: 16rem;
         }
       }
 
       .streaks {
         flex: auto;
-        margin-left: 25px;
+        margin-left: 2.5em;
         overflow-x: scroll;
-        min-height: 300px;
+        min-height: 30rem;
 
         .streak-card {
-          min-width: 210px;
-          min-height: 250px;
-          max-height: 250px;
+          min-width: 21rem;
+          min-height: 25rem;
+          max-height: 25rem;
           background-color: #fff;
           height: 80%;
-          border-radius: 25px;
-          margin-right: 20px;
+          border-radius: 2.5rem;
+          margin-right: 2em;
           position: relative;
-          margin-top: 25px;
+          margin-top: 2.5em;
           align-items: center;
           justify-content: center;
           flex: 1;
           cursor: pointer;
 
           .card-icon {
-            width: 40px;
-            height: 40px;
+            width: 4rem;
+            height: 4rem;
             border-radius: 50%;
             position: absolute;
             background-color: #F35B7F;
-            left: calc(50% - 20px);
-            top: -20px;
+            left: calc(50% - 2rem);
+            top: -2rem;
 
             i {
               color: #fff;
@@ -75,14 +75,14 @@
           }
 
           h6 {
-            font-size: 12px;
+            font-size: 1.2rem;
             color: var(--greyText);
             font-family: RobotoBold;
           }
 
           h1 {
-            font-size: 36px;
-            margin-top: 25px;
+            font-size: 3.6rem;
+            margin-top: 2.5em;
             font-family: JosefinSansRegular;
             color: #F35B7F;
             transition: font 0.1s linear
@@ -90,8 +90,8 @@
 
           span {
             font-family: RobotoMedium;
-            font-size: 10px;
-            margin-top: 5px;
+            font-size: 1rem;
+            margin-top: 0.5em;
             visibility: hidden;
             opacity: 0;
             transition: visibility 0s,
@@ -103,11 +103,11 @@
             opacity: 0;
             justify-content: center;
             align-items: center;
-            height: 20px;
-            width: 30px;
-            border-radius: 9px;
+            height: 2rem;
+            width: 3rem;
+            border-radius: .9rem;
             background-color: #F35B7F;
-            margin-top: 9px;
+            margin-top: .9em;
             transition: visibility 0s,
               opacity 0.5s linear;
 
@@ -120,7 +120,7 @@
 
         .streak-card:hover {
           h1 {
-            font-size: 24px;
+            font-size: 2.4rem;
           }
 
           span {
@@ -141,9 +141,9 @@
     .data-container {
       height: 50%;
       background-color: #FFFAEF;
-      border-radius: 20px;
-      margin-top: 30px;
-      padding: 30px;
+      border-radius: 2rem;
+      margin-top: 3em;
+      padding: 3em;
 
       .header-data {
         h2 {
@@ -154,37 +154,37 @@
       .progress-container {
         flex: auto;
         overflow-x: scroll;
-        min-height: 300px;
+        min-height: 30rem;
 
         .progress-card {
           flex: 1;
           background-color: #fff;
-          border-radius: 25px;
-          margin-right: 20px;
-          margin-top: 25px;
-          padding: 15px;
-          min-width: 350px;
-          min-height: 250px;
+          border-radius: 2.5rem;
+          margin-right: 2em;
+          margin-top: 2.5em;
+          padding: 1.5em;
+          min-width: 35rem;
+          min-height: 25rem;
 
           .title-container {
             align-items: center;
 
             .title-icon {
-              height: 50px;
-              width: 50px;
+              height: 5rem;
+              width: 5rem;
               border-radius: 50%;
-              margin-right: 5px;
+              margin-right: 0.5em;
 
               i {
-                font-size: 22px;
+                font-size: 2.2rem;
               }
             }
 
             h3 {
               align-self: center;
               font-family: JosefinSansRegular;
-              font-size: 30px;
-              margin-top: 25px;
+              font-size: 3rem;
+              margin-top: 2.5em;
             }
 
             .title-icon-succ {
@@ -214,24 +214,24 @@
 
 
           .progress-bar {
-            margin-top: 28px;
+            // margin-top: 2.8em;
 
             .bar {
               position: relative;
-              height: 6px;
+              height: .6rem;
               width: 100%;
-              border-radius: 3px;
+              border-radius: .3rem;
               background-color: #E8EEF2;
-              margin-right: 10px;
+              margin-right: 1em;
               align-self: center;
             }
 
             .bar-complete {
               position: absolute;
               left: 0;
-              height: 6px;
+              height: .6rem;
               width: 50%;
-              border-radius: 3px;
+              border-radius: .3rem;
             }
 
             .bar-comp-succ {
@@ -266,9 +266,9 @@
 
           .count-container {
             display: flex;
-            height: 41px;
-            margin-top: 30px;
-            border-radius: 10px;
+            height: 4.1rem;
+            margin-top: 2em;
+            border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -303,57 +303,57 @@
   }
 
   .right-container {
-    margin-top: 30px;
+    margin-top: 3em;
     background-color: #FBFBFB;
-    border-radius: 20px;
-    min-width: 275px;
-    padding: 30px;
+    border-radius: 2rem;
+    min-width: 27.5rem;
+    padding: 3em;
     
 
     .right-container-title {
       font-family: JosefinSansRegular;
       color: var(--primaryColor);
-      font-size: 18px;
+      font-size: 1.8rem;
     }
 
     .date-data {
-      margin-top: 20px;
-      max-height: calc(100vh - (60px + 50px + 50px + 80px + 80px));
+      margin-top: 2em;
+      max-height: calc(100vh - (6rem + 5rem + 5rem + 8rem + 8rem));
       overflow: auto;
 
       .date-content {
         font-family: RobotoBold;
-        font-size: 12px;
+        font-size: 1.2rem;
       }
 
       .info-container {
-        margin-top: 20px;
+        margin-top: 2em;
         display: flex;
 
         .time {
           font-family: JosefinSansRegular;
-          font-size: 18px;
-          min-width: 80px;
+          font-size: 1.8rem;
+          min-width: 8rem;
         }
 
         .hr-line {
-          height: 36px;
-          width: 4px;
-          border-radius: 2px;
+          height: 3.6rem;
+          width: .4rem;
+          border-radius: .2rem;
           background-color: #9ACBCF;
-          margin-left: 10px;
+          margin-left: 1em;
         }
 
         .action-info {
-          margin-left: 10px;
+          margin-left: 1em;
 
           .name {
             color: #8F8F8F;
-            font-size: 12px;
+            font-size: 1.2rem;
           }
 
           .action {
-            font-size: 12px;
+            font-size: 1.2rem;
             font-weight: bold;
           }
         }
@@ -361,16 +361,16 @@
     }
 
     .see-all {
-      font-size: 12px;
+      font-size: 1.2rem;
       color: var(--primaryColor);
       text-align: center;
-      margin-right: 10px;
+      margin-right: 1em;
     }
 
     .see-all-btn {
-      width: 24px;
+      width: 2.4rem;
       height: 17px;
-      border-radius: 8px;
+      border-radius: 0.8rem;
       background-color: var(--primaryColor);
       visibility: hidden;
       opacity: 0;
@@ -378,7 +378,7 @@
         opacity 0.5s linear;
 
       i {
-        font-size: 12px;
+        font-size: 1.2rem;
         color: #fff
       }
 
@@ -411,7 +411,7 @@
   /* Styles */
   .dashboard
   {
-    // height: calc(100vh - (var(--navigationSmallHeight) + 50px));
+    // height: calc(100vh - (var(--navigationSmallHeight) + 5rem));
   }
 
 

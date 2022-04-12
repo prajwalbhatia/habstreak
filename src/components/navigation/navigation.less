@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  padding: var(--pagesPaddingHorizontal) 40px;
+  padding: var(--pagesPaddingHorizontal) 4em;
   width: var(--navigationWidth);
   background-image: url('../../assests/images/menu_bg.png');
   background-size: cover;
@@ -31,24 +31,24 @@
   }
 
   .avatar-container {
-    width: 100px;
-    min-height: 100px;
+    width: 10rem;
+    min-height: 10rem;
     border-radius: 50%;
-    box-shadow: 0px 3px 6px var(--boxShadow);
+    box-shadow: 0px .3rem .6rem var(--boxShadow);
     background: transparent;
-    margin-top: 40px;
+    margin-top: 4em;
     background-color: var(--primaryColor);
 
     span
     {
       font-family: RobotoBold;
-      font-size: 50px;
+      font-size: 5rem;
       color: #fff;
     }
   }
 
   .personal-detail-container {
-    margin-top: 22px;
+    margin-top: 2.2em;
     flex-direction: column;
 
     .name,
@@ -59,37 +59,37 @@
 
     .email {
       color: var(--greyText);
-      margin-top: 5px;
+      margin-top: 0.5em;
     }
   }
 
   .navigation-container {
-    margin-top: 80px;
+    margin-top: 8em;
     display: flex;
     flex: 8;
 
     h5 {
       color: var(--greyText);
       font-family: RobotoMedium;
-      margin-top: 3px;
-      font-size: 14px;
+      margin-top: .3em;
+      font-size: 1.4rem;
       cursor: pointer;
     }
 
     li {
-      margin: 31px 0;
+      margin: 3.1em 0;
       position: relative;
     }
 
     .active {
       position: absolute;
-      right: -10px;
+      right: -1rem;
       top: 50%;
       transform: translate(0, -50%);
       width: 0;
-      height: 5px;
-      width: 5px;
-      border-radius: 2.5px;
+      height: 0.5rem;
+      width: 0.5rem;
+      border-radius: 2.5rem;
       background-color: var(--primaryColor);
     }
 
@@ -100,92 +100,92 @@
     .navigation-icons {
       font-size: 1.4rem;
       color: var(--greyText);
-      margin-top: 1px;
-      margin-right: 5px;
+      margin-top: .1rem;
+      margin-right: 0.5rem;
     }
   }
 
   .logout-btn-container {
-    margin-top: 60px;
+    margin-top: 6em;
     display: flex;
     width: 105px;
 
     h5 {
-      font-size: 14px;
+      font-size: 1.4rem;
     }
 
     i {
-      font-size: 14px;
-      margin-right: 14px;
+      font-size: 1.4rem;
+      margin-right: 1.4rem;
     }
   }
 
   .developer-container {
     display: flex;
     flex: 1;
-    margin-top: 52px;
+    margin-top: 5.2em;
     justify-content: center;
     align-items: center;
     text-align: center;
-    border-top: 1px solid white;
+    border-top: .1rem solid white;
 
     span {
-      font-size: 10px;
+      font-size: 1rem;
       font-family: RobotoMedium;
-      max-width: 86px;
+      max-width: 8.6rem;
     }
 
     .heart-icon {
-      font-size: 13px;
+      font-size: 1.3rem;
       color: var(--primaryColor);
     }
   }
 
   .vertical-line {
-    top: 50px;
-    bottom: 50px;
+    top: 5rem;
+    bottom: 5rem;
     position: absolute;
-    width: 1px;
+    width: .1rem;
     background-color: var(--greyText);
     right: 0;
     opacity: 0.3;
-    box-shadow: 0px 3px 6px var(--boxShadow);
+    box-shadow: 0px .3rem .6rem var(--boxShadow);
   }
 }
 
 .navigation-small-screen {
   display: none;
   position: absolute;
-  bottom: 20px;
-  box-shadow: 0px 3px 6px var(--boxShadow);
-  border-radius: 20px;
-  left: 30px;
-  right: 30px;
+  bottom: 2rem;
+  box-shadow: 0px .3rem .6rem var(--boxShadow);
+  border-radius: 2rem;
+  left: 3rem;
+  right: 3rem;
   background: #fff;
   z-index: 10;
   height: var(--navigationSmallHeight);
-  padding: 20px 30px;
+  padding: 2em 3em;
 
    h5 {
      color: var(--greyText);
      font-family: RobotoMedium;
-     margin-top: 1px;
-     font-size: 10px;
+     margin-top: .1em;
+     font-size: 1rem;
      cursor: pointer;
    }
 
    i
    {
-     font-size: 20px;
+     font-size: 2rem;
    }
 
   .active {
     position: absolute;
-    bottom: -5px;
+    bottom: -0.5rem;
     width: 0;
-    height: 5px;
-    width: 5px;
-    border-radius: 2.5px;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 2.5rem;
     background-color: var(--primaryColor);
   }
 
@@ -196,8 +196,8 @@
   .navigation-icons {
     font-size: 1.4rem;
     color: var(--greyText);
-    margin-top: 1px;
-    margin-right: 5px;
+    margin-top: .1em;
+    margin-right: 0.5em;
   }
 }
 
