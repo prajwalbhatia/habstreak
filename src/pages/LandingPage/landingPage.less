@@ -39,7 +39,7 @@
       position: relative;
 
       .listing {
-        height: 21.4rem;
+        min-height: 21.4rem;
         width: 20rem;
         border-radius: 2rem;
         box-shadow: 0rem .3rem .6rem var(--boxShadow);
@@ -47,7 +47,7 @@
         top: 5rem;
         right: 0;
         background: #FFFFFF;
-        padding: 2em;
+        padding: 2em 0em 2em 2em;
 
         li {
           margin-bottom: 1.5em;
@@ -65,7 +65,12 @@
 
   .hero-section {
     height: auto;
-    padding-top: 14.5em;
+    padding-top: 10%;
+
+    .hero-image
+    {
+     width: 70%;
+    }
 
     .buttons {
       margin-top: 5em;
@@ -83,11 +88,10 @@
   }
 
   .features-section {
-    padding-top: 15em;
+    margin-top: 10%;
     height: auto;
     display: flex;
     flex-direction: column;
-    height: 106rem;
 
     .section-container {
       height: inherit;
@@ -99,7 +103,7 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      padding-top: 12em;
+      margin-top: 10%;
       padding-left: 15em;
 
       .top-row,
@@ -121,6 +125,11 @@
         padding: 1em;
         box-shadow: 0px .3rem .6rem var(--boxShadow);
 
+        h1
+        {
+          font-size: 2rem;
+        }
+
         p {
           text-align: center;
           margin-top: 0.5em;
@@ -133,14 +142,14 @@
       flex: 1;
       max-width: 55.7rem;
       flex-direction: column;
-      margin-top: 14.5em;
+      margin-top: 10%;
       // justify-content: center;
     }
   }
 
   .guide-section {
-    padding-top: 5em;
-    height: 106.2rem;
+    padding-top: 10%;
+    height: auto;
     display: flex;
     flex-direction: column;
 
@@ -160,8 +169,7 @@
   }
 
   .pricing-section {
-    height: 106.1rem !important;
-    padding-top: 5em;
+    height: auto !important;
 
     .pack-container {
       display: flex;
@@ -226,8 +234,8 @@
   }
 
   .contact-section {
-    height: 50rem;
-    padding-top: 15em;
+    height: auto;
+    padding-top: 10%;
 
     .container {
       margin-top: 6em;
@@ -336,12 +344,11 @@
   .global-background {
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
   }
 
   .hero-background {
     background-image: url('./img/Section1.png');
-    height: 92.6rem;
+    height: auto;
   }
 
   .feature-background {
@@ -354,7 +361,7 @@
 
   .price-background {
     background-image: url('./img/Section4.png');
-    height: 92.6rem;
+    height: auto;
   }
 
   .contact-background {
@@ -392,7 +399,7 @@
     width: 11.5rem;
     color: var(--globalBlack);
     border: .1rem solid var(--primaryColor);
-    margin-right: 3em;
+    margin-right: 1em;
     transition: all 0.5s;
   }
 
@@ -417,20 +424,20 @@
     .hero-section {
       flex-direction: column;
       align-items: center;
-      padding-top: 7.5em;
+      // padding-top: 7.5em;
 
       .hero-container {
         max-width: 100%;
       }
 
       .hero-image {
-        margin-top: 7.5em;
+        margin: 7.5em;
       }
     }
 
     .features-section {
-      margin-top: 0;
-      padding-top: 5em;
+      // margin-top: 10%;
+      // padding-top: 10%;
 
       .section-container {
         flex-direction: column;
@@ -439,7 +446,7 @@
           justify-content: center;
           align-items: center;
           padding-left: 0;
-          padding-top: 4.5em;
+          margin-top: 0%;
         }
 
         .right-section {
@@ -449,7 +456,7 @@
     }
 
     .guide-section {
-      padding-top: 10em;
+      // padding-top: 10em;
 
       .guide-container {
         flex-direction: column;
@@ -465,7 +472,7 @@
     }
 
     .pricing-section {
-      padding-top: 10em;
+      // padding-top: 10em;
     }
 
   }
@@ -484,7 +491,7 @@
     }
 
     .features-section {
-      padding-top: 15em;
+      // padding-top: 15em;
     }
 
     .landing-page-header {
@@ -500,7 +507,7 @@
     }
 
     .pricing-section {
-      padding-top: 5em;
+      // padding-top: 5em;
     }
 
   }
@@ -537,8 +544,8 @@
     }
 
     .hero-section {
-      padding-top: 6em;
-      height: 66rem;
+      // padding-top: 6em;
+      height: auto;
 
       .hero-image {
         width: 100%;
@@ -548,7 +555,7 @@
 
 
     .features-section {
-      padding-top: 5em;
+      // padding-top: 5em;
       height: auto;
 
       .section-container {
@@ -569,7 +576,7 @@
       }
 
       .right-section {
-        margin-top: 4.5em;
+        // margin-top: 4.5em;
 
         h1 {
           text-align: center;
@@ -589,14 +596,14 @@
     }
 
     .guide-section {
-      height: 60rem;
+      height: auto;
       display: flex;
       flex-direction: column;
     }
 
     .contact-section {
       height: auto;
-      padding-top: 20em;
+      // padding-top: 20em;
 
       .container {
         flex-direction: column;
@@ -639,7 +646,7 @@
     }
 
     .pricing-section {
-      padding-top: 25em;
+      // padding-top: 25em;
     }
 
   }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
 //Libraries
 import moment from 'moment';
@@ -108,28 +109,36 @@ const iconType = (type) => {
 
 function RecentActivities() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [groupedActivities, setGroupedActivities] = useState({});
-  const [planType, setPlanType] = useState("");
+  const [planType, setPlanType] = useState("unlimited");
 
   //Getting the data from the state
   const activities = useSelector((state) => state.recentActivities.activities);
   const authData = useSelector((state) => state.user.authData);
   const loading = useSelector((state) => state.recentActivities.loading);
 
+
   useEffect(() => {
-    if (planType.length > 0 && planType !== "free") {
+    if (planType === "prime") {
       dispatch(getRecentActivitiesData());
     }
-    else if (planType === 'prime') {
-      dialogForUpgrade();
+    else if (planType === 'free') {
+      dialogForUpgrade(history);
     }
     dispatch(stopLoading());
   }, [dispatch, planType])
 
-  useEffect(() => {
-    if (authData)
-      setPlanType(planDetail());
-  }, [authData]);
+
+  // useEffect(() => {
+  //   if (authData)
+  //     setPlanType(planDetail());
+  // }, []);
+
+  // useEffect(() => {
+  //   if (authData)
+  //     setPlanType(planDetail());
+  // }, [authData]);
 
 
   useEffect(() => {

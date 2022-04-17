@@ -1,11 +1,11 @@
 .streak {
     .streak-details-container {
-        height: calc((100vh - (6rem + 5rem + 5rem + 3rem)));
+        min-height: calc((100vh - (6rem + 5rem + 5rem + 3rem)));
         margin-top: 3em;
 
         .left-container {
-            height: 100%;
             width: 50%;
+            height: calc((100vh - (6rem + 5rem + 5rem + 3rem)));
             border-radius: 2rem;
             background: #FFF7F5;
             flex: 1;
@@ -310,7 +310,7 @@
 
         .streak-details-container {
             flex-direction: column-reverse;
-            height: 100vh;
+            
             // margin-top: calc(var(--headerHeight) * 2 + (3rem * 3));
             .right-container,
             .left-container {

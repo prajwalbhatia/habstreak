@@ -40,7 +40,7 @@ function Profile(props) {
 
 
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
-  const [planType, setPlanType] = useState("");
+  const [planType, setPlanType] = useState("unlimited");
 
 
   //Getting the data from the state
@@ -48,10 +48,10 @@ function Profile(props) {
   // const loading = useSelector((state) => state.streak.loading);
   const loading = false;
 
-  useEffect(() => {
-    if (authData)
-      setPlanType(planDetail());
-  }, [authData]);
+  // useEffect(() => {
+  //   if (authData)
+  //     setPlanType(planDetail());
+  // }, [authData]);
 
   const loadScript = (src) => {
     return new Promise(resolve => {
@@ -78,7 +78,7 @@ function Profile(props) {
     const data = await fetch('http://localhost:5000/razorpay', { method: 'POST' }).then(res => res.json());
 
     var options = {
-      "key": "",
+      "key": process.env.REACT_APP_RAZORPAY_KEY,
       "amount": data.amount,
       "currency": data.currency,
       "name": "Habstreak",
@@ -236,7 +236,9 @@ function Profile(props) {
                             <div></div>
                             <div>
                               <h2 className='jos-primary'>Prime</h2>
-                              <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>90</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
+                              {/* <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>90</span><span className='rob-reg-14-black'>.00 / PER MONTH</span> */}
+                              <span className='jos-primary size-36'>FREE</span>
+
                             </div>
                           </div>
 

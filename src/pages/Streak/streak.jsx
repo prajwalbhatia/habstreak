@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, dialogForCreateAndUpdateStreak, progress, perPerDay, isSame, isBefore } from 'utilities';
+import { errorHandler, dialogForCreateAndUpdateStreak, progress, perPerDay, isSame, isBefore, isAfter } from 'utilities';
 
 
 //COMPONENTS
@@ -136,6 +136,7 @@ function Streak(props) {
      * @param {Object} detail - Object of detail we want to update
      */
     const updateStreakDetail = (detail) => {
+    console.log('🚀 ~ file: streak.jsx ~ line 139 ~ updateStreakDetail ~ detail', detail);
         dispatch(updateStreakDetailData({
             description: desc[detail._id]
         }, detail._id, detail.streakId));
@@ -153,10 +154,10 @@ function Streak(props) {
         let status = '';
         if (isSame(date, moment().format()))
             status = 'Active';
-        else if (isBefore(date, moment().format()))
-            status = 'Past';
-        else
+        else if (isAfter(date, moment().format()))
             status = 'Upcoming';
+        else
+            status = 'Active';
         return status;
     }
 
@@ -169,11 +170,12 @@ function Streak(props) {
 
     const dayContainerJsx = () => {
         return (
-            <div>
+            <>
                 {
                     streakDetail.length > 0
                         ?
                         streakDetail.map((detail, index) => {
+                            console.log('🚀 ~ file: streak.jsx ~ line 177 ~ streakDetail.map ~ detail', detail);
                             const status = checkingStatus(detail.date);
                             return (
                                 <div key={index}>
@@ -262,7 +264,7 @@ function Streak(props) {
                         </div>
                 }
 
-            </div>
+            </>
         );
     }
 

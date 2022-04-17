@@ -23,6 +23,7 @@ export const errorHandler = (error, errorInfo) => {
  * @param {String} streakId - In case of update id of streak we want to update
  */
 export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) => {
+  console.log('🚀 ~ file: index.js ~ line 26 ~ dialogForCreateAndUpdateStreak ~ data', moment(data?.startDate).startOf('day'));
   const contentData =
     type === 'create'
       ?
@@ -80,8 +81,8 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
     icon: 'icon-streak',
     initialData: type === 'create' ? {} : {
       title: data?.title,
-      dateFrom: moment(data?.startDate).format().split('T')[0],
-      dateTo: moment(data?.endDate).format().split('T')[0],
+      dateFrom: moment(data?.startDate).startOf('day').toString(),
+      dateTo: moment(data?.endDate).endOf('day').toString(),
       description: data?.description
     },
     primaryButtonText: type === 'create' ? "Create" : 'Update',
@@ -91,6 +92,9 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
       ...contentData
     ],
     btnClickHandler: (data) => {
+      data.dateFrom = moment(data.dateFrom).startOf('day').toString();
+      data.dateTo = moment(data.dateTo).endOf('day').toString();
+
       if (data.type === "primary") {
         delete data.type
         if (type === 'create') {
@@ -112,7 +116,6 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
  * @param {Array} streaks - streaks for dropdown options
  */
 export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewardId = '', streaks) => {
-console.log('🚀 ~ file: index.js ~ line 115 ~ dialogForCreateAndUpdateReward ~ data', data);
 
   if (data && size(data) > 0) {
     var dataObj = {
@@ -202,23 +205,34 @@ console.log('🚀 ~ file: index.js ~ line 115 ~ dialogForCreateAndUpdateReward ~
 
     initialData: type === 'create' ? {} : { ...dataObj },
     btnClickHandler: (data) => {
+    console.log('🚀 ~ file: index.js ~ line 204 ~ dialogForCreateAndUpdateReward ~ data', data);
       if (data.type === "primary") {
         delete data.type
         let rewardObj = {};
+        if (data?.streakName?.userId)
         rewardObj.userId = data?.streakName?.userId;
+        if (data?.title)
         rewardObj.title = data?.title
+        
         rewardObj.streakId = (data.streakName && (data?.streakName?.id || data?.streakName?._id)) || '';
-        rewardObj.date = data?.pickDate;
+        if (data?.pickDate)
+        rewardObj.date = moment(data?.pickDate).endOf('day').toString();
         rewardObj.rewardEarned = false
-
-        if (type === 'create') {
-          store.dispatch(createRewardData(rewardObj));
-        }
-        else {
-          store.dispatch(updateRewardData(rewardObj, rewardId));
+        
+        if (size(rewardObj) === 5) {
+          if (type === 'create') {
+            store.dispatch(createRewardData(rewardObj));
+          }
+          else {
+            store.dispatch(updateRewardData(rewardObj, rewardId));
+          }
+          Modal.hide();
         }
       }
-      Modal.hide();
+      else
+      {
+        Modal.hide();
+      }
     },
     dropdownHandler: (uid, selectedStreak) => {
       if (uid === 'streakName') {
@@ -281,7 +295,7 @@ export const dialogForError = (message) => {
   });
 };
 
-export const dialogForUpgrade = () => {
+export const dialogForUpgrade = (history) => {
   const contentData =
     [{
       eleType: "text",
@@ -300,9 +314,9 @@ export const dialogForUpgrade = () => {
     ],
 
     btnClickHandler: (data) => {
-      // if (data.type === "primary") {
-      //   history.push('/streak-list');
-      // }
+      if (data.type === "primary") {
+        history.push('/profile');
+      }
       Modal.hide();
     }
   });
@@ -544,8 +558,8 @@ export const planDetail = () => {
     case "free":
       return "free"
     case "prime":
-      return "prime"  
+      return "prime"
     default:
-      return ""
+      return "unlimited"
   }
 }

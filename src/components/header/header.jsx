@@ -53,8 +53,7 @@ function Header(props) {
     const [user] = useState(JSON.parse(localStorage.getItem('profile')));
     const [streakCount, setStreakCount] = useState(0);
     const [rewardCount, setRewardCount] = useState(0);
-    const [planType, setPlanType] = useState("");
-    console.log('🚀 ~ file: header.jsx ~ line 57 ~ Header ~ planType', planType);
+    const [planType, setPlanType] = useState("unlimited");
 
     const { internalNavigation, headerText } = props;
 
@@ -76,10 +75,10 @@ function Header(props) {
         setRewardCount(rewards.length);
     }, [rewards]);
 
-    useEffect(() => {
-        if (authData)
-            setPlanType(planDetail());
-    }, [authData]);
+    // useEffect(() => {
+    //     if (authData)
+    //         setPlanType(planDetail());
+    // }, [authData]);
 
     return (
         <header className="header">
@@ -139,7 +138,7 @@ function Header(props) {
                 <h1 className="heading">{headerText}</h1>
                 {props.withInternalNavigation
                     &&
-                    <div onClick={() => history.goBack()} className="d-flex header-nav-container">
+                    <div onClick={() => history.goBack()} className="d-flex header-nav-container mt-10">
                         <i className="demo-icon icon-back" />
                         <h5>{internalNavigation}</h5>
                     </div>
@@ -206,14 +205,14 @@ function Header(props) {
                                     if (rewardCount < plansFeatures[planType].rewards)
                                         dialogForCreateAndUpdateReward('create', {}, '', filterStreak);
                                     else
-                                        dialogForUpgrade();
+                                        dialogForUpgrade(history);
                                 }
                             }
                             else {
                                 if (streakCount < plansFeatures[planType].streaks)
                                     dialogForCreateAndUpdateStreak();
                                 else
-                                    dialogForUpgrade();
+                                    dialogForUpgrade(history);
                             }
                         }
                     }

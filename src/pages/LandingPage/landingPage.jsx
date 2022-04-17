@@ -214,7 +214,7 @@ function LandingPage() {
         </section>
 
         <section id="guide" className='global-background guide-section guide-background padding-global'>
-          <header className='guide-heading mt-30'>Guide</header>
+          <header className='guide-heading'>Guide</header>
 
           <div className='d-flex mt-40 guide-container' >
             <div className="left-section">

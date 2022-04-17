@@ -208,7 +208,10 @@ function StreakList(props) {
       streakObj.running = status === 'Upcoming'
         ? '--'
         :
-        (streak.tag === 'unfinished' ? 'DROPPED' : `${streak.days} days`);
+        (streak.tag === 'unfinished'
+          ? 'DROPPED'
+          :
+          (streak.tag === 'finished' ? '--' : `${streak.days} days`));
       streakObj.reward = `${rewardEarned}/${totalRewardsCount}`;
       streakObj.description = streak.description
 
@@ -279,7 +282,7 @@ function StreakList(props) {
     if (actionObj.actionType === 'tabClicked') {
       dispatch(streakListType(actionObj.data));
       if (actionObj.data === 'Running') {
-        const tab = activeTab('Running' , tabDataClone);
+        const tab = activeTab('Running', tabDataClone);
         setTabData([...tab]);
 
         const modifiedData = modifyStreaks([...running]);

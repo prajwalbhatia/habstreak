@@ -49,7 +49,7 @@ export const createStreakData = (streak) => async (dispatch) => {
         //THE STREAK IS OF TODAY'S DATE
         if (isSame(data.dateFrom, Date().now)) {
             const streadDetailData = {
-                date: data.date,
+                date: data.dateFrom,
                 streakId: data._id,
                 rewards: [],
             }

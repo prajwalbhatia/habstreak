@@ -91,6 +91,11 @@ export const plansFeatures = {
     streaks: 100,
     rewards: 100,
     activities: true
+  },
+  "unlimited": {
+    streaks: 100,
+    rewards: 100,
+    activities: true
   }
 }
 
