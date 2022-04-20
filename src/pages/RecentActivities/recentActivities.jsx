@@ -111,7 +111,7 @@ function RecentActivities() {
   const dispatch = useDispatch();
   const history = useHistory();
   const [groupedActivities, setGroupedActivities] = useState({});
-  const [planType, setPlanType] = useState("unlimited");
+  const [planType, setPlanType] = useState("");
 
   //Getting the data from the state
   const activities = useSelector((state) => state.recentActivities.activities);
@@ -130,15 +130,15 @@ function RecentActivities() {
   }, [dispatch, planType])
 
 
-  // useEffect(() => {
-  //   if (authData)
-  //     setPlanType(planDetail());
-  // }, []);
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, []);
 
-  // useEffect(() => {
-  //   if (authData)
-  //     setPlanType(planDetail());
-  // }, [authData]);
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
 
 
   useEffect(() => {

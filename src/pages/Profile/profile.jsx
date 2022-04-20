@@ -15,7 +15,7 @@ import { dialogForCreateAndUpdateStreak, perPerDay } from "utilities";
 import { getStreaksData } from "redux/actions/streak";
 import { getRewardsData } from "redux/actions/reward";
 import { getRecentActivitiesData } from "redux/actions/recentActivities";
-import { updateuser } from "redux/actions/user";
+import { updateuser, createPaymentRequest } from "redux/actions/user";
 
 
 //CSS
@@ -31,27 +31,67 @@ import { errorHandler, isSameOrBefore, activityTitle, progressFun, isSame, isBef
 
 //CONSTANTS
 import { icons, theme } from "constants/index";
+import { size } from 'lodash';
 
 function Profile(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   const authData = useSelector((state) => state.user.authData);
-  console.log('🚀 ~ file: profile.jsx ~ line 39 ~ Profile ~ authData', authData);
-
+  const { paymentData } = useSelector((state) => state.user);
+  console.log('🚀 ~ file: profile.jsx ~ line 41 ~ Profile ~ paymentData', paymentData);
 
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
-  const [planType, setPlanType] = useState("unlimited");
+  const [planType, setPlanType] = useState("");
+  console.log('🚀 ~ file: profile.jsx ~ line 45 ~ Profile ~ planType', planType);
 
 
   //Getting the data from the state
 
-  // const loading = useSelector((state) => state.streak.loading);
-  const loading = false;
+  const loading = useSelector((state) => state.streak.loading);
+  // const loading = false;
 
-  // useEffect(() => {
-  //   if (authData)
-  //     setPlanType(planDetail());
-  // }, [authData]);
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
+
+
+  useEffect(() => {
+    if (size(paymentData) > 0) {
+      var options = {
+        "key": process.env.REACT_APP_RAZORPAY_KEY,
+        "amount": paymentData.amount,
+        "currency": paymentData.currency,
+        "name": "Habstreak",
+        "description": "",
+        "image": process.env.REACT_APP_ENV === 'development' ? "http://localhost:5000/logo.svg" : 'https://habstreak.herokuapp.com/logo.svg',
+        "order_id": paymentData.id,
+        "handler": function (response) {
+          console.log('🚀 ~ file: profile.jsx ~ line 68 ~ useEffect ~ response', response);
+          dispatch(updateuser(
+            {
+              planType: 'prime',
+              orderId: response.razorpay_order_id,
+              paymentId: response.razorpay_payment_id
+            }
+            , authData.result.email))
+
+          // alert(response.razorpay_payment_id);
+          // alert(response.razorpay_order_id);
+          // alert(response.razorpay_signature)
+        },
+        // "prefill": {
+        //   "name": "Gaurav Kumar",
+        //   "email": "gaurav.kumar@example.com",
+        //   "contact": "9999999999"
+        // },
+      };
+      const paymentObject = new window.Razorpay(options);
+
+      paymentObject.open();
+    }
+  }, [paymentData])
+
 
   const loadScript = (src) => {
     return new Promise(resolve => {
@@ -75,32 +115,26 @@ function Profile(props) {
       alert('Razorpay SDK failed to load');
     }
 
-    const data = await fetch('http://localhost:5000/razorpay', { method: 'POST' }).then(res => res.json());
+    dispatch(createPaymentRequest());
 
-    var options = {
-      "key": process.env.REACT_APP_RAZORPAY_KEY,
-      "amount": data.amount,
-      "currency": data.currency,
-      "name": "Habstreak",
-      "description": "",
-      "image": "http://localhost:5000/logo.svg",
-      "order_id": data.id,
-      "handler": function (response) {
-        dispatch(updateuser({ planType: 'prime' }, authData.result.email))
+    // let data;
 
-        // alert(response.razorpay_payment_id);
-        // alert(response.razorpay_order_id);
-        // alert(response.razorpay_signature)
-      },
-      // "prefill": {
-      //   "name": "Gaurav Kumar",
-      //   "email": "gaurav.kumar@example.com",
-      //   "contact": "9999999999"
-      // },
-    };
-    const paymentObject = new window.Razorpay(options);
+    // if (process.env.REACT_APP_ENV === 'development')
+    // {
+    //   data = await fetch(
+    //     'http://localhost:5000/razorpay',
+    //     { method: 'POST' })
+    //     .then(res => res.json());
+    // }
+    // else
+    // {
+    //   data = await fetch(
+    //     'https://habstreak.com/razorpay',
+    //     { method: 'POST' })
+    //     .then(res => res.json());
+    // }
 
-    paymentObject.open();
+
     // paymentObject.on('payment.failed', function (response) {
     //   alert(response.error.code);
     //   alert(response.error.description);
@@ -236,8 +270,8 @@ function Profile(props) {
                             <div></div>
                             <div>
                               <h2 className='jos-primary'>Prime</h2>
-                              {/* <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>90</span><span className='rob-reg-14-black'>.00 / PER MONTH</span> */}
-                              <span className='jos-primary size-36'>FREE</span>
+                              <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>90</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
+                              {/* <span className='jos-primary size-36'>FREE</span> */}
 
                             </div>
                           </div>
@@ -266,15 +300,15 @@ function Profile(props) {
                   }
 
                   {
-                    // planType === 'free' &&
-                    // <div className='d-flex plan-btn-container center-items'>
-                    //   <OutlinedPrimaryButton
-                    //     name='Change Plan'
-                    //     click={displayRazorpay}
-                    //     btnContainerClass="change-plan-btn"
-                    //     btnClass='h-40'
-                    //   />
-                    // </div>
+                    planType === 'free' &&
+                    <div className='d-flex plan-btn-container center-items'>
+                      <OutlinedPrimaryButton
+                        name='Change Plan'
+                        click={displayRazorpay}
+                        btnContainerClass="change-plan-btn"
+                        btnClass='h-40'
+                      />
+                    </div>
                   }
                 </div>
               </div>

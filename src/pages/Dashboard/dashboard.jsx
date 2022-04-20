@@ -45,7 +45,7 @@ function Dashboard(props) {
   const [taskCount, setTaskCount] = useState(0);
   const [groupedActivities, setGroupedActivities] = useState({});
   const [streakCount, setStreakCount] = useState(0);
-  const [planType, setPlanType] = useState("unlimited");
+  const [planType, setPlanType] = useState("");
 
   const [percentageData, setPercentageData] = useState({
     streakSuccess: 0,
@@ -113,10 +113,10 @@ function Dashboard(props) {
     setTaskCount(running.length);
   }, [streaks, rewards]);
 
-  // useEffect(() => {
-  //   if (authData)
-  //     setPlanType(planDetail());
-  // }, [authData]);
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
 
 
   useEffect(() => {

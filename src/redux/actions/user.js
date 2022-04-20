@@ -1,4 +1,4 @@
-import { AUTH, LOGOUT, REFRESH_TOKEN, SIGNIN_FAIL, EMPTY_ERROR} from '../constants/action-type';
+import { AUTH, LOGOUT, REFRESH_TOKEN, SIGNIN_FAIL, EMPTY_ERROR, PAYMENT_REQUEST, PAYMENT_REQUEST_FAIL } from '../constants/action-type';
 
 import {
     createUser,
@@ -9,6 +9,7 @@ import {
 import {
     logout,
     updateUser,
+    paymentRequest
 } from '../api';
 
 export const emptyError = () => async (dispatch) => {
@@ -91,4 +92,17 @@ export const logoutCall = (refreshToken) => async (dispatch) => {
     }
 }
 
+
+export const createPaymentRequest = () => async (dispatch) => {
+    try {
+        const  {data}  = await paymentRequest();
+        const action = { type: PAYMENT_REQUEST, data }
+        dispatch(action);
+    } catch (error) {
+        console.log(error.response.data.error.message);
+        // const action = { type: PAYMENT_REQUEST_FAIL, payload: error.response.data.error.message }
+        // dispatch(action);
+    }
+
+}
 

@@ -353,7 +353,15 @@ function Account(props) {
             />
           </div>
 
-          <p className='t-and-c'>By creating an account means you're okay with <span>Terms &amp; Condition</span> and <span>Privacy Policy</span>
+          <p className='t-and-c'>By creating an account means you're okay with
+            <span
+              onClick={() => {
+                history.push('/terms-and-condition')
+              }}
+            >Terms &amp; Condition</span> and <span
+              onClick={() => {
+                history.push('/privacy-policy')
+              }}>Privacy Policy</span>
           </p>
 
         </form>

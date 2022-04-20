@@ -560,6 +560,6 @@ export const planDetail = () => {
     case "prime":
       return "prime"
     default:
-      return "unlimited"
+      return "free"
   }
 }

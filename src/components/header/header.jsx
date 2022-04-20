@@ -53,7 +53,7 @@ function Header(props) {
     const [user] = useState(JSON.parse(localStorage.getItem('profile')));
     const [streakCount, setStreakCount] = useState(0);
     const [rewardCount, setRewardCount] = useState(0);
-    const [planType, setPlanType] = useState("unlimited");
+    const [planType, setPlanType] = useState("");
 
     const { internalNavigation, headerText } = props;
 
@@ -75,10 +75,10 @@ function Header(props) {
         setRewardCount(rewards.length);
     }, [rewards]);
 
-    // useEffect(() => {
-    //     if (authData)
-    //         setPlanType(planDetail());
-    // }, [authData]);
+    useEffect(() => {
+        if (authData)
+            setPlanType(planDetail());
+    }, [authData]);
 
     return (
         <header className="header">
