@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
@@ -63,3 +64,6 @@ export const getRecentActivities = () => API.get(`/recentActivities`);
 export const logout = (token) => API.post('/user/logout', token);
 
 export const updateUser = (userData, email) => API.patch(`/user/${email}`, userData);
+
+//PAYMAENT
+export const paymentRequest = () => API.post('/razorpay');

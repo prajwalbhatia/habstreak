@@ -16,6 +16,8 @@ import RecentActivities from 'pages/RecentActivities/recentActivities';
 import AccountPage from 'pages/Account/account';
 import LandingPage from 'pages/LandingPage/landingPage';
 import ProfilePage from 'pages/Profile/profile';
+import TermsAndCondition from 'pages/Policies/tearmsAndCondition';
+import PrivacyPolicy from 'pages/Policies/privacyPolicy';
 import SuccessPage from 'pages/GoogleResponse/success';
 import Errorpage from 'pages/GoogleResponse/error';
 
@@ -36,6 +38,8 @@ function App(props) {
         <Route path="/error" component={Errorpage} />
         <Route path="/account" component={AccountPage} />
         <Route path="/profile" component={ProfilePage} />
+        <Route path="/terms-and-condition" component={TermsAndCondition} />
+        <Route path="/privacy-policy" component={PrivacyPolicy} />
         <Route path="/" component={LandingPage} />
       </Switch>
     </Router>

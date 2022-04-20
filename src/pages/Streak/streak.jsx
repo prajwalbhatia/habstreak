@@ -150,7 +150,7 @@ function Streak(props) {
         dialogForCreateAndUpdateStreak('update', streak, streak._id);
     }
 
-    const checkingStatus = (date) => {
+    const checkingStatusForStreak = (date) => {
         let status = '';
         if (isSame(date, moment().format()))
             status = 'Active';
@@ -158,6 +158,17 @@ function Streak(props) {
             status = 'Upcoming';
         else
             status = 'Active';
+        return status;
+    }
+
+    const checkingStatus = (date) => {
+        let status = '';
+        if (isSame(date, moment().format()))
+            status = 'Active';
+        else if (isAfter(date, moment().format()))
+            status = 'Upcoming';
+        else
+            status = 'Past';
         return status;
     }
 
@@ -175,7 +186,6 @@ function Streak(props) {
                     streakDetail.length > 0
                         ?
                         streakDetail.map((detail, index) => {
-                            console.log('🚀 ~ file: streak.jsx ~ line 177 ~ streakDetail.map ~ detail', detail);
                             const status = checkingStatus(detail.date);
                             return (
                                 <div key={index}>
@@ -460,7 +470,7 @@ function Streak(props) {
                                 <div className='d-flex justify-space-between container-heading'>
                                     <h3 className='jos-18-primary task-heading'>Tasks</h3>
                                     <span className='rob-med-12-primary streak-status'>State:
-                                        {streak[0]?.tag ? streak[0]?.tag.toUpperCase() : checkingStatus(streak[0]?.dateFrom).toUpperCase()}</span>
+                                        {streak[0]?.tag ? streak[0]?.tag.toUpperCase() : checkingStatusForStreak(streak[0]?.dateFrom).toUpperCase()}</span>
                                 </div>
 
                                 <div className='task-container  mt-20'>
