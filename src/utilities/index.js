@@ -493,8 +493,8 @@ export const perPerDay = (dateFrom, dateTo) => {
 }
 
 export const logoutFun = (history, refreshToken) => {
-  store.dispatch(logoutCall(refreshToken));
   history.replace('/');
+  store.dispatch(logoutCall(refreshToken));
 }
 
 export const streakTabData = () => {

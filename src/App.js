@@ -18,6 +18,7 @@ import LandingPage from 'pages/LandingPage/landingPage';
 import ProfilePage from 'pages/Profile/profile';
 import TermsAndCondition from 'pages/Policies/tearmsAndCondition';
 import PrivacyPolicy from 'pages/Policies/privacyPolicy';
+import CancellationPolicy from 'pages/Policies/cancellationPolicy';
 import SuccessPage from 'pages/GoogleResponse/success';
 import Errorpage from 'pages/GoogleResponse/error';
 
@@ -40,6 +41,8 @@ function App(props) {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/terms-and-condition" component={TermsAndCondition} />
         <Route path="/privacy-policy" component={PrivacyPolicy} />
+        <Route path="/refund-policy" component={CancellationPolicy} />
+
         <Route path="/" component={LandingPage} />
       </Switch>
     </Router>

@@ -402,6 +402,16 @@ function LandingPage() {
             <p className='rob-reg-10-grey'>Copyright © by Habstreak 2022</p>
           </div>
         </div>
+
+        <div className='d-flex justify-center policies'>
+          <span onClick={() => {
+            history.push('/privacy-policy')
+          }}>Privacy Policy</span><span onClick={() => {
+            history.push('/terms-and-condition')
+          }}>|| Terms and Policies ||</span><span onClick={() => {
+            history.push('/refund-policy')
+          }}>Refund Policy</span>
+        </div>
       </div>
     </div>
   )
