@@ -205,20 +205,20 @@ export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewar
 
     initialData: type === 'create' ? {} : { ...dataObj },
     btnClickHandler: (data) => {
-    console.log('🚀 ~ file: index.js ~ line 204 ~ dialogForCreateAndUpdateReward ~ data', data);
+      console.log('🚀 ~ file: index.js ~ line 204 ~ dialogForCreateAndUpdateReward ~ data', data);
       if (data.type === "primary") {
         delete data.type
         let rewardObj = {};
         if (data?.streakName?.userId)
-        rewardObj.userId = data?.streakName?.userId;
+          rewardObj.userId = data?.streakName?.userId;
         if (data?.title)
-        rewardObj.title = data?.title
-        
+          rewardObj.title = data?.title
+
         rewardObj.streakId = (data.streakName && (data?.streakName?.id || data?.streakName?._id)) || '';
         if (data?.pickDate)
-        rewardObj.date = moment(data?.pickDate).endOf('day').toString();
+          rewardObj.date = moment(data?.pickDate).endOf('day').toString();
         rewardObj.rewardEarned = false
-        
+
         if (size(rewardObj) === 5) {
           if (type === 'create') {
             store.dispatch(createRewardData(rewardObj));
@@ -229,8 +229,7 @@ export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewar
           Modal.hide();
         }
       }
-      else
-      {
+      else {
         Modal.hide();
       }
     },
@@ -562,4 +561,15 @@ export const planDetail = () => {
     default:
       return "free"
   }
+}
+
+/**
+   * 
+   * @param {String} jumpTo - to where to jump (signup or login) 
+   */
+export const jumpToAccount = (jumpTo, history) => {
+  history.push({
+    pathname: `/account`,
+    state: { jumpTo },
+  });
 }

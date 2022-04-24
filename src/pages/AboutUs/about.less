@@ -1,0 +1,41 @@
+.aboutUs.padding-global {
+  padding-left: 10em;
+  padding-right: 10em;
+}
+
+
+.aboutUs {
+  min-height: 100vh;
+  height: auto;
+  background: rgb(255, 231, 225);
+  background: linear-gradient(90deg, rgba(255, 231, 225, 1) 19%, rgba(255, 255, 255, 1) 100%);
+
+  p {
+    font-size: 2em;
+    line-height: 1.5;
+  }
+
+  .buttons-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .header-btn {
+    height: 5rem;
+    border-radius: 2.5rem;
+    font-size: 1.8rem;
+    transition: all 0.5s;
+  }
+
+  .h1-30 {
+    font-size: 3rem;
+    font-family: RobotoBold;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .aboutUs.padding-global {
+    padding-left: 3em;
+    padding-right: 3em;
+  }
+}

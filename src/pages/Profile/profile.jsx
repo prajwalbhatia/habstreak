@@ -59,7 +59,7 @@ function Profile(props) {
   useEffect(() => {
     if (size(paymentData) > 0) {
       var options = {
-        "key": process.env.REACT_APP_RAZORPAY_KEY,
+        "key": process.env.REACT_APP_ENV === 'development' ? process.env.REACT_APP_RAZORPAY_KEY : process.env.REACT_APP_RAZORPAY_KEY_PROD,
         "amount": paymentData.amount,
         "currency": paymentData.currency,
         "name": "Habstreak",

@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 
 //Component 
 import { PrimaryButton } from "components/button/button";
+import LandingHeader  from 'components/landing-header/landingHeader';
 import { TextInputElement, InputElement } from "components/form-elements/form-elements";
-import { AiFillHeart } from "react-icons/ai";
-import { IconContext } from "react-icons"
 
 //CSS
 import "../../index.css";
@@ -13,6 +12,9 @@ import './landingPage.css';
 //Redux
 import { useHistory } from 'react-router-dom';
 
+//UTILITIES
+import { jumpToAccount } from "utilities/index";
+
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
 import { ReactComponent as Hero } from './img/hero.svg';
@@ -20,47 +22,23 @@ import { ReactComponent as Video } from './img/video.svg';
 import { ReactComponent as Intro } from './img/Intro.svg';
 import { ReactComponent as Prime } from './img/Prime.svg';
 
-import { useEffect } from 'react';
-
 function LandingPage() {
   const history = useHistory();
   //STATES
   const [selectedNav, setSelectedNav] = useState('home');
-  const [showListing, setShowListing] = useState(false);
-
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
-
-  const handleScroll = (e) => {
-    let scroll = window.scrollY;
-    if (scroll && scroll < 400)
-      setSelectedNav('home');
-  }
 
   //FUNCTIONS
   const handleLinkClick = (e) => {
     if (!e.target.getAttribute('data-value'))
       setSelectedNav('home');
+    else if (e.target.getAttribute('data-value') === 'aboutUs')
+    {
+      history.push('/about-us')
+    }  
     else {
       document.getElementById(e.target.getAttribute('data-value')).scrollIntoView({ behavior: 'smooth' });
       setSelectedNav(e.target.getAttribute('data-value'));
     }
-  }
-
-  /**
-   * 
-   * @param {String} jumpTo - to where to jump (signup or login) 
-   */
-  const jumpToAccount = (jumpTo) => {
-    history.push({
-      pathname: `/account`,
-      state: { jumpTo },
-    });
   }
 
   //FUNCTIONS
@@ -71,72 +49,9 @@ function LandingPage() {
       <div className='landing-page'>
         {/* Header */}
         <div className='global-background hero-background'>
-          <header className="landing-page-header d-flex padding-global">
-            {/* LOGO */}
-            <div className='logo-container'>
-              <Logo />
-            </div>
-
-            {/* Navigation */}
-            <div id="home" className='main-navigation'>
-              <nav className='landing-navigation'>
-                <ol
-                  className='d-flex'
-                  onClick={handleLinkClick}
-                >
-                  <li className={selectedNav === 'home' ? 'list-active' : ''} data-value='home'>Home</li>
-                  <li className={selectedNav === 'feature' ? 'list-active' : ''} data-value='feature'>Feature</li>
-                  <li className={selectedNav === 'guide' ? 'list-active' : ''} data-value='guide'>Guide</li>
-                  <li className={selectedNav === 'contact' ? 'list-active' : ''} data-value='contact'>Contact</li>
-                </ol>
-              </nav>
-            </div>
-
-            {/* BUTTONS CONTAINER */}
-            <div className='buttons-container'>
-              <PrimaryButton
-                name={'Login'}
-                click={() => { jumpToAccount('login') }}
-                btnContainerClass="ml-10"
-                btnClass='header-btn landing-login-btn'
-              />
-
-              <PrimaryButton
-                name={'Get Started'}
-                click={() => { jumpToAccount('signup') }}
-                btnContainerClass="ml-10"
-                btnClass='header-btn landing-get-started'
-              />
-            </div>
-
-            <div className='d-flex center-items btn-list-container'>
-              {
-                showListing
-                  ?
-                  <i
-                    onClick={() => setShowListing(false)}
-                    className="demo-icon size-30-primary  icon-close" />
-                  :
-                  <i
-                    onClick={() => setShowListing(true)}
-                    className="demo-icon  size-30-primary icon-menu" />
-              }
-              {showListing && <div className='listing'>
-                <ol
-                  className='d-flex flex-dir-col'
-                  onClick={handleLinkClick}
-                >
-                  <li data-value='home'>Home</li>
-                  <li data-value='feature'>Feature</li>
-                  <li data-value='guide'>Guide</li>
-                  <li data-value='contact'>Contact</li>
-                </ol>
-
-                <span className='rob-med-10-grey'>Made with
-                  <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
-              </div>}
-            </div>
-          </header>
+          <LandingHeader
+            navListing={true}
+          />
 
           {/* <main> */}
           <section id="hero" className='hero-section padding-global d-flex justify-space-between'>
@@ -146,14 +61,14 @@ function LandingPage() {
               <div className='buttons d-flex'>
                 <PrimaryButton
                   name={'Get Started'}
-                  click={() => { jumpToAccount('signup') }}
+                  click={() => { jumpToAccount('signup' , history) }}
                   btnContainerClass="fit-content"
                   btnClass='header-btn landing-get-started'
                 />
 
                 <PrimaryButton
                   name={'Login'}
-                  click={() => { jumpToAccount('login') }}
+                  click={() => { jumpToAccount('login' , history) }}
                   btnContainerClass="ml-30 fit-content"
                   btnClass='header-btn landing-login-btn'
                 />
@@ -203,7 +118,7 @@ function LandingPage() {
               <div className='buttons d-flex mt-50'>
                 <PrimaryButton
                   name={'Get Started'}
-                  click={() => { jumpToAccount('signup') }}
+                  click={() => { jumpToAccount('signup' , history) }}
                   btnContainerClass=""
                   btnClass='header-btn landing-get-started'
                 />
@@ -317,7 +232,7 @@ function LandingPage() {
               </div>
 
               <div className='center-items mb-10'>
-                <div onClick={() => { jumpToAccount('signup') }} className='d-flex plan-btn-container center-items mt-20 prime-btn c-pointer'>
+                <div onClick={() => { jumpToAccount('signup' , history) }} className='d-flex plan-btn-container center-items mt-20 prime-btn c-pointer'>
                   <h3 className='font-18 font-jos font-bold'>Choose Plan</h3>
                 </div>
               </div>

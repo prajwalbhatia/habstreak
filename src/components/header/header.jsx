@@ -152,7 +152,6 @@ function Header(props) {
                         ?
                         <Search
                             data={(searchText) => {
-                                console.log('🚀 ~ file: header.jsx ~ line 127 ~ Header ~ searchText', searchText);
                                 dispatch(search(searchText));
                             }}
                             containerClass={'mr-30'}
