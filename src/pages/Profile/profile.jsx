@@ -270,7 +270,7 @@ function Profile(props) {
                             <div></div>
                             <div>
                               <h2 className='jos-primary'>Prime</h2>
-                              <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>90</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
+                              <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>45</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
                               {/* <span className='jos-primary size-36'>FREE</span> */}
 
                             </div>

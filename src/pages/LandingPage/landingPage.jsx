@@ -203,7 +203,7 @@ function LandingPage() {
                     <h2 className='font-jos'>PRIME</h2>
                   </div>
                   <div className='price-container'>
-                    <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>90</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
+                    <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>45</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
                   </div>
 
                 </div>
