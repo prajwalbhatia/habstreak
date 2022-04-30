@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 //IMAGES
 import { ReactComponent as Logo } from 'assests/images/Logo.svg';
 
+
 //Component 
 import { PrimaryButton } from "components/button/button";
 import { AiFillHeart } from "react-icons/ai";
@@ -55,6 +56,8 @@ function LandingHeader({ navListing, sectionListing }) {
       document.getElementById(e.target.getAttribute('data-value')).scrollIntoView({ behavior: 'smooth' });
       setSelectedNav(e.target.getAttribute('data-value'));
     }
+
+    setShowListing(false);
   }
 
 
@@ -63,7 +66,7 @@ function LandingHeader({ navListing, sectionListing }) {
       <header className="landing-page-header d-flex padding-global">
         {/* LOGO */}
         <div className='logo-container'>
-          <Logo />
+          <Logo/>
         </div>
 
         {/* Navigation */}

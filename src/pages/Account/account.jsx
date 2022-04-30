@@ -115,6 +115,20 @@ function Account(props) {
     console.log('GOOGLE FAILURE', res)
   }
 
+  window.getProfile = (data) => {
+    if(data)
+    {
+      const token = data?.idToken;
+      const result = data?.user;
+      
+      try {
+        dispatch(auth({ result, token }));
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -230,6 +244,15 @@ function Account(props) {
       setIsValid(false);
 
   }
+
+
+  const mobileAppGoogleLogin = () => {
+    const event = {
+      event: 'google-login',
+      data: {}
+    }
+    window.ReactNativeWebView.postMessage(JSON.stringify(event));
+  }
   //FUNCTIONS
 
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -340,17 +363,20 @@ function Account(props) {
           <p className='size-10-8f mt-35'>{isSignup ? 'Or Signup With' : 'Or Login With'}</p>
 
           <div className='socials'>
-            <div className='icon-container'>
+            <div onClick={mobileAppGoogleLogin} className='icon-container'>
               <i className="demo-icon  icon-google" />
             </div>
-            <GoogleLogin
-              clientId={clientId}
-              buttonText=""
-              onSuccess={googleSuccess}
-              onFailure={googleFailure}
-              cookiePolicy={'single_host_origin'}
-              className='google-btn'
-            />
+
+            {!window.ReactNativeWebView
+              &&
+              <GoogleLogin
+                clientId={clientId}
+                buttonText=""
+                onSuccess={googleSuccess}
+                onFailure={googleFailure}
+                cookiePolicy={'single_host_origin'}
+                className='google-btn'
+              />}
           </div>
 
           <p className='t-and-c'>By creating an account means you're okay with
