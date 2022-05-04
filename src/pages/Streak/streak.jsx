@@ -328,14 +328,6 @@ function Streak(props) {
             <div className='d-flex flex-1 flex-dir-col w-100'>
                 <div className='d-flex justify-space-between detail-head-container'>
                     <h3 className='jos-18-primary'>Performance</h3>
-                    {/* <div className='btn-container'>
-                        <OutlinedPrimaryButton
-                            name={'EDIT'}
-                            // click={() => updateStreakDetail(detail)}
-                            btnContainerClass="okay-btn"
-                            btnClass=''
-                        />
-                    </div> */}
                 </div>
 
                 <div className='progress-data flex-auto mt-20'>
@@ -346,13 +338,50 @@ function Streak(props) {
                             {
                                 progressData.weekDaysArr.map((day, index) => {
                                     return (
-                                        <span key={index} className='rob-med-12-black'>{day}</span>
+                                        <div key={index}>
+                                            <span className='rob-med-12-black'>{day}</span>
+                                            <div className='d-flex date-circles'>
+
+                                                <div
+                                                    className='center-items back-circle'
+                                                    style={
+                                                        index <
+                                                            (streak[0]?.tag === 'finished'
+                                                                ?
+                                                                streakDetail.length
+                                                                :
+                                                                streakDetail.length - 1
+                                                            )
+                                                            ?
+                                                            { background: 'var(--primaryColor)' }
+                                                            :
+                                                            {}}
+                                                >
+                                                    <div
+                                                        className='center-items circle'
+                                                        style={index >=
+                                                            (streak[0]?.tag === 'finished'
+                                                                ?
+                                                                streakDetail.length
+                                                                :
+                                                                streakDetail.length - 1
+                                                            )
+                                                            ?
+                                                            { background: '#E8EEF2', minWidth: '4rem', height: '4rem' }
+                                                            :
+                                                            {}}
+                                                    >
+                                                        <span className='rob-med-12-black'>{progressData.daysArr[index]}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     );
                                 })
                             }
 
                         </div>
-
+                        {/* 
                         <div className='d-flex date-circles'>
 
                             {
@@ -397,7 +426,7 @@ function Streak(props) {
                             }
 
 
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className='progress-container'>
