@@ -1,12 +1,32 @@
 .landing-page {
 
+  .react-player {
+    //  position: absolute;
+    //  top: 0;
+    //  left: 0;
+    border: 2px solid var(--primaryColor);
+  }
+
+  .play-pause-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+  }
+
+  .fullscreen-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+
+
   .hero-section {
     height: auto;
     padding-top: 10%;
 
-    .hero-image
-    {
-     width: 70%;
+    .hero-image {
+      width: 70%;
     }
 
     .buttons {
@@ -62,8 +82,7 @@
         padding: 1em;
         box-shadow: 0px .3rem .6rem var(--boxShadow);
 
-        h1
-        {
+        h1 {
           font-size: 2rem;
         }
 
@@ -102,6 +121,24 @@
       display: flex;
       flex: 1.5;
       justify-content: flex-end;
+      margin-left: 20rem;
+
+      .player-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70rem;
+
+        .play-icon
+        {
+          font-size: 50px;
+        }
+
+        .full-screen-icon
+        {
+          font-size: 20px;
+        }
+      }
     }
   }
 
@@ -264,10 +301,8 @@
     }
   }
 
-  .policies
-  {
-    span 
-    {
+  .policies {
+    span {
       font-size: 1.2rem;
       color: var(--greyText);
       text-align: center;
@@ -417,6 +452,13 @@
 
         .right-section {
           justify-content: center;
+
+          margin-left: 0;
+          padding: 5rem;
+
+          .player-container {
+            height: 50rem;
+          }
         }
       }
     }
@@ -427,6 +469,23 @@
 
   }
 }
+
+@media only screen and (max-width : 1410px) {
+  .landing-page {
+
+    .guide-section {
+      .right-section {
+        margin-left: 0rem;
+
+        .player-container {
+          // height: 25rem !important;
+          margin-top: 5rem;
+        }
+      }
+    }
+  }
+}
+
 
 //MEDIA QUERIES
 @media only screen and (max-width: 1024px) {
@@ -444,18 +503,6 @@
       // padding-top: 15em;
     }
 
-    .landing-page-header {
-
-      .main-navigation,
-      .buttons-container {
-        display: none;
-      }
-
-      .btn-list-container {
-        display: flex;
-      }
-    }
-
     .pricing-section {
       // padding-top: 5em;
     }
@@ -463,8 +510,25 @@
   }
 }
 
+
+
+
+
+
 @media only screen and (max-width : 800px) {
   .landing-page {
+
+    .guide-section {
+      .right-section {
+        margin-left: 0rem;
+
+        .player-container {
+          margin-top: 2rem;
+          height: 25rem !important;
+        }
+      }
+    }
+
     .pricing-section {
       height: auto !important;
 
@@ -549,6 +613,8 @@
       height: auto;
       display: flex;
       flex-direction: column;
+
+
     }
 
     .contact-section {
@@ -579,6 +645,8 @@
           .button-container {
             justify-content: center;
           }
+
+
         }
       }
     }
