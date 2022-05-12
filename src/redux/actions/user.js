@@ -1,15 +1,16 @@
-import { AUTH, LOGOUT, REFRESH_TOKEN, SIGNIN_FAIL, EMPTY_ERROR, PAYMENT_REQUEST, PAYMENT_REQUEST_FAIL } from '../constants/action-type';
+import { AUTH, VERIFY_EMAIL, LOGOUT, REFRESH_TOKEN, SIGNIN_FAIL, EMPTY_ERROR, PAYMENT_REQUEST, PAYMENT_REQUEST_FAIL } from '../constants/action-type';
 
 import {
     createUser,
     signIn,
     signUp,
+    verifyEmail
 } from '../api/user';
 
 import {
     logout,
     updateUser,
-    paymentRequest
+    paymentRequest,
 } from '../api';
 
 export const emptyError = () => async (dispatch) => {
@@ -17,14 +18,13 @@ export const emptyError = () => async (dispatch) => {
     dispatch(action);
 }
 
-
-export const updateuser = (data , email) => async (dispatch) => {
+export const updateuser = (data, email) => async (dispatch) => {
     try {
-        const updatedData = await updateUser(data , email);
+        const updatedData = await updateUser(data, email);
         const tokens = JSON.parse(localStorage.getItem('profile'))
         const newObj = {
             token: tokens.token,
-            refreshToken : tokens.refreshToken,
+            refreshToken: tokens.refreshToken,
             result: updatedData.data
         }
         const action = { type: AUTH, data: newObj }
@@ -36,10 +36,11 @@ export const updateuser = (data , email) => async (dispatch) => {
 
 export const auth = (data) => async (dispatch) => {
     try {
-        
+
         const userDetail = await createUser(data.result);
 
-        data.result.planType = userDetail.data.planType 
+        data.result.planType = userDetail.data.planType;
+        data.result.verified = userDetail.data.verified;
         const action = { type: AUTH, data }
         dispatch(action);
     } catch (error) {
@@ -54,10 +55,10 @@ export const signin = (formData, history) => async dispatch => {
         const { data } = await signIn(formData);
         const action = { type: AUTH, data }
         dispatch(action);
-        history.push('/dashboard');
+        // history.push('/dashboard');
     } catch (error) {
-        console.log('SIGNIN ERROR' , error.response.data.error.message);
-        const action = { type: SIGNIN_FAIL, data : error.response.data.error.message }
+        console.log('SIGNIN ERROR', error.response.data.error.message);
+        const action = { type: SIGNIN_FAIL, data: error.response.data.error.message }
         dispatch(action);
     }
 }
@@ -66,6 +67,17 @@ export const signup = (formData, history) => async dispatch => {
     try {
         const { data } = await signUp(formData);
         const action = { type: AUTH, data }
+        dispatch(action);
+        // history.push('/dashboard');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const verifyemail = (emailData, history) => async dispatch => {
+    try {
+        const { data } = await verifyEmail(emailData);
+        const action = { type: VERIFY_EMAIL, data }
         dispatch(action);
         history.push('/dashboard');
     } catch (error) {
@@ -84,7 +96,7 @@ export const storeRefreshToken = (data) => async dispatch => {
 
 export const logoutCall = (refreshToken) => async (dispatch) => {
     try {
-        await logout({refreshToken});
+        await logout({ refreshToken });
         const action = { type: LOGOUT }
         dispatch(action);
     } catch (error) {
@@ -92,10 +104,9 @@ export const logoutCall = (refreshToken) => async (dispatch) => {
     }
 }
 
-
 export const createPaymentRequest = () => async (dispatch) => {
     try {
-        const  {data}  = await paymentRequest();
+        const { data } = await paymentRequest();
         const action = { type: PAYMENT_REQUEST, data }
         dispatch(action);
     } catch (error) {

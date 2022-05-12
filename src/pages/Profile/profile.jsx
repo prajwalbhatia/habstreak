@@ -38,11 +38,9 @@ function Profile(props) {
   const history = useHistory();
   const authData = useSelector((state) => state.user.authData);
   const { paymentData } = useSelector((state) => state.user);
-  console.log('🚀 ~ file: profile.jsx ~ line 41 ~ Profile ~ paymentData', paymentData);
 
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [planType, setPlanType] = useState("");
-  console.log('🚀 ~ file: profile.jsx ~ line 45 ~ Profile ~ planType', planType);
 
 
   //Getting the data from the state
@@ -67,7 +65,6 @@ function Profile(props) {
         "image": process.env.REACT_APP_ENV === 'development' ? "http://localhost:5000/logo.svg" : 'https://habstreak.herokuapp.com/logo.svg',
         "order_id": paymentData.id,
         "handler": function (response) {
-          console.log('🚀 ~ file: profile.jsx ~ line 68 ~ useEffect ~ response', response);
           dispatch(updateuser(
             {
               planType: 'prime',
