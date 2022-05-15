@@ -44,6 +44,7 @@ export const AUTH = 'AUTH';
 export const LOGOUT = 'LOGOUT';
 export const REFRESH_TOKEN = 'REFRESH_TOKEN';
 export const SIGNIN_FAIL = 'SIGNIN_FAIL';
+export const SIGNUP_FAIL = 'SIGNUP_FAIL';
 
 //SEARCH 
 export const SEARCH = 'SEARCH';

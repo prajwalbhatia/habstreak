@@ -267,7 +267,6 @@ function Modal(props) {
                 </div>
             </div>
             <div className="wrapper">
-                modal
             </div>
         </div>
     );

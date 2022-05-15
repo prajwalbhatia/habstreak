@@ -1,13 +1,20 @@
-import { AUTH, LOGOUT, REFRESH_TOKEN, SIGNIN_FAIL, PAYMENT_REQUEST , EMPTY_ERROR} from '../constants/action-type';
+import {
+    AUTH,
+    LOGOUT,
+    REFRESH_TOKEN,
+    SIGNIN_FAIL,
+    PAYMENT_REQUEST,
+    SIGNUP_FAIL,
+    EMPTY_ERROR
+} from '../constants/action-type';
 
 const initialState = {
     authData: JSON.parse(localStorage.getItem('profile')),
-    error : '',
-    paymentData : {}
+    error: '',
+    paymentData: {}
 }
 
 const userReducer = (state = initialState, action) => {
-console.log('🚀 ~ file: user.js ~ line 10 ~ userReducer ~ action', action);
     switch (action.type) {
         case AUTH:
             localStorage.setItem('profile', JSON.stringify({ ...action?.data }))
@@ -16,15 +23,17 @@ console.log('🚀 ~ file: user.js ~ line 10 ~ userReducer ~ action', action);
             localStorage.setItem('profile', JSON.stringify({ ...action?.data }))
             return { ...state, authData: action?.data }
         case PAYMENT_REQUEST:
-            return {...state , paymentData : action?.data}    
+            return { ...state, paymentData: action?.data }
         case LOGOUT:
             localStorage.clear();
             // localStorage.removeItem('profile');
             return { ...state, authData: null }
         case SIGNIN_FAIL:
-            return {...state , error : action.data }    
+            return { ...state, error: action.data }
+        case SIGNUP_FAIL:
+            return { ...state, error: action.data }
         case EMPTY_ERROR:
-            return { ...state, error: "" }    
+            return { ...state, error: "" }
         default:
             return state;
     }
