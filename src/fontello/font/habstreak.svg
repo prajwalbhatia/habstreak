@@ -79,6 +79,14 @@
 <glyph glyph-name="logout" unicode="&#xe823;" d="M779 571l-79-79 88-88h-455v-112h455l-88-88 79-79 221 225-221 221z m-666 167h387v112h-387c-63 0-113-50-113-112v-780c0-58 50-108 113-108h387v112h-387v776z" horiz-adv-x="1000" />
 
 <glyph glyph-name="close-circle" unicode="&#xe824;" d="M500 850c-275 0-500-225-500-500s225-500 500-500 500 225 500 500-225 500-500 500z m250-679l-71-71-179 179-179-179-71 71 179 179-179 179 71 71 179-179 179 179 71-71-179-179 179-179z" horiz-adv-x="1000" />
+
+<glyph glyph-name="play" unicode="&#xe825;" d="M108-150v1000l788-500-788-500z" horiz-adv-x="1000" />
+
+<glyph glyph-name="fullscreen" unicode="&#xe826;" d="M0-150v346h108v-238h238v-108h-346z m0 654v346h346v-108h-238v-238h-108z m654-654v108h238v238h108v-346h-346z m238 654v238h-238v108h346v-346h-108z" horiz-adv-x="1000" />
+
+<glyph glyph-name="fullscreen-exit" unicode="&#xe827;" d="M238-150v238h-238v108h346v-346h-108z m-238 654v109h238v237h108v-346h-346z m654-654v346h346v-108h-237v-238h-109z m0 654v346h109v-237h237v-109h-346z" horiz-adv-x="1000" />
+
+<glyph glyph-name="pause" unicode="&#xe828;" d="M650-150v1000h275v-1000h-275z m-579 0v1000h275v-1000h-275z" horiz-adv-x="1000" />
 </font>
 </defs>
 </svg>

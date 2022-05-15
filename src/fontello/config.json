@@ -523,6 +523,62 @@
       "search": [
         "close-circle"
       ]
+    },
+    {
+      "uid": "5a6c4f85da2c3b878ac2f46a7be9e483",
+      "css": "play",
+      "code": 59429,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M108.3 1000V0L895.8 500 108.3 1000Z",
+        "width": 1000
+      },
+      "search": [
+        "play"
+      ]
+    },
+    {
+      "uid": "7a7dfc7b2eede9b1bf3c7cdfe03a0d8c",
+      "css": "fullscreen",
+      "code": 59430,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M0 1000V654.2H108.3V891.7H345.8V1000H0ZM0 345.8V0H345.8V108.3H108.3V345.8H0ZM654.2 1000V891.7H891.7V654.2H1000V1000H654.2ZM891.7 345.8V108.3H654.2V0H1000V345.8H891.7Z",
+        "width": 1000
+      },
+      "search": [
+        "fullscreen"
+      ]
+    },
+    {
+      "uid": "1c1461ee0e787befb485cfabaaccebe8",
+      "css": "fullscreen-exit",
+      "code": 59431,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M237.5 1000V762.5H0V654.2H345.8V1000H237.5ZM0 345.8V237.5H237.5V0H345.8V345.8H0ZM654.2 1000V654.2H1000V762.5H762.5V1000H654.2ZM654.2 345.8V0H762.5V237.5H1000V345.8H654.2Z",
+        "width": 1000
+      },
+      "search": [
+        "fullscreen-exit"
+      ]
+    },
+    {
+      "uid": "e0446371ed742f9128c82ef821385200",
+      "css": "pause",
+      "code": 59432,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M650 1000V0H925V1000H650ZM70.8 1000V0H345.8V1000H70.8Z",
+        "width": 1000
+      },
+      "search": [
+        "pause"
+      ]
     }
   ]
 }

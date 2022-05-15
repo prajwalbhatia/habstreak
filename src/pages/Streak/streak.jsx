@@ -136,7 +136,6 @@ function Streak(props) {
      * @param {Object} detail - Object of detail we want to update
      */
     const updateStreakDetail = (detail) => {
-    console.log('🚀 ~ file: streak.jsx ~ line 139 ~ updateStreakDetail ~ detail', detail);
         dispatch(updateStreakDetailData({
             description: desc[detail._id]
         }, detail._id, detail.streakId));
@@ -447,7 +446,6 @@ function Streak(props) {
                                 progressData.rewards.length > 0
                                     ?
                                     progressData.rewards.map((reward, index) => {
-                                        console.log('🚀 ~ file: streak.jsx ~ line 414 ~ progressData.rewards.map ~ reward', reward);
                                         return (
                                             <div
                                                 key={index}

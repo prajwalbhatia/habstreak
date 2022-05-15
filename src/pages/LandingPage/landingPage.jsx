@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import ReactPlayer from 'react-player';
+
 
 //Component 
 import { PrimaryButton } from "components/button/button";
-import LandingHeader  from 'components/landing-header/landingHeader';
+import LandingHeader from 'components/landing-header/landingHeader';
 import { TextInputElement, InputElement } from "components/form-elements/form-elements";
 
 //CSS
@@ -21,20 +23,55 @@ import { ReactComponent as Hero } from './img/hero.svg';
 import { ReactComponent as Video } from './img/video.svg';
 import { ReactComponent as Intro } from './img/Intro.svg';
 import { ReactComponent as Prime } from './img/Prime.svg';
+import { height } from '@mui/system';
+import screenfull from 'screenfull';
 
 function LandingPage() {
   const history = useHistory();
+
+  //REF
+  const playerContainerRef = useRef();
+
   //STATES
   const [selectedNav, setSelectedNav] = useState('home');
+  const [playIcon, setPlayIcon] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   //If we have a user in local storage
+  //   //and it is not verified then we have to clear
+  //   //local storage
+  //   const user = JSON.parse(localStorage.getItem('profile'));
+  //   if(user)
+  //   {
+  //     const isVerified = user?.result?.verified;
+  //     if(!isVerified)
+  //     {
+  //         localStorage.clear();
+  //     }
+  //   }
+  // } , [])
+
+  const handleScroll = (e) => {
+    let scroll = window.scrollY;
+    if (scroll && scroll < 400)
+      setSelectedNav('home');
+  }
 
   //FUNCTIONS
   const handleLinkClick = (e) => {
     if (!e.target.getAttribute('data-value'))
       setSelectedNav('home');
-    else if (e.target.getAttribute('data-value') === 'aboutUs')
-    {
+    else if (e.target.getAttribute('data-value') === 'aboutUs') {
       history.push('/about-us')
-    }  
+    }
     else {
       document.getElementById(e.target.getAttribute('data-value')).scrollIntoView({ behavior: 'smooth' });
       setSelectedNav(e.target.getAttribute('data-value'));
@@ -61,14 +98,14 @@ function LandingPage() {
               <div className='buttons d-flex'>
                 <PrimaryButton
                   name={'Get Started'}
-                  click={() => { jumpToAccount('signup' , history) }}
+                  click={() => { jumpToAccount('signup', history) }}
                   btnContainerClass="fit-content"
                   btnClass='header-btn landing-get-started'
                 />
 
                 <PrimaryButton
                   name={'Login'}
-                  click={() => { jumpToAccount('login' , history) }}
+                  click={() => { jumpToAccount('login', history) }}
                   btnContainerClass="ml-30 fit-content"
                   btnClass='header-btn landing-login-btn'
                 />
@@ -118,7 +155,7 @@ function LandingPage() {
               <div className='buttons d-flex mt-50'>
                 <PrimaryButton
                   name={'Get Started'}
-                  click={() => { jumpToAccount('signup' , history) }}
+                  click={() => { jumpToAccount('signup', history) }}
                   btnContainerClass=""
                   btnClass='header-btn landing-get-started'
                 />
@@ -137,8 +174,60 @@ function LandingPage() {
               <p className='p-18'>Take baby steps daily to complete the impossible looking tasks and make impossible task says I M POSSIBLE.</p>
             </div>
 
-            <div className="right-section">
-              <Video />
+
+            <div className="right-section" style={{ position: 'relative' }}>
+              <div className='player-container' >
+                <div
+                  ref={playerContainerRef}
+                  style={{ position: 'relative' }}
+                >
+                  <ReactPlayer
+                    url={process.env.REACT_APP_ENV === 'development' ? "http://localhost:5000/habstreak_guide.mp4" : 'https://habstreak.herokuapp.com/habstreak_guide.mp4'}
+                    width="100%"
+                    height="100%"
+                    playing={playIcon}
+                    className='react-player'
+                  />
+
+                  <div className='fullscreen-icon'
+                    onClick={() => {
+                      screenfull.toggle(playerContainerRef.current)
+                      console.log('TOGGLE', screenfull.isFullscreen)
+
+                      setIsFullScreen(!isFullScreen);
+                      
+                      // }
+                    }}>
+                    {
+                      isFullScreen
+                        ?
+                        <i className="demo-icon icon-fullscreen-exit full-screen-icon" />
+                        :
+                        <i className="demo-icon icon-fullscreen full-screen-icon" />
+                    }
+                  </div>
+
+
+                  <div className='play-pause-icon'
+                    onClick={() => {
+                      setPlayIcon(!playIcon)
+                    }}>
+                    {
+                      !playIcon
+                        ?
+                        <i className="demo-icon icon-play play-icon" />
+                        :
+                        <i className="demo-icon icon-pause play-icon" />
+                    }
+                  </div>
+                </div>
+
+
+              </div>
+              {/* <div style={{ position: 'relative' }}>
+                <Video />
+
+              </div> */}
             </div>
           </div>
         </section>
@@ -232,7 +321,7 @@ function LandingPage() {
               </div>
 
               <div className='center-items mb-10'>
-                <div onClick={() => { jumpToAccount('signup' , history) }} className='d-flex plan-btn-container center-items mt-20 prime-btn c-pointer'>
+                <div onClick={() => { jumpToAccount('signup', history) }} className='d-flex plan-btn-container center-items mt-20 prime-btn c-pointer'>
                   <h3 className='font-18 font-jos font-bold'>Choose Plan</h3>
                 </div>
               </div>
@@ -252,6 +341,9 @@ function LandingPage() {
                 <i className="demo-icon icon-facebook mr-20 contact-icon" />
                 <i className="demo-icon icon-instagram mr-20 contact-icon" />
                 <i className="demo-icon icon-twitter contact-icon" />
+
+                <i className="demo-icon icon-fullscreen contact-icon" />
+
               </div>
             </div>
             <div className='middle-section'>

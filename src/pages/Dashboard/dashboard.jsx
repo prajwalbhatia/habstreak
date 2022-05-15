@@ -74,13 +74,20 @@ function Dashboard(props) {
     const finished = streaks.filter((streak) => streak.tag === 'finished');
     const unfinishedStreak = streaks.filter((streak) => streak.tag === 'unfinished');
 
+    //Streaks that are artice currently or will become active in future (i.e upcoming) 
+    //Finished and unfinished streak will be excluded
     const running = streaks.filter((streak) => {
-      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
+      if ((isSameOrBefore(streak.dateFrom, currentDate) || isSameOrAfter(streak.dateTo, currentDate)) && !streak.tag) {
         return streak;
       }
       else
         return null;
     });
+
+    const filterStreaks = running.filter((streak, index) => {
+      if (index <= 2 && isSameOrBefore(streak.dateFrom, currentDate))
+        return streak
+    })
 
     const earned = rewards.filter(reward => reward.rewardEarned);
     const totalStreak = [...streaks].length;
@@ -110,7 +117,7 @@ function Dashboard(props) {
       streakUnsuccessful
     })
 
-    setTaskCount(running.length);
+    setTaskCount(filterStreaks.length);
   }, [streaks, rewards]);
 
   useEffect(() => {
@@ -140,12 +147,13 @@ function Dashboard(props) {
 
 
   const streakCardJsx = () => {
-    console.log('STRAK CARD')
-
     const currentDate = moment().format();
 
+    //Streaks that are artice currently or will become active in future (i.e upcoming) 
+    //Finished and unfinished streak will be excluded
+
     const running = streaks.filter((streak) => {
-      if (isSameOrBefore(streak.dateFrom, currentDate) && isSameOrAfter(streak.dateTo, currentDate) && !streak.tag) {
+      if ((isSameOrBefore(streak.dateFrom, currentDate) || isSameOrAfter(streak.dateTo, currentDate)) && !streak.tag) {
         return streak;
       }
       else
@@ -153,60 +161,70 @@ function Dashboard(props) {
     });
 
     if (running.length > 0) {
-      const filterSttreaks = streaks.filter((streak, index) => {
-        if (index <= 2 && isSameOrBefore(streak.dateFrom, Date().now))
+      const filterStreaks = running.filter((streak, index) => {
+        if (index <= 2 && isSameOrBefore(streak.dateFrom, currentDate))
           return streak
       })
-      return (
-        filterSttreaks.map((streak, index) => {
-          if (streak.tag !== 'unfinished') {
-            const { dateFrom, dateTo, _id } = streak;
-            const todayDate = moment(new Date());
-            const percPerDay = perPerDay(dateFrom, dateTo);
+      if (filterStreaks.length > 0) {
+        return (
 
-            const daysDone = isSame(todayDate, dateFrom) ? 0 : todayDate.diff(dateFrom, 'days');
-            const progress = percPerDay * daysDone;
-            return (
-              <div
-                key={index} className='flex-dir-col streak-card'
-                onClick={(e) => {
-                  e.stopPropagation()
-                  history.push({
-                    pathname: `/streak/${_id}`,
-                    state: {
-                      from: 'Dashboard',
-                    },
+          filterStreaks.map((streak, index) => {
+            if (streak.tag !== 'unfinished') {
+              const { dateFrom, dateTo, _id } = streak;
+              const todayDate = moment(new Date());
+              const percPerDay = perPerDay(dateFrom, dateTo);
 
-                  })
-                }}
-              >
+              const daysDone = isSame(todayDate, dateFrom) ? 0 : todayDate.diff(dateFrom, 'days');
+              const progress = percPerDay * daysDone;
+              return (
                 <div
-                  className='center-items card-icon'
-                  style={{ background: theme[index] }}
-                >
-                  <i className={`demo-icon ${icons[index]}`} />
-                </div>
-                <h4>{streak.title}</h4>
-                <h6 className='mt-10'>Running</h6>
-                <h1 style={{ color: theme[index] }} >{`${progress}%`}</h1>
-                <span>{`${streak.days} day to go`}</span>
-                <div
-                  className='d-flex go-btn'
-                  style={{ background: theme[index] }}
-                >
-                  <i className="demo-icon icon-going-in" />
-                </div>
-              </div>
-            )
-          }
-        })
+                  key={index} className='flex-dir-col streak-card'
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    history.push({
+                      pathname: `/streak/${_id}`,
+                      state: {
+                        from: 'Dashboard',
+                      },
 
-      )
+                    })
+                  }}
+                >
+                  <div
+                    className='center-items card-icon'
+                    style={{ background: theme[index] }}
+                  >
+                    <i className={`demo-icon ${icons[index]}`} />
+                  </div>
+                  <h4>{streak.title}</h4>
+                  <h6 className='mt-10'>Running</h6>
+                  <h1 style={{ color: theme[index] }} >{`${progress}%`}</h1>
+                  <span>{`${streak.days} day to go`}</span>
+                  <div
+                    className='d-flex go-btn'
+                    style={{ background: theme[index] }}
+                  >
+                    <i className="demo-icon icon-going-in" />
+                  </div>
+                </div>
+              )
+            }
+
+          })
+
+        )
+      }
+      else {
+        return (
+          <h2>No Current Tasks</h2>
+        )
+      }
     }
-    else
+    else {
       return (
         <h2>No Current Tasks</h2>
       )
+    }
   }
 
   const recentActivityCardJsx = () => {

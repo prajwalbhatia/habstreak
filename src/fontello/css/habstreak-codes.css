@@ -36,3 +36,7 @@
 .icon-activity:before { content: '\e822'; } /* '' */
 .icon-logout:before { content: '\e823'; } /* '' */
 .icon-close-circle:before { content: '\e824'; } /* '' */
+.icon-play:before { content: '\e825'; } /* '' */
+.icon-fullscreen:before { content: '\e826'; } /* '' */
+.icon-fullscreen-exit:before { content: '\e827'; } /* '' */
+.icon-pause:before { content: '\e828'; } /* '' */

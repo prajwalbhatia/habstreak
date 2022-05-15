@@ -17,10 +17,13 @@ import reducers from './redux/reducers';
 import thunk from 'redux-thunk';
 
 export let store;
+let logger;
 
-const logger = createLogger({
+if (process.env.REACT_APP_ENV === 'development') {
+  logger = createLogger({
 
-});
+  });
+}
 
 if (process.env.REACT_APP_ENV === 'development')
   store = createStore(reducers, compose(applyMiddleware(thunk, logger)));

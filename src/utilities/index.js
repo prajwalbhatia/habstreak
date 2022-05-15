@@ -23,7 +23,6 @@ export const errorHandler = (error, errorInfo) => {
  * @param {String} streakId - In case of update id of streak we want to update
  */
 export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) => {
-  console.log('🚀 ~ file: index.js ~ line 26 ~ dialogForCreateAndUpdateStreak ~ data', moment(data?.startDate).startOf('day'));
   const contentData =
     type === 'create'
       ?
@@ -94,6 +93,7 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
     btnClickHandler: (data) => {
       data.dateFrom = moment(data.dateFrom).startOf('day').toString();
       data.dateTo = moment(data.dateTo).endOf('day').toString();
+      console.log('🚀 ~ file: index.js ~ line 94 ~ dialogForCreateAndUpdateStreak ~ data', data);
 
       if (data.type === "primary") {
         delete data.type
@@ -205,7 +205,6 @@ export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewar
 
     initialData: type === 'create' ? {} : { ...dataObj },
     btnClickHandler: (data) => {
-      console.log('🚀 ~ file: index.js ~ line 204 ~ dialogForCreateAndUpdateReward ~ data', data);
       if (data.type === "primary") {
         delete data.type
         let rewardObj = {};

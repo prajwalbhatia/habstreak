@@ -31,7 +31,6 @@ export const createRewardData = (reward) => async (dispatch) => {
     const action = { type: CREATE_REWARD_SUCCESS }
     dispatch(action);
   } catch (error) {
-    console.log('create reward ->', error.response.data.error.message);
     const action = { type: ERROR, data: error.response.data.error.message }
     dispatch(action);
   }

@@ -14,7 +14,8 @@ import {
   auth,
   signup,
   signin,
-  emptyError
+  emptyError,
+  verifyemail
 } from "redux/actions/user";
 
 //CSS
@@ -48,7 +49,8 @@ function Account(props) {
   //STATES
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [showPassword, setShowPassword] = useState(false);
-  const [isSignup, setIsSignup] = useState(false);
+  const [stage, setStage] = useState('login');
+  console.log('🚀 ~ file: account.jsx ~ line 52 ~ Account ~ stage', stage);
   const [formData, setFormData] = useState(initialState);
   const [errMsg, setErrMsg] = useState({ email: '' });
   const [successMsg, setSuccessMsg] = useState({});
@@ -66,33 +68,46 @@ function Account(props) {
 
   useEffect(() => {
     const token = user?.token;
-    if (token)
+    if (token && user.result.verified)
       history.push('/dashboard');
+    else {
+      if (!user?.result?.verified)
+        setStage('login')
+    }
   }, [history, user?.token])
 
   useEffect(() => {
     if (location?.state?.jumpTo === 'signup')
-      setIsSignup(true)
-    else {
-      setIsSignup(false);
+      setStage('signin')
+    else if (location?.state?.jumpTo === 'login') {
+      setStage('login');
     }
+    // delete location.state.jumpTo
   }, [location])
 
   useEffect(() => {
-    if (authData)
-      history.push('/dashboard');
+    if (authData && stage === 'signin') {
+      setStage('verify')
+    }
+    else if (authData && stage === 'login') {
+      console.log('AUTH DATA', authData)
+      if (authData?.result?.verified)
+        history.push('/dashboard');
+      else
+        setStage('verify')
+    }
   }, [authData, history]);
 
   useEffect(() => {
-    if (isSignup)
+    if (stage)
       setIsValid(false);
     // else
     //   setIsValid(true);
-  }, [isSignup]);
+  }, [stage]);
 
 
   useEffect(() => {
-    if (!isSignup) {
+    if (!stage) {
       if (Object.keys(errMsg).length === 0 && formData['email'].length > 0 && formData['password'].length > 0)
         setIsValid(true);
     }
@@ -116,11 +131,10 @@ function Account(props) {
   }
 
   window.getProfile = (data) => {
-    if(data)
-    {
+    if (data) {
       const token = data?.idToken;
       const result = data?.user;
-      
+
       try {
         dispatch(auth({ result, token }));
       } catch (error) {
@@ -132,11 +146,26 @@ function Account(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isSignup) {
+    //Signining the user
+    //and will send the user to verify email screen
+    if (stage === 'signin') {
       dispatch(signup(formData, history))
     }
-    else {
+    //Logging the user if and only if user is verified
+    //if not verified then will send to verify screen
+    else if (stage === 'login') {
       dispatch(signin(formData, history))
+    }
+    //Verifying the user
+    else if (stage === 'verify') {
+      const otp = formData.otp1 + formData.otp2 + formData.otp3 + formData.otp4;
+      if (otp.length === 4) {
+        const dataObj = {
+          otp,
+          userId: authData?.result?._id
+        }
+        dispatch(verifyemail(dataObj, history))
+      }
     }
   }
 
@@ -145,7 +174,11 @@ function Account(props) {
   }
 
   const switchMode = () => {
-    setIsSignup((prevIsSignup) => !prevIsSignup);
+    if (stage === 'login')
+      setStage('signin')
+    else if (stage === 'signin')
+      setStage('login')
+
     setFormData(initialState);
     setErrMsg({});
     setSuccessMsg({});
@@ -235,8 +268,6 @@ function Account(props) {
       }
     }
 
-    console.log('VALIDATION', Object.keys(errMsg))
-
     //VALIDATION
     if (Object.keys(errMsg).length === 0)
       setIsValid(true);
@@ -263,11 +294,11 @@ function Account(props) {
         <p>A central hub where individual or teams can work, plan, and archive amazing things together.</p>
         <div className='center-items'>
           {
-            isSignup
+            stage === 'login'
               ?
-              <Signup />
-              :
               <Login />
+              :
+              <Signup />
           }
         </div>
       </div>
@@ -277,16 +308,49 @@ function Account(props) {
             <p className='size-16-8f'>ENG (USA)</p>
             <i className="demo-icon  icon-language size-16-8f" />
           </div>
-          <p className='size-10-8f roboto-medium mt-35'>{isSignup ? 'START FOR FREE' : 'ENJOY YOUR STREAK!'}</p>
 
-          <h1>{isSignup ? 'Sign up to Habstreak' : 'Login to Habstreak'}</h1>
 
-          <p className='already-member'>{isSignup ? 'Already a Member?' : 'Are you a new member?'}
-            <span className='c-pointer' onClick={switchMode}>{isSignup ? 'Login' : 'Sign up'}</span>
+          <p className='size-10-8f roboto-medium mt-35'>
+            {stage === 'signin'
+              ? 'START FOR FREE' :
+              (stage === 'login' ?
+                'ENJOY YOUR STREAK!'
+                : 'Verify TO ENJOY!')}
           </p>
 
+          <h1>{stage === 'signin'
+            ? 'Sign up to Habstreak'
+            :
+            (
+              stage === 'login'
+                ?
+                'Login to Habstreak'
+                :
+                'Verify your email'
+            )
+          }</h1>
+
+          <p className='already-member'>
+            {stage === 'signin'
+              ?
+              'Already a Member?' :
+              (stage === 'login'
+                ?
+                'Are you a new member?'
+                :
+                'An OTP is send to your email'
+              )}
+            <span className='c-pointer' onClick={switchMode}>
+              {stage === 'signin'
+                ?
+                'Login'
+                :
+                (stage === 'login' ? 'Sign up' : '')}</span>
+          </p>
+
+
           {
-            isSignup &&
+            stage === 'signin' &&
             <InputElement
               placeholder={'Firstname Lastname'}
               uid={'fullName'}
@@ -302,39 +366,46 @@ function Account(props) {
             />
           }
 
-          <InputElement
-            placeholder={'name@gmail.com'}
-            lable={'EMAIL'}
-            uid={'email'}
-            type="email"
-            value={formData['email']}
-            containerClass={'mt-25'}
-            onChange={handleChange}
-            onBlur={validation}
-            errMsg={errMsg['email']}
-            successMsg={successMsg['email']}
-            icon={<i className="demo-icon icon-email size-16-8f" />}
-          />
+          {
+            (stage === 'signin' || stage === 'login')
+            &&
+            <>
+              <InputElement
+                placeholder={'name@gmail.com'}
+                lable={'EMAIL'}
+                uid={'email'}
+                type="email"
+                value={formData['email']}
+                containerClass={'mt-25'}
+                onChange={handleChange}
+                onBlur={validation}
+                errMsg={errMsg['email']}
+                successMsg={successMsg['email']}
+                icon={<i className="demo-icon icon-email size-16-8f" />}
+              />
 
-          <InputElement
-            placeholder={'8 characters and 1 capital letter'}
-            lable={'PASSWORD'}
-            uid={'password'}
-            type={showPassword ? "text" : "password"}
-            containerClass={'mt-25'}
-            value={formData['password']}
-            onChange={handleChange}
-            onBlur={isSignup ? validation : null}
-            errMsg={isSignup ? errMsg['password'] : null}
-            successMsg={isSignup ? successMsg['password'] : null}
-            icon={<i
-              onClick={togglePassword}
-              className="demo-icon icon-lock size-16-8f c-pointer"
-            />}
-          />
+              <InputElement
+                placeholder={'8 characters and 1 capital letter'}
+                lable={'PASSWORD'}
+                uid={'password'}
+                type={showPassword ? "text" : "password"}
+                containerClass={'mt-25'}
+                value={formData['password']}
+                onChange={handleChange}
+                onBlur={stage ? validation : null}
+                errMsg={stage ? errMsg['password'] : null}
+                successMsg={stage ? successMsg['password'] : null}
+                icon={<i
+                  onClick={togglePassword}
+                  className="demo-icon icon-lock size-16-8f c-pointer"
+                />}
+              />
+            </>
+          }
+
 
           {
-            isSignup
+            stage === 'signin'
             &&
             <InputElement
               placeholder={'8 characters and 1 capital letter'}
@@ -351,33 +422,106 @@ function Account(props) {
             />
           }
 
+          {
+            stage === 'verify'
+            &&
+            <div style={{ display: 'flex' }}>
+              <InputElement
+                placeholder={'X'}
+                // lable={'CONFIRM PASSWORD'}
+                uid={'otp1'}
+                value={formData['otp1']}
+                type={"string"}
+                onChange={handleChange}
+                // onBlur={validation}
+                // errMsg={errMsg['confirmPassword']}
+                // successMsg={successMsg['confirmPassword']}
+                containerClass='otp-box mt-25'
+              />
+
+              <InputElement
+                placeholder={'X'}
+                // lable={'CONFIRM PASSWORD'}
+                uid={'otp2'}
+                value={formData['otp2']}
+                type={"string"}
+                onChange={handleChange}
+                // onBlur={validation}
+                // errMsg={errMsg['confirmPassword']}
+                // successMsg={successMsg['confirmPassword']}
+                containerClass='otp-box mt-25'
+
+              />
+
+              <InputElement
+                placeholder={'X'}
+                // lable={'CONFIRM PASSWORD'}
+                uid={'otp3'}
+                value={formData['otp3']}
+                type={"string"}
+                onChange={handleChange}
+                // onBlur={validation}
+                // errMsg={errMsg['confirmPassword']}
+                // successMsg={successMsg['confirmPassword']}
+                containerClass='otp-box mt-25'
+
+              />
+
+              <InputElement
+                placeholder={'X'}
+                // lable={'CONFIRM PASSWORD'}
+                uid={'otp4'}
+                value={formData['otp4']}
+                type={"string"}
+                onChange={handleChange}
+                // onBlur={validation}
+                // errMsg={errMsg['confirmPassword']}
+                // successMsg={successMsg['confirmPassword']}
+                containerClass='otp-box mt-25'
+
+              />
+
+            </div>
+          }
+
+
           <PrimaryButton
-            name={isSignup ? 'CREATE ACCOUNT' : 'LOGIN'}
+            name={stage === 'signin' ? 'CREATE ACCOUNT' : (stage === 'login' ? 'LOGIN' : 'VERIFY')}
             click={() => { }}
             btnContainerClass="mt-30"
-            btnClass={isValid ? 'create-account-btn' : 'create-account-btn in-valid'}
+            btnClass={(isValid || stage === 'verify') ? 'create-account-btn' : 'create-account-btn in-valid'}
             type="submit"
-            disabled={isValid ? false : true}
+            disabled={(isValid || stage === 'verify') ? false : true}
           />
 
-          <p className='size-10-8f mt-35'>{isSignup ? 'Or Signup With' : 'Or Login With'}</p>
 
-          <div className='socials'>
-            <div onClick={mobileAppGoogleLogin} className='icon-container'>
-              <i className="demo-icon  icon-google" />
-            </div>
+          {
+            (stage === 'signin' || stage === 'login')
+            &&
+            <>
+              <p className='size-10-8f mt-35'>{stage ? 'Or Signup With' : 'Or Login With'}</p>
 
-            {!window.ReactNativeWebView
-              &&
-              <GoogleLogin
-                clientId={clientId}
-                buttonText=""
-                onSuccess={googleSuccess}
-                onFailure={googleFailure}
-                cookiePolicy={'single_host_origin'}
-                className='google-btn'
-              />}
-          </div>
+              <div className='socials'>
+                <div onClick={mobileAppGoogleLogin} className='icon-container'>
+                  <i className="demo-icon  icon-google" />
+                </div>
+
+                {!window.ReactNativeWebView
+                  &&
+                  <GoogleLogin
+                    clientId={clientId}
+                    buttonText=""
+                    onSuccess={googleSuccess}
+                    onFailure={googleFailure}
+                    cookiePolicy={'single_host_origin'}
+                    className='google-btn'
+                  />}
+              </div>
+            </>
+          }
+
+
+
 
           <p className='t-and-c'>By creating an account means you're okay with
             <span
