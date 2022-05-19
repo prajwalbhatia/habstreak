@@ -6,6 +6,7 @@ import {
     EMPTY_ERROR,
     PAYMENT_REQUEST,
     SIGNUP_FAIL,
+    VERIFY_EMAIL,
     PAYMENT_REQUEST_FAIL
 } from '../constants/action-type';
 

@@ -458,7 +458,7 @@ function Streak(props) {
                                         );
                                     })
                                     :
-                                    <div className='center-items trophy-container'>
+                                    <div className='center-items trophy-container-no-hover'>
                                         <i className="demo-icon icon-flag" />
                                     </div>
 

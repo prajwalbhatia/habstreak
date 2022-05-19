@@ -5,6 +5,22 @@
     //  top: 0;
     //  left: 0;
     border: 2px solid var(--primaryColor);
+    min-height: 80vh;
+    min-width: 80vw;
+    position: relative;
+
+
+  }
+
+  .player-shimmer {
+    animation-duration: 2.2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: shimmer;
+    animation-timing-function: linear;
+    background: #ddd;
+    background: linear-gradient(to right, #F6F6F6 8%, #F0F0F0 18%, #F6F6F6 33%);
+    // background-size: 1200px 100%;
   }
 
   .play-pause-icon {
@@ -129,15 +145,14 @@
         align-items: center;
         height: 70rem;
 
-        .play-icon
-        {
-          font-size: 50px;
+
+        .play-icon {
+          font-size: 400%;
           color: var(--primaryColor);
         }
 
-        .full-screen-icon
-        {
-          font-size: 20px;
+        .full-screen-icon {
+          font-size: 250%;
           color: var(--primaryColor);
         }
       }

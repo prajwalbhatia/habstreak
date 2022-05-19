@@ -5,13 +5,14 @@ import {
     SIGNIN_FAIL,
     PAYMENT_REQUEST,
     SIGNUP_FAIL,
+    VERIFY_EMAIL,
     EMPTY_ERROR
 } from '../constants/action-type';
 
 const initialState = {
     authData: JSON.parse(localStorage.getItem('profile')),
     error: '',
-    paymentData: {}
+    paymentData: {},
 }
 
 const userReducer = (state = initialState, action) => {

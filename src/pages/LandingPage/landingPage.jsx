@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-
+import { ClipLoader } from "react-spinners";
 
 //Component 
 import { PrimaryButton } from "components/button/button";
@@ -36,6 +36,8 @@ function LandingPage() {
   const [selectedNav, setSelectedNav] = useState('home');
   const [playIcon, setPlayIcon] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [playerReady, setPlayerReady] = useState(false);
+  const [url, setUrl] = useState(null)
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -44,20 +46,20 @@ function LandingPage() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   //If we have a user in local storage
-  //   //and it is not verified then we have to clear
-  //   //local storage
-  //   const user = JSON.parse(localStorage.getItem('profile'));
-  //   if(user)
-  //   {
-  //     const isVerified = user?.result?.verified;
-  //     if(!isVerified)
-  //     {
-  //         localStorage.clear();
-  //     }
-  //   }
-  // } , [])
+  useEffect(() => {
+    //If we have a user in local storage
+    //and it is not verified then we have to clear
+    //local storage
+    const user = JSON.parse(localStorage.getItem('profile'));
+    if (user) {
+      const isVerified = user?.result?.verified;
+      if (!isVerified) {
+        localStorage.clear();
+        window.location.reload();
+      }
+    }
+
+  }, [])
 
   const handleScroll = (e) => {
     let scroll = window.scrollY;
@@ -94,7 +96,7 @@ function LandingPage() {
           <section id="hero" className='hero-section padding-global d-flex justify-space-between'>
             <div className='hero-container'>
               <h1 className='h1-50'>Get things done and reward yourself</h1>
-              <p className='p-18'>Are you tired of starting the things and dropping i in between??? Not anymore, try habstreak, record your task and reward yourself on reaching milestones</p>
+              <p className='p-18'>Are you tired of starting the things and dropping in between??? Not anymore, try habstreak, record your task and reward yourself on reaching milestones</p>
               <div className='buttons d-flex'>
                 <PrimaryButton
                   name={'Get Started'}
@@ -186,48 +188,60 @@ function LandingPage() {
                     width="100%"
                     height="100%"
                     playing={playIcon}
-                    className='react-player'
+                    className={playerReady ? 'react-player' : 'react-player player-shimmer'}
+                    onReady={() => {
+                      setPlayerReady(true);
+                    }}
+                    onStart={() => {
+                      setPlayerReady(false);
+                    }}
                   />
-
-                  <div className='fullscreen-icon'
-                    onClick={() => {
-                      screenfull.toggle(playerContainerRef.current)
-                      console.log('TOGGLE', screenfull.isFullscreen)
-
-                      setIsFullScreen(!isFullScreen);
-                      
-                      // }
-                    }}>
-                    {
-                      isFullScreen
-                        ?
-                        <i className="demo-icon icon-fullscreen-exit full-screen-icon" />
-                        :
-                        <i className="demo-icon icon-fullscreen full-screen-icon" />
-                    }
-                  </div>
+                    
 
 
-                  <div className='play-pause-icon'
-                    onClick={() => {
-                      setPlayIcon(!playIcon)
-                    }}>
-                    {
-                      !playIcon
-                        ?
-                        <i className="demo-icon icon-play play-icon" />
-                        :
-                        <i className="demo-icon icon-pause play-icon" />
-                    }
-                  </div>
+                  {
+                    playerReady
+                    &&
+                    <>
+                      <div className='fullscreen-icon'
+                        onClick={() => {
+                          screenfull.toggle(playerContainerRef.current)
+                          console.log('TOGGLE', screenfull.isFullscreen)
+
+                          setIsFullScreen(!isFullScreen);
+
+                          // }
+                        }}>
+                        {
+                          isFullScreen
+                            ?
+                            <i className="demo-icon icon-fullscreen-exit full-screen-icon" />
+                            :
+                            <i className="demo-icon icon-fullscreen full-screen-icon" />
+                        }
+                      </div>
+
+
+                      <div className='play-pause-icon'
+                        onClick={() => {
+                          setPlayIcon(!playIcon)
+                        }}>
+                        {
+                          !playIcon
+                            ?
+                            <i className="demo-icon icon-play play-icon" />
+                            :
+                            <i className="demo-icon icon-pause play-icon" />
+                        }
+                      </div>
+                    </>
+                    
+                  }
                 </div>
 
 
               </div>
-              {/* <div style={{ position: 'relative' }}>
-                <Video />
 
-              </div> */}
             </div>
           </div>
         </section>

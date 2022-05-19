@@ -50,7 +50,6 @@ function Account(props) {
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [showPassword, setShowPassword] = useState(false);
   const [stage, setStage] = useState('login');
-  console.log('🚀 ~ file: account.jsx ~ line 52 ~ Account ~ stage', stage);
   const [formData, setFormData] = useState(initialState);
   const [errMsg, setErrMsg] = useState({ email: '' });
   const [successMsg, setSuccessMsg] = useState({});
