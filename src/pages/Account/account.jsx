@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useHistory, useLocation } from 'react-router-dom'
 
@@ -38,6 +38,10 @@ const initialState = {
 }
 
 function Account(props) {
+  const otp2ref = useRef();
+  const otp3ref = useRef();
+  const otp4ref = useRef();
+
   //HOOKS
   const dispatch = useDispatch();
   const history = useHistory();
@@ -49,6 +53,7 @@ function Account(props) {
   //STATES
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [stage, setStage] = useState('login');
   const [formData, setFormData] = useState(initialState);
   const [errMsg, setErrMsg] = useState({ email: '' });
@@ -81,15 +86,16 @@ function Account(props) {
     else if (location?.state?.jumpTo === 'login') {
       setStage('login');
     }
-    // delete location.state.jumpTo
   }, [location])
 
   useEffect(() => {
     if (authData && stage === 'signin') {
-      setStage('verify')
+      if (authData?.result?.verified)
+        history.push('/dashboard');
+      else
+        setStage('verify')
     }
-    else if (authData && stage === 'login') {
-      console.log('AUTH DATA', authData)
+    else if (authData && (stage === 'login')) {
       if (authData?.result?.verified)
         history.push('/dashboard');
       else
@@ -169,6 +175,19 @@ function Account(props) {
   }
 
   const handleChange = (e) => {
+    if (e.target.name.includes('otp')) {
+      if (e.target.name === 'otp1' && e.target.value.length > 0)
+        otp2ref.current.focus()
+      else if (e.target.name === 'otp2' && e.target.value.length > 0)
+        otp3ref.current.focus()
+      else if (e.target.name === 'otp3' && e.target.value.length > 0)
+        otp4ref.current.focus()
+      else if (e.target.name === 'otp4' && e.target.value.length > 0)
+        otp4ref.current.blur()
+
+    }
+
+
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
@@ -185,6 +204,10 @@ function Account(props) {
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
+  }
+
+  const toggleConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   }
 
   const validation = (e) => {
@@ -411,13 +434,17 @@ function Account(props) {
               lable={'CONFIRM PASSWORD'}
               uid={'confirmPassword'}
               value={formData['confirmPassword']}
-              type={"password"}
+              type={showConfirmPassword ? "text" : "password"}
               containerClass={'mt-25'}
               onChange={handleChange}
               onBlur={validation}
               errMsg={errMsg['confirmPassword']}
               successMsg={successMsg['confirmPassword']}
-              icon={<i className="demo-icon icon-lock size-16-8f c-pointer" />}
+              icon={
+                <i
+                  onClick={toggleConfirmPassword}
+                  className="demo-icon icon-lock size-16-8f c-pointer"
+                />}
             />
           }
 
@@ -442,6 +469,8 @@ function Account(props) {
                 placeholder={'X'}
                 // lable={'CONFIRM PASSWORD'}
                 uid={'otp2'}
+                // ref={otp2ref}
+                reference={otp2ref}
                 value={formData['otp2']}
                 type={"string"}
                 onChange={handleChange}
@@ -454,6 +483,7 @@ function Account(props) {
 
               <InputElement
                 placeholder={'X'}
+                reference={otp3ref}
                 // lable={'CONFIRM PASSWORD'}
                 uid={'otp3'}
                 value={formData['otp3']}
@@ -470,6 +500,7 @@ function Account(props) {
                 placeholder={'X'}
                 // lable={'CONFIRM PASSWORD'}
                 uid={'otp4'}
+                reference={otp4ref}
                 value={formData['otp4']}
                 type={"string"}
                 onChange={handleChange}

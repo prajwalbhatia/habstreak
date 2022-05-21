@@ -5,8 +5,8 @@
     //  top: 0;
     //  left: 0;
     border: 2px solid var(--primaryColor);
-    min-height: 80vh;
-    min-width: 80vw;
+    // min-height: 80vh;
+    min-width: 50vw;
     position: relative;
 
 
@@ -168,7 +168,8 @@
       margin-top: 10em;
 
       .price-box {
-        height: 80rem;
+        // height: 80rem;
+        height: auto;
         min-width: 35rem;
         border-radius: 2rem;
         box-shadow: 0px .3rem .6rem var(--boxShadow);
@@ -489,6 +490,9 @@
 
 @media only screen and (max-width : 1410px) {
   .landing-page {
+    .react-player {
+      min-width: 80vw;
+    }
 
     .guide-section {
       .right-section {
@@ -509,6 +513,7 @@
 
   /* Styles */
   .landing-page {
+    
     overflow: hidden;
 
     .padding-global {
@@ -527,14 +532,8 @@
   }
 }
 
-
-
-
-
-
 @media only screen and (max-width : 800px) {
   .landing-page {
-
     .guide-section {
       .right-section {
         margin-left: 0rem;

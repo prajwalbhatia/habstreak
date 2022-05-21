@@ -164,18 +164,20 @@ function Table(props) {
         return (
           <div
             onClick={() => {
-              history.push({
-                pathname: `/streak/${data[headingData.uid].id}`,
-                state: {
-                  from: 'Reward',
-                  status: data[headingData.uid].state
-                },
+              if (data[headingData.uid]?.title) {
+                history.push({
+                  pathname: `/streak/${data[headingData.uid].id}`,
+                  state: {
+                    from: 'Reward',
+                    status: data[headingData.uid].state
+                  },
 
-              });
+                });
+              }
             }}
             key={index}
             className="s-14-rm-pr table-data c-pointer" >
-            {data[headingData.uid].title}
+            {data[headingData.uid]?.title || '-'}
           </div >
         )
       default:
@@ -274,7 +276,7 @@ function Table(props) {
                         ?
                         (dataInner.running === '--' ? '--' : `${dataInner.running} running`)
                         :
-                        `${dataInner?.streak?.title}`
+                        `${dataInner?.streak?.title || '-'}`
                     }
                   </span>
 
@@ -306,7 +308,7 @@ function Table(props) {
                           </div>
                           <div className='d-flex mt-10'>
                             <span className='circle mr-10'></span>
-                            <span className='rob-med-14-black '>{`Days left: ${dataInner.running} Days`}</span>
+                            <span className='rob-med-14-black '>{dataInner.running === '-' ? `Days left:  ${dataInner.running}` : `Days left:  ${dataInner.running} Days`}</span>
                           </div>
 
                           <div className='d-flex mt-10'>
@@ -318,24 +320,26 @@ function Table(props) {
                   </div>
 
                   <div className='d-flex table-card-btns mt-20'>
-                    <OutlinedPrimaryButton
-                      name={'Edit'}
-                      click={(e) => editRow(e, dataInner)}
-                      btnContainerClass={'mr-10'}
-                      btnClass={'small-screen-btn'}
-                    />
-
                     {
                       currentTab !== 'Unfinished'
                         ?
                         <OutlinedPrimaryButton
-                          name={'Delete'}
-                          click={(e) => deleteRow(e, dataInner)}
-                          btnClass={'small-screen-btn danger-btn'}
+                          name={'Edit'}
+                          click={(e) => editRow(e, dataInner)}
+                          btnContainerClass={'mr-10'}
+                          btnClass={'small-screen-btn'}
                         />
                         :
                         null
                     }
+
+
+                    <OutlinedPrimaryButton
+                      name={'Delete'}
+                      click={(e) => deleteRow(e, dataInner)}
+                      btnClass={'small-screen-btn danger-btn'}
+                    />
+
                   </div>
                 </div>
               )

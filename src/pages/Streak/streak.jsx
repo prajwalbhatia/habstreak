@@ -146,7 +146,8 @@ function Streak(props) {
    * @param {Object} streak - data we want to update  
    */
     const updateStreak = (streak) => {
-        dialogForCreateAndUpdateStreak('update', streak, streak._id);
+        if (streak?.tag !== 'unfinished')
+            dialogForCreateAndUpdateStreak('update', streak, streak._id);
     }
 
     const checkingStatusForStreak = (date) => {
@@ -283,12 +284,16 @@ function Streak(props) {
                 <div className='d-flex flex-1 justify-space-between detail-head-container'>
                     <h3 className='jos-18-primary'>{streak[0]?.title}</h3>
                     <div className='btn-container'>
-                        <OutlinedPrimaryButton
-                            name={'EDIT'}
-                            click={() => updateStreak(streak[0])}
-                            btnContainerClass="okay-btn"
-                            btnClass=''
-                        />
+                        {
+                            streak[0]?.tag !== 'unfinished'
+                            &&
+                            <OutlinedPrimaryButton
+                                name={'EDIT'}
+                                click={() => updateStreak(streak[0])}
+                                btnContainerClass="okay-btn"
+                                btnClass=''
+                            />
+                        }
                     </div>
                 </div>
 
@@ -378,54 +383,7 @@ function Streak(props) {
                                     );
                                 })
                             }
-
                         </div>
-                        {/* 
-                        <div className='d-flex date-circles'>
-
-                            {
-                                progressData.daysArr.map((day, index) => {
-                                    return (
-                                        <div key={index}>
-                                            <div
-                                                key={index} className='center-items back-circle'
-                                                style={
-                                                    index <
-                                                        (streak[0]?.tag === 'finished'
-                                                            ?
-                                                            streakDetail.length
-                                                            :
-                                                            streakDetail.length - 1
-                                                        )
-                                                        ?
-                                                        { background: 'var(--primaryColor)' }
-                                                        :
-                                                        {}}
-                                            >
-                                                <div
-                                                    className='center-items circle'
-                                                    style={index >=
-                                                        (streak[0]?.tag === 'finished'
-                                                            ?
-                                                            streakDetail.length
-                                                            :
-                                                            streakDetail.length - 1
-                                                        )
-                                                        ?
-                                                        { background: '#E8EEF2', minWidth: '4rem', height: '4rem' }
-                                                        :
-                                                        {}}
-                                                >
-                                                    <span className='rob-med-12-black'>{day}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            }
-
-
-                        </div> */}
                     </div>
 
                     <div className='progress-container'>
@@ -466,7 +424,7 @@ function Streak(props) {
                         </div>
 
                         <div className='center-items mt-20'>
-                            <span className='rob-med-10-primary'>Come On! You can Do It.</span>
+                            <span className='rob-med-10-primary'>{streak[0]?.tag === 'unfinshed' ? 'Come On! You can Do It.' : 'Better Luck next time !!'}</span>
                         </div>
                     </div>
                 </div>

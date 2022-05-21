@@ -326,7 +326,7 @@ function StreakList(props) {
     }
 
     else if (actionObj.actionType === 'navigate') {
-      if (currentTab !== 'Unfinished') {
+      // if (currentTab !== 'Unfinished') {
         history.push({
           pathname: `/streak/${actionObj.data._id}`,
           state: {
@@ -335,7 +335,7 @@ function StreakList(props) {
           },
 
         });
-      }
+      // }
     }
   }
 

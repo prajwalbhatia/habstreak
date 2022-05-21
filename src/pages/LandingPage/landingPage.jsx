@@ -193,7 +193,7 @@ function LandingPage() {
                       setPlayerReady(true);
                     }}
                     onStart={() => {
-                      setPlayerReady(false);
+                      // setPlayerReady(false);
                     }}
                   />
                     
