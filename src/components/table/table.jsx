@@ -251,7 +251,7 @@ function Table(props) {
     const data = _cloneDeep(tableData);
     let val = 0;
     return (
-      <div className='mt-30 d-flex o-scroll table-card-container'>
+      <div className='d-flex o-scroll table-card-container'>
 
         {
           data.length > 0

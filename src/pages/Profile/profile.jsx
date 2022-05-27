@@ -253,7 +253,7 @@ function Profile(props) {
                             <span className='rob-reg-14-black'>Yes</span>
                           </div>
 
-                          <div className='mt-20 plan-info d-flex '>
+                          <div className='mt-20 plan-info d-flex mb-20'>
                             <span className='rob-reg-14-black'>Recent Activities</span>
                             <span className='rob-reg-14-black'>No</span>
                           </div>
