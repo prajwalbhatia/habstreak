@@ -11,11 +11,19 @@ import { TextInputElement, InputElement } from "components/form-elements/form-el
 import "../../index.css";
 import './landingPage.css';
 
-//Redux
 import { useHistory } from 'react-router-dom';
 
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+
+//Actions
+import {
+  sendMessage as sendSupportMessage,
+  emptyError
+} from "redux/actions/support"
+
 //UTILITIES
-import { jumpToAccount } from "utilities/index";
+import { jumpToAccount, dialogForError, openInNewTab } from "utilities/index";
 
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
@@ -28,6 +36,10 @@ import screenfull from 'screenfull';
 
 function LandingPage() {
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  let error = useSelector((state) => state.user.error);
+
 
   //REF
   const playerContainerRef = useRef();
@@ -36,6 +48,9 @@ function LandingPage() {
   const [selectedNav, setSelectedNav] = useState('home');
   const [playIcon, setPlayIcon] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [errMsg, setErrMsg] = useState({ email: '' });
+  const [successMsg, setSuccessMsg] = useState({});
+  const [formData, setFormData] = useState({});
   const [playerReady, setPlayerReady] = useState(false);
   const [url, setUrl] = useState(null)
 
@@ -45,6 +60,13 @@ function LandingPage() {
       window.removeEventListener('scroll', handleScroll);
     }
   }, []);
+
+  useEffect(() => {
+    if (error.length > 0) {
+      dialogForError(error);
+      dispatch(emptyError());
+    }
+  }, [dispatch, error])
 
   useEffect(() => {
     //If we have a user in local storage
@@ -77,6 +99,56 @@ function LandingPage() {
     else {
       document.getElementById(e.target.getAttribute('data-value')).scrollIntoView({ behavior: 'smooth' });
       setSelectedNav(e.target.getAttribute('data-value'));
+    }
+  }
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const validation = (e) => {
+    //EMAIL VALIDATION
+    if (e.target.name === 'email') {
+      if (!formData[e.target.name]) {
+        setErrMsg({ ...errMsg, [e.target.name]: 'Email can\'t be empty' });
+      }
+      else if (typeof formData[e.target.name] !== "undefined") {
+        let lastAtPos = formData[e.target.name].lastIndexOf("@");
+        let lastDotPos = formData[e.target.name].lastIndexOf(".");
+
+        if (
+          !(
+            lastAtPos < lastDotPos &&
+            lastAtPos > 0 &&
+            formData[e.target.name].indexOf("@@") == -1 &&
+            lastDotPos > 2 &&
+            formData[e.target.name].length - lastDotPos > 2
+          )
+        ) {
+          setErrMsg({ ...errMsg, [e.target.name]: 'Email is not valid' });
+        }
+        else {
+          delete errMsg[[e.target.name]];
+          setErrMsg({ ...errMsg });
+          setSuccessMsg({ ...successMsg, [e.target.name]: 'Looks Great!' });
+        }
+      }
+    }
+  }
+
+  const sendMessage = () => {
+    console.log('SEND MESSAGE', errMsg)
+    if (Object.keys(formData).length === 2 && formData.email.length > 0 && formData.message.length > 0 && Object.keys(errMsg).length === 0) {
+      dispatch(sendSupportMessage(formData));
+      setTimeout(() => {
+        setFormData({ email: "", message: "" });
+        setErrMsg({ email: '' });
+        setSuccessMsg({ email: 'Message sent' })
+      }, 1000);
+
+      setTimeout(() => {
+        setSuccessMsg({ email: '' })
+      }, 2000);
     }
   }
 
@@ -196,7 +268,7 @@ function LandingPage() {
                       // setPlayerReady(false);
                     }}
                   />
-                    
+
 
 
                   {
@@ -235,7 +307,7 @@ function LandingPage() {
                         }
                       </div>
                     </>
-                    
+
                   }
                 </div>
 
@@ -352,12 +424,10 @@ function LandingPage() {
               <p className='mt-20'>When you will rewards yourself on small small milestones than you will feel exciting and motivated to complete that task and you will not break the streak.</p>
 
               <div className='socials mt-30'>
-                <i className="demo-icon icon-facebook mr-20 contact-icon" />
-                <i className="demo-icon icon-instagram mr-20 contact-icon" />
-                <i className="demo-icon icon-twitter contact-icon" />
-
-                <i className="demo-icon icon-fullscreen contact-icon" />
-
+                {/* <i className="demo-icon icon-facebook mr-20 contact-icon" /> */}
+                {/* <i className="demo-icon icon-instagram mr-20 contact-icon" /> */}
+                <i onClick={() => openInNewTab('https://twitter.com/bhatia_prajwal?t=m8OrMkj-hsks8OjwchvRqQ&s=09')}
+                  className="demo-icon icon-twitter contact-icon" />
               </div>
             </div>
             <div className='middle-section'>
@@ -368,26 +438,31 @@ function LandingPage() {
 
               <TextInputElement
                 placeholder={'Write message'}
-                onChange={(e) => {
-                  // setDesc({ ...desc, [detail._id]: e.target.value })
-                }}
-                value={''}
+                uid={'message'}
+                onChange={handleChange}
+                value={formData['message']}
                 type={'text'}
                 containerClass={'mt-20'}
               />
 
 
               <InputElement
-                placeholder={'Email id'}
+                placeholder={'name@gmail.com'}
+                uid={'email'}
                 type="text"
+                value={formData['email']}
                 containerClass={'mt-20'}
-              // value={formData?.[data.uid]}
-              // onChange={}
+                onBlur={validation}
+                errMsg={errMsg['email']}
+                successMsg={successMsg['email']}
+                icon={<i className="demo-icon icon-email size-16-8f" />}
+                onChange={handleChange}
+
               />
 
               <PrimaryButton
                 name={'Send'}
-                click={() => { }}
+                click={sendMessage}
                 btnContainerClass="d-flex justify-end"
                 btnClass='header-btn landing-login-btn send-btn mt-30'
               />

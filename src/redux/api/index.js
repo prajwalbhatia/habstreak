@@ -11,6 +11,8 @@ import {
 
 const API = axios.create({ baseURL: process.env.REACT_APP_ENV === 'development' ? 'http://localhost:5000' : 'https://habstreak.herokuapp.com/' });
 
+// const API = axios.create({ baseURL: process.env.REACT_APP_ENV === 'development' ? 'http://192.168.1.43:5000' : 'https://habstreak.herokuapp.com/' });
+
 
 API.interceptors.request.use(async (req) => {
   if (localStorage.getItem('profile')) {

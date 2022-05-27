@@ -209,7 +209,7 @@ function Profile(props) {
 
                     <div className='mt-20'>
                       <span className='rob-reg-12-grey mr-10'>Email:</span><span className='rob-reg-12-black mr-10'>{user?.result?.email}</span>
-                      {/* su<span className='rob-reg-12-primary'>Verified</span> */}
+                      {user?.result?.verified && <span className='rob-reg-12-primary'>Verified</span>}
                     </div>
 
                   </div>

@@ -9,17 +9,15 @@
 }
 
 .streak-list-inner-container {
-  height: calc(100vh - (6rem + 5rem + 5rem + 3rem + 6rem));
-  margin-top: 3em;
-
-  
-
+  height: calc(100vh - (6rem + 5rem + 5rem + 3rem));
+  margin-top: 2em;
+  overflow: auto;
 }
 
 
 //MEDIA QUERIES
-@media only screen and (max-width: 1020px) {
-
-  
-
+@media only screen and (max-width: 860px) {
+  .streak-list-inner-container {
+    height: calc(100vh - (40rem));
+  }
 }

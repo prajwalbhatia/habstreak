@@ -102,7 +102,14 @@ function Header(props) {
 
 
                     {showListing && <div className="menu-list">
-                        <div className="d-flex center-items profile-container">
+                        <div
+                            className="d-flex center-items profile-container c-pointer"
+                            onClick={() => {
+                                history.push({
+                                    pathname: `/profile`,
+                                })
+                            }}
+                        >
                             <div
                                 className="profile d-flex center-items"
                                 style={{

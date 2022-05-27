@@ -1,6 +1,8 @@
 .profile-inner-container {
   height: calc(100vh - (6rem + 5rem + 5rem));
-  padding-top: 3em;
+  margin-top: 2em;
+  flex-wrap: wrap;
+  overflow: auto;
 
   .left-container,
   .right-container {
@@ -8,6 +10,7 @@
     border-radius: 2rem;
     margin-right: 3em;
     padding: 3em;
+    min-width: 40rem;
   }
 
   .left-container {
@@ -81,4 +84,28 @@
     }
   }
 
+}
+
+
+
+@media only screen and (max-width: 1230px) {
+  .profile-inner-container {
+    .left-container {
+      margin-right: 0;
+      min-width: none;
+    }
+
+    .right-container {
+      margin-top: 2rem;
+      min-width: none;
+
+    }
+  }
+}
+
+
+@media only screen and (max-width: 860px) {
+ .profile-inner-container {
+   height: calc(100vh - (33rem));
+ }
 }

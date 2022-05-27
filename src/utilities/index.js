@@ -93,7 +93,6 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
     btnClickHandler: (data) => {
       data.dateFrom = moment(data.dateFrom).startOf('day').toString();
       data.dateTo = moment(data.dateTo).endOf('day').toString();
-      console.log('🚀 ~ file: index.js ~ line 94 ~ dialogForCreateAndUpdateStreak ~ data', data);
 
       if (data.type === "primary") {
         delete data.type
@@ -315,6 +314,8 @@ export const dialogForUpgrade = (history) => {
       if (data.type === "primary") {
         history.push('/profile');
       }
+      else  
+        history.push('/dashboard');
       Modal.hide();
     }
   });
@@ -571,4 +572,13 @@ export const jumpToAccount = (jumpTo, history) => {
     pathname: `/account`,
     state: { jumpTo },
   });
+}
+
+/**
+ * 
+ * @param {String} url
+ */
+export const openInNewTab = (url) => {
+  const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+  if (newWindow) newWindow.opener = null
 }

@@ -106,8 +106,6 @@ function Account(props) {
   useEffect(() => {
     if (stage)
       setIsValid(false);
-    // else
-    //   setIsValid(true);
   }, [stage]);
 
 
@@ -175,6 +173,7 @@ function Account(props) {
   }
 
   const handleChange = (e) => {
+    //IN CASE OF FILLING OTP
     if (e.target.name.includes('otp')) {
       if (e.target.name === 'otp1' && e.target.value.length > 0)
         otp2ref.current.focus()
@@ -184,9 +183,7 @@ function Account(props) {
         otp4ref.current.focus()
       else if (e.target.name === 'otp4' && e.target.value.length > 0)
         otp4ref.current.blur()
-
     }
-
 
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -454,63 +451,42 @@ function Account(props) {
             <div style={{ display: 'flex' }}>
               <InputElement
                 placeholder={'X'}
-                // lable={'CONFIRM PASSWORD'}
                 uid={'otp1'}
                 value={formData['otp1']}
                 type={"string"}
                 onChange={handleChange}
-                // onBlur={validation}
-                // errMsg={errMsg['confirmPassword']}
-                // successMsg={successMsg['confirmPassword']}
                 containerClass='otp-box mt-25'
               />
 
               <InputElement
                 placeholder={'X'}
-                // lable={'CONFIRM PASSWORD'}
                 uid={'otp2'}
-                // ref={otp2ref}
                 reference={otp2ref}
                 value={formData['otp2']}
                 type={"string"}
                 onChange={handleChange}
-                // onBlur={validation}
-                // errMsg={errMsg['confirmPassword']}
-                // successMsg={successMsg['confirmPassword']}
                 containerClass='otp-box mt-25'
-
               />
 
               <InputElement
                 placeholder={'X'}
                 reference={otp3ref}
-                // lable={'CONFIRM PASSWORD'}
                 uid={'otp3'}
                 value={formData['otp3']}
                 type={"string"}
                 onChange={handleChange}
-                // onBlur={validation}
-                // errMsg={errMsg['confirmPassword']}
-                // successMsg={successMsg['confirmPassword']}
                 containerClass='otp-box mt-25'
-
               />
 
               <InputElement
                 placeholder={'X'}
-                // lable={'CONFIRM PASSWORD'}
                 uid={'otp4'}
                 reference={otp4ref}
                 value={formData['otp4']}
                 type={"string"}
                 onChange={handleChange}
-                // onBlur={validation}
-                // errMsg={errMsg['confirmPassword']}
-                // successMsg={successMsg['confirmPassword']}
                 containerClass='otp-box mt-25'
-
               />
-
             </div>
           }
 
@@ -549,9 +525,6 @@ function Account(props) {
               </div>
             </>
           }
-
-
-
 
           <p className='t-and-c'>By creating an account means you're okay with
             <span

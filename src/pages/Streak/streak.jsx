@@ -41,7 +41,7 @@ function Streak(props) {
     const [progressData, setProgressData] = useState({
         weekDaysArr: [],
         daysArr: [],
-        perc: '0',
+        perc: 0.00,
         rewards: []
     });
 
@@ -389,7 +389,7 @@ function Streak(props) {
                     <div className='progress-container'>
                         <div className='d-flex justify-space-between'>
                             <span className='rob-med-10-primary'>Progress Bar</span>
-                            <span className='rob-med-10-primary'>{`${progressData.perc}% done`}</span>
+                            <span className='rob-med-10-primary'>{progressData?.perc > 100 ? '100% done' : `${progressData?.perc?.toFixed(2)}% done`}</span>
                         </div>
 
                         <div className='prgress-slider'>
@@ -424,7 +424,7 @@ function Streak(props) {
                         </div>
 
                         <div className='center-items mt-20'>
-                            <span className='rob-med-10-primary'>{streak[0]?.tag === 'unfinshed' ? 'Come On! You can Do It.' : 'Better Luck next time !!'}</span>
+                            <span className='rob-med-10-primary'>{streak[0]?.tag === 'unfinshed' ? 'Come On! You can Do It.' : (streak[0]?.tag === 'finished' ? 'Yay!! You have done it' : 'Better Luck next time !!')}</span>
                         </div>
                     </div>
                 </div>

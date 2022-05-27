@@ -4,10 +4,10 @@
 
 .dashboard-inner-container {
   height: calc(100vh - (6rem + 5rem + 5rem));
+  overflow: auto;
+  margin-top: 2em;
 
   .left-container {
-    margin-right: 3em;
-    margin-top: 3em;
     flex: 2;
 
     .task-container {
@@ -370,6 +370,7 @@
     }
 
     .see-all-btn {
+      display: none;
       width: 2.4rem;
       height: 17px;
       border-radius: 0.8rem;
@@ -390,6 +391,7 @@
       cursor: pointer;
 
       .see-all-btn {
+        display: flex;
         visibility: visible;
         opacity: 1;
       }
@@ -423,7 +425,11 @@
         flex-direction: column;
       }
     }
+  }
+}
 
-
+@media only screen and (max-width: 860px) {
+  .dashboard-inner-container {
+    height: calc(100vh - (40rem));
   }
 }

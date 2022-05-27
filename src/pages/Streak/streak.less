@@ -1,7 +1,8 @@
 .streak {
     .streak-details-container {
-        min-height: calc((100vh - (6rem + 5rem + 5rem + 3rem)));
-        margin-top: 3em;
+        height: calc((100vh - (6rem + 5rem + 5rem + 3rem)));
+        margin-top: 2em;
+        overflow: auto;
 
         .left-container {
             width: 50%;
@@ -11,6 +12,7 @@
             flex: 1;
             margin-right: 3em;
             padding: 3em 6em 3em 3em;
+            // overflow: auto;
 
             .day-represent {
                 display: flex;
@@ -171,7 +173,8 @@
                                 width: 37%;
                             }
 
-                            .trophy-container, .trophy-container-no-hover {
+                            .trophy-container,
+                            .trophy-container-no-hover {
                                 position: absolute;
                                 right: 0px;
                                 top: 0;
@@ -204,7 +207,7 @@
                                 transition: all 0.5s ease-in-out;
                                 min-width: 9rem;
                                 border-radius: 1.5rem;
-                                z-index : 1;
+                                z-index: 1;
 
                                 i {
                                     font-size: 1.6rem;
@@ -229,7 +232,7 @@
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
-        height: calc(100vh - 7.2rem);
+        // height: calc(100vh - 7.2rem);
 
         .streak-detail-card {
             margin-top: 1.4em;
@@ -307,7 +310,7 @@
 
         .streak-details-container {
             flex-direction: column-reverse;
-            
+
             // margin-top: calc(var(--headerHeight) * 2 + (3rem * 3));
             .right-container,
             .left-container {
@@ -319,14 +322,26 @@
                     margin-bottom: 0;
                 }
 
-                .performance-container
-                {
+                .performance-container {
                     margin-top: 3em;
                 }
             }
 
             .left-container {
                 margin-top: 3em;
+            }
+        }
+    }
+}
+
+
+@media only screen and (max-width: 860px) {
+    .streak {
+        .streak-details-container {
+            height: calc(100vh - (40rem));
+
+            .left-container {
+                margin-right: 0em;
             }
         }
     }
