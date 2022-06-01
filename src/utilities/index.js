@@ -115,11 +115,10 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
  * @param {Array} streaks - streaks for dropdown options
  */
 export const dialogForCreateAndUpdateReward = (type = 'create', data = {}, rewardId = '', streaks) => {
-
   if (data && size(data) > 0) {
     var dataObj = {
       title: data.title,
-      streakName: data.associated,
+      streakName: data.streak,
       pickDate: moment(data.date).format('YYYY-MM-DD'),
       minDate: new Date(data.streak.dateFrom) > new Date() ? new Date(data.streak.dateFrom) : new Date(),
       maxDate: new Date(data.streak.dateTo)
@@ -314,8 +313,8 @@ export const dialogForUpgrade = (history) => {
       if (data.type === "primary") {
         history.push('/profile');
       }
-      else  
-        history.push('/dashboard');
+      // else  
+        // history.push('/dashboard');
       Modal.hide();
     }
   });

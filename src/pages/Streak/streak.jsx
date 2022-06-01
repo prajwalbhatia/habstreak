@@ -424,7 +424,7 @@ function Streak(props) {
                         </div>
 
                         <div className='center-items mt-20'>
-                            <span className='rob-med-10-primary'>{streak[0]?.tag === 'unfinshed' ? 'Come On! You can Do It.' : (streak[0]?.tag === 'finished' ? 'Yay!! You have done it' : 'Better Luck next time !!')}</span>
+                            <span className='rob-med-10-primary'>{!streak[0]?.tag ? 'Come On! You can Do It.' : (  streak[0]?.tag === 'finished' ? 'Yay!! You have done it' : 'Better Luck next time !!')}</span>
                         </div>
                     </div>
                 </div>

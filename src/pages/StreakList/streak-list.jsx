@@ -362,6 +362,7 @@ function StreakList(props) {
                 currentTab={currentTab}
                 action={tableAction}
                 type='Streak'
+                streaksCount={streaks.length}
               />
 
             </div>

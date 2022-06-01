@@ -17,6 +17,7 @@ import "./modal.css";
 
 function Modal(props) {
     const [formData, setFormData] = useState({});
+    console.log('🚀 ~ file: modal.jsx ~ line 20 ~ Modal ~ formData', formData);
     const [showCalendar, setShowCalendar] = useState(false);
     const [modalType, setModalType] = useState('');
 

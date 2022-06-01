@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from "react-router";
 
@@ -8,7 +8,7 @@ import './table.css';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 //CONSTANTS
-import { theme } from "constants/index";
+import { theme, plansFeatures } from "constants/index";
 import { render } from '@testing-library/react';
 
 //COMPONENTS
@@ -18,12 +18,21 @@ import { OutlinedPrimaryButton } from "components/button/button";
 import { useSelector } from "react-redux";
 
 //UTILITIES
-import { dialogForCreateAndUpdateStreak, dialogForCreateAndUpdateReward } from "utilities";
+import { dialogForUpgrade, planDetail, dialogForCreateAndUpdateStreak, dialogForCreateAndUpdateReward } from "utilities";
 
 function Table(props) {
   const { tableHead, tabData, tableData, action, currentTab, type } = props;
+  const [planType, setPlanType] = useState("");
+
   const history = useHistory();
   const streaks = useSelector((state) => state.streak.streaks);
+  const authData = useSelector((state) => state.user.authData);
+
+
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -79,10 +88,15 @@ function Table(props) {
 
   const deleteRow = (e, streak) => {
     e.stopPropagation();
-    action({
-      actionType: 'deleteRow',
-      data: streak
-    })
+    if (planType === "prime") {
+      action({
+        actionType: 'deleteRow',
+        data: streak
+      })
+    }
+    else
+      dialogForUpgrade(history);
+
   }
 
   const editRow = (e, streak) => {
