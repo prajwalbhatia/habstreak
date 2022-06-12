@@ -4,9 +4,11 @@ import {
     REFRESH_TOKEN,
     SIGNIN_FAIL,
     PAYMENT_REQUEST,
+    PAYMENT_REQUEST_EMPTY,
     SIGNUP_FAIL,
     VERIFY_EMAIL,
-    EMPTY_ERROR
+    EMPTY_ERROR,
+    CHECK_USER
 } from '../constants/action-type';
 
 const initialState = {
@@ -28,6 +30,8 @@ const userReducer = (state = initialState, action) => {
             return { ...state, authData: action?.data }
         case PAYMENT_REQUEST:
             return { ...state, paymentData: action?.data }
+        case PAYMENT_REQUEST_EMPTY:
+            return { ...state, paymentData: {} }
         case LOGOUT:
             localStorage.clear();
             // localStorage.removeItem('profile');

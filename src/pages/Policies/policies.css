@@ -1,1 +1,1 @@
-.policy-main-container{background:#ffe7e1;background:linear-gradient(90deg, #ffe7e1 19%, #fff 100%)}.policy-main-container .policy-container{margin-top:3em}.policy-main-container.padding-global{padding-left:10em;padding-right:10em;padding-top:3em;height:100vh}
+.policy-main-container{background:#ffe7e1;background:linear-gradient(90deg, #ffe7e1 19%, #fff 100%)}.policy-main-container .policy-container{margin-top:3em}.policy-main-container.padding-global{padding-left:10em;padding-right:10em;padding-top:3em;min-height:100vh;height:auto}

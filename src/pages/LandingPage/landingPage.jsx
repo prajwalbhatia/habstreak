@@ -387,12 +387,12 @@ function LandingPage() {
               <div className='flex-auto'>
                 <div className='mt-20 plan-info d-flex '>
                   <span className='rob-reg-14-black'>No of streaks</span>
-                  <span className='rob-reg-14-black'>Unlimited</span>
+                  <span className='rob-reg-14-black'>100</span>
                 </div>
 
                 <div className='mt-20 plan-info d-flex '>
                   <span className='rob-reg-14-black'>No of rewards</span>
-                  <span className='rob-reg-14-black'>Unlimited</span>
+                  <span className='rob-reg-14-black'>100</span>
                 </div>
 
                 <div className='mt-20 plan-info d-flex '>

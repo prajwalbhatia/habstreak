@@ -7,6 +7,7 @@ import {
     PAYMENT_REQUEST,
     SIGNUP_FAIL,
     VERIFY_EMAIL,
+    PAYMENT_REQUEST_EMPTY,
     PAYMENT_REQUEST_FAIL
 } from '../constants/action-type';
 
@@ -14,13 +15,14 @@ import {
     createUser,
     signIn,
     signUp,
-    verifyEmail
+    verifyEmail,
 } from '../api/user';
 
 import {
     logout,
     updateUser,
     paymentRequest,
+    checkUserExist
 } from '../api';
 
 export const emptyError = () => async (dispatch) => {
@@ -124,6 +126,14 @@ export const createPaymentRequest = () => async (dispatch) => {
         // const action = { type: PAYMENT_REQUEST_FAIL, payload: error.response.data.error.message }
         // dispatch(action);
     }
+}
 
+export const emptyPaymentData = () => async (dispatch) => {
+    try {
+        const action = { type: PAYMENT_REQUEST_EMPTY }
+        dispatch(action);
+    } catch (error) {
+        console.log(error.response.data.error.message);
+    }
 }
 

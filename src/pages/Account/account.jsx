@@ -15,7 +15,7 @@ import {
   signup,
   signin,
   emptyError,
-  verifyemail
+  verifyemail,
 } from "redux/actions/user";
 
 //CSS
@@ -29,6 +29,11 @@ import { ReactComponent as Login } from './img/Login.svg';
 
 //UTILITIES
 import { dialogForError } from "utilities/index";
+
+//API
+import {
+  checkUserExist
+} from '../../redux/api';
 
 const initialState = {
   fullName: '',
@@ -47,6 +52,8 @@ function Account(props) {
   const history = useHistory();
   const location = useLocation();
   const authData = useSelector((state) => state.user.authData);
+  const { checkUser } = useSelector((state) => state.user);
+
   let error = useSelector((state) => state.user.error);
   //HOOKS
 
@@ -115,11 +122,20 @@ function Account(props) {
         setIsValid(true);
     }
   }, [formData]);
+
+
   //USE EFFECTS
 
   //FUNCTIONS
   const googleSuccess = async (res) => {
     const result = res?.profileObj;
+    const userData = await checkUserExist({ email: result?.email });
+
+    if (userData === true) {
+      dialogForError('User already exist');
+      return;
+    }
+
     const token = res?.tokenId;
 
     try {

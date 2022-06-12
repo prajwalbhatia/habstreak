@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 import { useLocation } from 'react-router-dom';
 
 //Redux
@@ -31,7 +30,8 @@ import {
   isSame,
   activeTab,
   rewardTabData,
-  dialogForError
+  dialogForError,
+  planDetail
 } from 'utilities';
 
 //COMPONENTS
@@ -39,7 +39,7 @@ import Frame from "../../components/frame/frame";
 import Table from "components/table/table.jsx";
 
 //CONSTANTS
-import { rewardListTableHeadings } from "constants/index";
+import { rewardListTableHeadings, plansFeatures } from "constants/index";
 
 function RewardList(props) {
   const dispatch = useDispatch();
@@ -54,9 +54,13 @@ function RewardList(props) {
 
   const [rewardsEarned, setRewardsEarned] = useState([]);
   const [rewardsToBuy, setRewardsToBuy] = useState([]);
+  const [planType, setPlanType] = useState("");
+
 
   const rewardsData = useSelector((state) => state.reward.rewards);
   const rewardsClone = useSelector((state) => state.reward.rewards);
+  const authData = useSelector((state) => state.user.authData);
+
   let { error, loading } = useSelector((state) => state.reward);
 
 
@@ -100,8 +104,19 @@ function RewardList(props) {
   }, []);
 
   useEffect(() => {
-    setRewards([...rewardsData]);
+    if (planType === "prime") {
+      setRewards([...rewardsData]);
+    }
+    else {
+      let limitedData = [...rewardsData].splice(0, plansFeatures['free'].rewards);
+      setRewards([...limitedData]);
+    }
   }, [rewardsData])
+
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
 
   useEffect(() => {
     if (searchText == '') {

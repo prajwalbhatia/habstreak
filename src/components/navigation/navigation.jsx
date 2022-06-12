@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { AiFillHeart } from "react-icons/ai";
-import { IconContext } from "react-icons"
+import React, { useState ,useEffect } from 'react';
 import { useHistory } from "react-router";
 import { useLocation } from 'react-router-dom';
+import { useSelector , useDispatch } from "react-redux";
+
+//Libraries
+import moment from 'moment';
 
 //Navigation list
 import { navigationList, navigationIcons } from './navigationList';
@@ -10,27 +12,54 @@ import { navigationList, navigationIcons } from './navigationList';
 //CSS
 import "./navigation.css";
 import "../../index.css";
-import { useEffect } from 'react';
 
 //IMAGES
 import { ReactComponent as Logo } from 'assests/images/Logo.svg';
 
 //UTILITIES
-import { logoutFun } from 'utilities';
+import { logoutFun, dialogForPlanUpgrade} from 'utilities';
+
+//Actions
+import { updateuser } from "redux/actions/user";
 
 
 function Navigation(props) {
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
+
 
   const [navigation, setNavigation] = useState([...navigationList]);
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
+
+  const authData = useSelector((state) => state.user.authData);
+
+  useEffect(() => {
+    dispatch(updateuser({}, authData.result.email))
+  }, [])
 
 
   useEffect(() => {
     if (localStorage.getItem('navigationList')) {
       const naigationData = JSON.parse(localStorage.getItem('navigationList'));
       setNavigation([...naigationData]);
+    }
+
+    let currentDate = moment().endOf('day').format();
+    let endDate = authData?.result?.endTime;
+
+    let daysLeft = moment(endDate).diff(moment(currentDate), 'days')
+
+    if (moment(currentDate).isAfter(moment(endDate))) {
+      // logoutFun(history, user?.refreshToken)
+      dispatch(updateuser({}, authData.result.email))
+    }
+
+
+    if (daysLeft === 1 && localStorage.getItem('planUpgradeModal') !== '1')
+    {
+      dialogForPlanUpgrade(history);
+      localStorage.setItem('planUpgradeModal' , 1)
     }
   }, []);
 
@@ -114,6 +143,8 @@ function Navigation(props) {
         <div className='personal-detail-container display-none'>
           <h4 className='name'>{user?.result?.name}</h4>
           <h4 className='email'>{user?.result?.email}</h4>
+          <h4 className='prime'>{user?.result?.planType  === "prime" ? user?.result?.planType.toUpperCase() : ""}</h4>
+
         </div>
 
         <div className="navigation-container display-none">

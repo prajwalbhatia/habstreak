@@ -7,9 +7,9 @@ import moment from 'moment';
 //Actions
 import { createStreakData, updateStreakData, deleteStreakData, deleteStreakAndRewardData } from "redux/actions/streak";
 import { createRewardData, updateRewardData, deleteRewardBulk, deleteRewardData } from "redux/actions/reward";
+
 import { size } from "lodash";
 import { logoutCall } from "redux/actions/user";
-
 
 //FUNCTIONS
 export const errorHandler = (error, errorInfo) => {
@@ -260,6 +260,33 @@ export const dialogForMessage = (history) => {
     btnClickHandler: (data) => {
       if (data.type === "primary") {
         history.push('/streak-list');
+      }
+      Modal.hide();
+    }
+  });
+};
+
+export const dialogForPlanUpgrade = (history) => {
+  const contentData =
+    [{
+      eleType: "text",
+      text: 'Your plan will expire today, renew plan to keep enjoying prime features'
+    }]
+
+  Modal.show({
+    title: 'Message',
+    icon: '',
+    primaryButtonText: "Renew Plan",
+    secondaryButtonText: "Cancel",
+
+
+    content: [
+      ...contentData
+    ],
+
+    btnClickHandler: (data) => {
+      if (data.type === "primary") {
+        history.push('/profile');
       }
       Modal.hide();
     }

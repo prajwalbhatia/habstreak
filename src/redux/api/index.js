@@ -65,6 +65,8 @@ export const getRecentActivities = () => API.get(`/recentActivities`);
 //AUTH
 export const logout = (token) => API.post('/user/logout', token);
 
+
+export const checkUserExist = (data) => API.post('/user/check' , data);
 export const updateUser = (userData, email) => API.patch(`/user/${email}`, userData);
 
 //PAYMAENT

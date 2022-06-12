@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
@@ -9,14 +8,9 @@ import { ClipLoader } from "react-spinners";
 //COMPONENTS
 import Frame from "components/frame/frame";
 import { OutlinedPrimaryButton, SecondaryButton } from "components/button/button";
-import { dialogForCreateAndUpdateStreak, perPerDay } from "utilities";
 
 //Actions
-import { getStreaksData } from "redux/actions/streak";
-import { getRewardsData } from "redux/actions/reward";
-import { getRecentActivitiesData } from "redux/actions/recentActivities";
-import { updateuser, createPaymentRequest } from "redux/actions/user";
-
+import { updateuser, createPaymentRequest, emptyPaymentData } from "redux/actions/user";
 
 //CSS
 import './profile.css';
@@ -27,15 +21,13 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, isSameOrBefore, activityTitle, progressFun, isSame, isBefore, planDetail } from 'utilities';
+import { errorHandler, planDetail } from 'utilities';
 
 //CONSTANTS
-import { icons, theme } from "constants/index";
 import { size } from 'lodash';
 
 function Profile(props) {
   const dispatch = useDispatch();
-  const history = useHistory();
   const authData = useSelector((state) => state.user.authData);
   const { paymentData } = useSelector((state) => state.user);
 
@@ -49,9 +41,15 @@ function Profile(props) {
   // const loading = false;
 
   useEffect(() => {
-    if (authData)
+    if (authData) {
       setPlanType(planDetail());
+    }
   }, [authData]);
+
+
+  useEffect(() => {
+    dispatch(updateuser({}, authData.result.email))
+  } ,[])
 
 
   useEffect(() => {
@@ -65,23 +63,34 @@ function Profile(props) {
         "image": process.env.REACT_APP_ENV === 'development' ? "http://localhost:5000/logo.svg" : 'https://habstreak.herokuapp.com/logo.svg',
         "order_id": paymentData.id,
         "handler": function (response) {
+          let startTime = "";
+          let endTime = "";
+
+          if (authData?.result?.startTime && authData?.result?.endTime) {
+            startTime = authData?.result?.startTime;
+            endTime = moment(authData?.result?.endTime).add(31, 'days').endOf('day').format();
+          }
+          else {
+            startTime = moment().startOf('day').format();
+            endTime = moment().add(31, 'days').endOf('day').format();
+          }
+
+
           dispatch(updateuser(
             {
               planType: 'prime',
               orderId: response.razorpay_order_id,
-              paymentId: response.razorpay_payment_id
+              paymentId: response.razorpay_payment_id,
+              startTime,
+              endTime
             }
             , authData.result.email))
 
-          // alert(response.razorpay_payment_id);
-          // alert(response.razorpay_order_id);
-          // alert(response.razorpay_signature)
+
+          localStorage.removeItem('planUpgradeModal')  
+          dispatch(emptyPaymentData())
+
         },
-        // "prefill": {
-        //   "name": "Gaurav Kumar",
-        //   "email": "gaurav.kumar@example.com",
-        //   "contact": "9999999999"
-        // },
       };
       const paymentObject = new window.Razorpay(options);
 
@@ -113,38 +122,6 @@ function Profile(props) {
     }
 
     dispatch(createPaymentRequest());
-
-    // let data;
-
-    // if (process.env.REACT_APP_ENV === 'development')
-    // {
-    //   data = await fetch(
-    //     'http://localhost:5000/razorpay',
-    //     { method: 'POST' })
-    //     .then(res => res.json());
-    // }
-    // else
-    // {
-    //   data = await fetch(
-    //     'https://habstreak.com/razorpay',
-    //     { method: 'POST' })
-    //     .then(res => res.json());
-    // }
-
-
-    // paymentObject.on('payment.failed', function (response) {
-    //   alert(response.error.code);
-    //   alert(response.error.description);
-    //   alert(response.error.source);
-    //   alert(response.error.step);
-    //   alert(response.error.reason);
-    //   alert(response.error.metadata.order_id);
-    //   alert(response.error.metadata.payment_id);
-    // });
-    // document.getElementById('rzp-button1').onclick = function (e) {
-    //   rzp1.open();
-    //   e.preventDefault();
-    // }
   }
 
 
@@ -264,9 +241,9 @@ function Profile(props) {
                       <div className='flex-dir-col flex-auto plan-container mt-20'>
                         <div className='plan-details'>
                           <div className='plan-type'>
-                            <div></div>
                             <div>
                               <h2 className='jos-primary'>Prime</h2>
+                              <div><h3 className='rob-bold-12-primary'>Expires in {moment(authData?.result?.endTime).diff(moment(moment().format()), 'days')} days</h3></div>
                               <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>45</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
                               {/* <span className='jos-primary size-36'>FREE</span> */}
 
@@ -296,17 +273,15 @@ function Profile(props) {
                       </div>
                   }
 
-                  {
-                    planType === 'free' &&
-                    <div className='d-flex plan-btn-container center-items'>
-                      <OutlinedPrimaryButton
-                        name='Change Plan'
-                        click={displayRazorpay}
-                        btnContainerClass="change-plan-btn"
-                        btnClass='h-40'
-                      />
-                    </div>
-                  }
+                  <div className='d-flex plan-btn-container center-items'>
+                    <OutlinedPrimaryButton
+                      name={planType === 'free' ? 'Change Plan' : 'Renew Plan'}
+                      click={displayRazorpay}
+                      btnContainerClass="change-plan-btn"
+                      btnClass='h-40'
+                    />
+                  </div>
+
                 </div>
               </div>
             </>

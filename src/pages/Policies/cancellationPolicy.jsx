@@ -22,8 +22,7 @@ function CancellationPolicy() {
       <div className='policy-container'>
         <h1 className='mt-10'>Cancellations and Refunds</h1>
         <p className='mt-10'>
-          You may cancel your Habstreak Membership at any time for any or no reason. If you have cancelled your Habstreak Membership, you will lose access to all Premium features you enrolled into during your Habstreak Membership the moment you will recieve your refund.
-          For cancellation please email at <strong>prajwal6bhatia@gmail.com</strong> with your email id.
+          Once you have paid for one month membership you will not be able to cancel your menbership for 1 month. After that its your choice, if you want to continue you can pay for next month. Once you have completed your membership month and you don't pay for next month you will only be able to see 2 streaks or 2 rewards as it is in our free plan.
         </p>
       </div>
     </div >

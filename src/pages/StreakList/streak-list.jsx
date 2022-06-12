@@ -35,11 +35,12 @@ import {
   isSameOrBefore,
   isAfter,
   streakTabData,
-  activeTab
+  activeTab,
+  planDetail
 } from 'utilities';
 
 //CONSTANTS
-import { streakListTableHeadings } from "constants/index";
+import { streakListTableHeadings, plansFeatures } from "constants/index";
 
 function StreakList(props) {
   const dispatch = useDispatch();
@@ -56,11 +57,15 @@ function StreakList(props) {
   const [upcoming, setUpcoming] = useState([]);
   const [finished, setFinished] = useState([]);
   const [unfinished, setUnfinished] = useState([]);
+  const [planType, setPlanType] = useState("");
+
 
   //Getting the data from the state
   const streaksData = useSelector((state) => state.streak.streaks);
   const streaksClone = useSelector((state) => state.streak.streaks);
   const streakListTypeData = useSelector((state) => state.streak.streaksListType);
+  const authData = useSelector((state) => state.user.authData);
+
 
   const loading = useSelector((state) => state.streak.loading);
   const error = useSelector((state) => state.streak.error);
@@ -125,8 +130,21 @@ function StreakList(props) {
   }, [searchText])
 
   useEffect(() => {
-    setStreaks([...streaksData]);
+    if (planType === "prime") 
+    {
+      setStreaks([...streaksData]);
+    }
+    else
+    {
+      let limitedData = [...streaksData].splice(0, plansFeatures['free'].streaks);
+      setStreaks([...limitedData]);
+    }
   }, [streaksData])
+
+  useEffect(() => {
+    if (authData)
+      setPlanType(planDetail());
+  }, [authData]);
 
   useEffect(() => {
     dispatch(getStreaksData());
@@ -327,14 +345,14 @@ function StreakList(props) {
 
     else if (actionObj.actionType === 'navigate') {
       // if (currentTab !== 'Unfinished') {
-        history.push({
-          pathname: `/streak/${actionObj.data._id}`,
-          state: {
-            from: 'Streak',
-            status: statusFun(currentTab)
-          },
+      history.push({
+        pathname: `/streak/${actionObj.data._id}`,
+        state: {
+          from: 'Streak',
+          status: statusFun(currentTab)
+        },
 
-        });
+      });
       // }
     }
   }

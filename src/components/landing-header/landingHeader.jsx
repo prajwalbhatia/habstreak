@@ -8,8 +8,6 @@ import { ReactComponent as Logo } from 'assests/images/Logo.svg';
 
 //Component 
 import { PrimaryButton } from "components/button/button";
-import { AiFillHeart } from "react-icons/ai";
-import { IconContext } from "react-icons"
 
 //Redux
 import { useHistory } from 'react-router-dom';
@@ -139,8 +137,8 @@ function LandingHeader({ navListing, sectionListing }) {
                 </ol>
             }
 
-            <span className='rob-med-10-grey'>Made with
-              <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
+            <span>Made with<i className="demo-icon icon-heart color-red" />
+              by PRAJWAL BHATIA</span>
           </div>}
         </div>
       </header>

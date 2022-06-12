@@ -16,8 +16,6 @@ import { ReactComponent as Logo } from 'assests/images/Logo.svg';
 import Search from "../search/search";
 import { OutlinedPrimaryButton } from "components/button/button";
 import { IconButton } from "components/button/button";
-import { AiFillHeart } from "react-icons/ai";
-import { IconContext } from "react-icons"
 
 //UTILITIES
 import {
@@ -135,8 +133,8 @@ function Header(props) {
                             </li>
                         </ol>
 
-                        <span className='rob-med-10-grey'>Made with
-                            <IconContext.Provider value={{ className: 'heart-icon' }}> <AiFillHeart /> </IconContext.Provider>by PRAJWAL BHATIA</span>
+                        <span>Made with<i className="demo-icon icon-heart color-red" />
+                            by PRAJWAL BHATIA</span>
                     </div>}
                 </div>
             </div>
@@ -189,8 +187,6 @@ function Header(props) {
                                     }
                                 })
                             }
-                            {/* <li>Streak 1</li> */}
-                            {/* <li>Streak 1</li> */}
                         </ol>
 
                         <div className="d-flex center-items mb-10">
@@ -226,7 +222,6 @@ function Header(props) {
                     btnClass='h-40'
                 />
             </div>
-
         </header>
     );
 }

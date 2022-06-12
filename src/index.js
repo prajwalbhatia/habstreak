@@ -7,6 +7,7 @@ import './fonts/JosefinSans-Regular.ttf';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import './index.css';
 import App from './App';
 
@@ -26,7 +27,9 @@ if (process.env.REACT_APP_ENV === 'development') {
 }
 
 if (process.env.REACT_APP_ENV === 'development')
-  store = createStore(reducers, compose(applyMiddleware(thunk, logger)));
+  store = createStore(reducers, composeWithDevTools(
+    compose(applyMiddleware(thunk, logger))
+  ));
 else
   store = createStore(reducers, compose(applyMiddleware(thunk)));
 

@@ -8,8 +8,7 @@ import './table.css';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 //CONSTANTS
-import { theme, plansFeatures } from "constants/index";
-import { render } from '@testing-library/react';
+import { theme } from "constants/index";
 
 //COMPONENTS
 import { OutlinedPrimaryButton } from "components/button/button";
