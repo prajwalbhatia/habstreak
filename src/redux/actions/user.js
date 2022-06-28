@@ -8,7 +8,6 @@ import {
     SIGNUP_FAIL,
     VERIFY_EMAIL,
     PAYMENT_REQUEST_EMPTY,
-    PAYMENT_REQUEST_FAIL
 } from '../constants/action-type';
 
 import {
@@ -22,7 +21,6 @@ import {
     logout,
     updateUser,
     paymentRequest,
-    checkUserExist
 } from '../api';
 
 export const emptyError = () => async (dispatch) => {

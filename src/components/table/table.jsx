@@ -54,6 +54,7 @@ function Table(props) {
 
   const renderTableTab = () => {
     const data = _cloneDeep(tabData);
+    console.log('🚀 ~ file: table.jsx ~ line 57 ~ renderTableTab ~ data', data);
     return (
       <div className="tab-area">
         {

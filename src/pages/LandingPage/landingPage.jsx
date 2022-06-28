@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
-import { ClipLoader } from "react-spinners";
 
 //Component 
 import { PrimaryButton } from "components/button/button";
@@ -28,10 +27,8 @@ import { jumpToAccount, dialogForError, openInNewTab } from "utilities/index";
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
 import { ReactComponent as Hero } from './img/hero.svg';
-import { ReactComponent as Video } from './img/video.svg';
 import { ReactComponent as Intro } from './img/Intro.svg';
 import { ReactComponent as Prime } from './img/Prime.svg';
-import { height } from '@mui/system';
 import screenfull from 'screenfull';
 
 function LandingPage() {
@@ -52,7 +49,6 @@ function LandingPage() {
   const [successMsg, setSuccessMsg] = useState({});
   const [formData, setFormData] = useState({});
   const [playerReady, setPlayerReady] = useState(false);
-  const [url, setUrl] = useState(null)
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -120,7 +116,7 @@ function LandingPage() {
           !(
             lastAtPos < lastDotPos &&
             lastAtPos > 0 &&
-            formData[e.target.name].indexOf("@@") == -1 &&
+            formData[e.target.name].indexOf("@@") === -1 &&
             lastDotPos > 2 &&
             formData[e.target.name].length - lastDotPos > 2
           )

@@ -198,7 +198,7 @@ function Dashboard(props) {
                   </div>
                   <h4>{streak.title}</h4>
                   <h6 className='mt-10'>Running</h6>
-                  <h1 style={{ color: theme[index] }} >{`${progress}%`}</h1>
+                  <h1 style={{ color: theme[index] }} >{`${progress.toFixed(2)}%`}</h1>
                   <span>{`${streak.days} day to go`}</span>
                   <div
                     className='d-flex go-btn'

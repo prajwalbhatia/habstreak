@@ -4,7 +4,6 @@ import {
 
 import {
   WRITE_MESSAGE,
-  WRITE_MESSAGE_SUCCESS,
   ERROR,
   EMPTY_ERROR
 } from '../constants/action-type';

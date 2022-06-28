@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Fallback from 'utilities/fallback/fallback.js';
 
 //UTILITIES
-import { errorHandler, dialogForCreateAndUpdateStreak, progress, perPerDay, isSame, isBefore, isAfter } from 'utilities';
+import { errorHandler, dialogForCreateAndUpdateStreak, perPerDay, isSame, isAfter } from 'utilities';
 
 
 //COMPONENTS
@@ -82,14 +82,12 @@ function Streak(props) {
             setCollapseState({ ...collapseState, collapseDetail });
             setStreaks([...streaksData]);
         }
-    }, [streakDetail, desc, streaks])
+    }, [streakDetail, desc, streaks, collapseState])
 
 
 
     useEffect(() => {
-        if (streak && streak[0]
-            // && streakDetail && streakDetail.length > 0
-        ) {
+        if (streak && streak[0]) {
             const { dateFrom, dateTo, days, rewards } = streak.length > 0 && streak[0];
             const weekDaysArr = [];
             const daysArr = [];
@@ -216,7 +214,13 @@ function Streak(props) {
                                                             (
                                                                 streak[0]?.tag === 'unfinished'
                                                                     ?
-                                                                    <i className="demo-icon icon-close-circle circle-icon" />
+                                                                    (
+                                                                        index === streakDetail.length - 1
+                                                                            ?
+                                                                            <i className="demo-icon icon-close-circle circle-icon" />
+                                                                            :
+                                                                            <i className="demo-icon icon-check-circle circle-icon" />
+                                                                    )
                                                                     :
                                                                     <i className="demo-icon icon-check-circle circle-icon" />
                                                             )
@@ -424,7 +428,7 @@ function Streak(props) {
                         </div>
 
                         <div className='center-items mt-20'>
-                            <span className='rob-med-10-primary'>{!streak[0]?.tag ? 'Come On! You can Do It.' : (  streak[0]?.tag === 'finished' ? 'Yay!! You have done it' : 'Better Luck next time !!')}</span>
+                            <span className='rob-med-10-primary'>{!streak[0]?.tag ? 'Come On! You can Do It.' : (streak[0]?.tag === 'finished' ? 'Yay!! You have done it' : 'Better Luck next time !!')}</span>
                         </div>
                     </div>
                 </div>

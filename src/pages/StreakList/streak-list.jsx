@@ -49,7 +49,7 @@ function StreakList(props) {
 
   //STATES
   const [tabData, setTabData] = useState([...streakTabData()]);
-  const [tabDataClone] = useState([...streakTabData()]);
+  const [tabDataClone , setTabDataClone] = useState([...streakTabData()]);
   const [currentTab, setCurrentTab] = useState('Running');
   const [tableData, setTableData] = useState([]);
   const [streaks, setStreaks] = useState([]);
@@ -107,7 +107,8 @@ function StreakList(props) {
 
   //WHEN STREAK TEXT IS CHANGED
   useEffect(() => {
-    if (searchText == '') {
+    if (searchText === '') {
+      debugger
       setStreaks(streaksClone);
 
       const tabDataModified = tabDataFun();
@@ -149,22 +150,24 @@ function StreakList(props) {
   useEffect(() => {
     dispatch(getStreaksData());
     dispatch(search(''));
-
+    
     setCurrentTab(streakListTypeData);
     const data = tabDataFun();
     setTabData([...data])
-
+    
     if (location.state && location.state.goTo) {
-      setCurrentTab(location.state.goTo)
-
+      setCurrentTab(location.state.goTo);
+      let tab = null;
       if (location.state.goTo === 'Finished') {
-        const tab = activeTab('Finished');
-        setTabData([...tab]);
+        // dispatch(streakListType('Finished'));
+        tab = activeTab('Finished');
       }
       if (location.state.goTo === 'Unfinished') {
-        const tab = activeTab('Unfinished');
-        setTabData([...tab]);
+        // dispatch(streakListType('Unfinished'));
+        tab = activeTab('Unfinished');
       }
+      setTabData([...tab]);
+      setTabDataClone([...tab]);
     }
   }, [])
 
