@@ -7,8 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
-import { forEach as _forEach } from "lodash";
-
 
 //Actions
 import { getRewardsData, emptyError } from "redux/actions/reward";
@@ -46,7 +44,7 @@ function RewardList(props) {
   const location = useLocation();
 
   const [tabData, setTabData] = useState([...rewardTabData()]);
-  const [tabDataClone, setTabDataClone] = useState([...rewardTabData()]);
+  const [tabDataClone] = useState([...rewardTabData()]);
 
   const [tableData, setTableData] = useState([]);
   const [currentTab, setCurrentTab] = useState('To Buy');
@@ -119,7 +117,7 @@ function RewardList(props) {
   }, [authData]);
 
   useEffect(() => {
-    if (searchText == '') {
+    if (searchText === '') {
       setRewards(rewardsClone);
       const tabDataModified = tabDataFun();
       setTabData(tabDataModified);

@@ -82,7 +82,7 @@ export function OutlinedPrimaryButton(props) {
 
 
 export function IconButton(props) {
-    const { btnContainerClass, btnClass, tooltip, tooltipData, click } = props;
+    const { btnContainerClass, tooltip, tooltipData, click } = props;
     return (
         <div
             className={

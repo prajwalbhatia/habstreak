@@ -52,7 +52,6 @@ function Account(props) {
   const history = useHistory();
   const location = useLocation();
   const authData = useSelector((state) => state.user.authData);
-  const { checkUser } = useSelector((state) => state.user);
 
   let error = useSelector((state) => state.user.error);
   //HOOKS
@@ -252,7 +251,7 @@ function Account(props) {
           !(
             lastAtPos < lastDotPos &&
             lastAtPos > 0 &&
-            formData[e.target.name].indexOf("@@") == -1 &&
+            formData[e.target.name].indexOf("@@") === -1 &&
             lastDotPos > 2 &&
             formData[e.target.name].length - lastDotPos > 2
           )

@@ -180,7 +180,6 @@ function Header(props) {
                                         return (
                                             <div className="d-flex" key={index}>
                                                 <li>{activityTitle(activity.type, activity.title, 'dashboard')}</li>
-                                                {/* <span className="pointer ml-10"></span> */}
                                             </div>
 
                                         )
@@ -188,7 +187,6 @@ function Header(props) {
                                 })
                             }
                         </ol>
-
                         <div className="d-flex center-items mb-10">
                             <span onClick={goToActivities} className="color-primary c-pointer">See all</span></div>
                     </div>}

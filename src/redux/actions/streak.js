@@ -37,7 +37,6 @@ import {
 } from 'utilities';
 
 //Libraries
-import moment from 'moment';
 import { getRecentActivitiesData } from './recentActivities';
 
 //Action Creators
