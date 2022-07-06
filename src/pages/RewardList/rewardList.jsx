@@ -202,7 +202,11 @@ function RewardList(props) {
         const rewardDate = moment(reward.date);
         const streakStartDate = moment(streakAssociated[0].dateFrom);
         const currentDate = moment().startOf('day').toString();
-        const daysLeft = Math.ceil(rewardDate.diff(currentDate, 'days' , true));
+        let daysLeft = Math.ceil(rewardDate.diff(currentDate, 'days', true));
+
+        if (daysLeft < 0)
+          daysLeft = 0;
+
         const progress = isSame(streakStartDate, currentDate) ? 0 : progressFun(streakStartDate, rewardDate, daysLeft);
 
         let rewardObj = {};
@@ -214,9 +218,9 @@ function RewardList(props) {
           state: streakState(streakAssociated[0])
         } || '');
         rewardObj.date = moment(reward.date).format('L');
-        rewardObj.running = streakAssociated[0].dateFrom > currentDate ? '-' : daysLeft;
+        rewardObj.running = moment(streakAssociated[0].dateFrom).format() > moment(currentDate).format() ? '-' : daysLeft;
         rewardObj.reward = streakAssociated.rewards && `${streakAssociated?.rewards.length}`;
-        rewardObj.progress = streakAssociated[0].dateFrom > currentDate ? '-' : `${progress.toFixed(2)}%`;
+        rewardObj.progress = moment(streakAssociated[0].dateFrom).format() > moment(currentDate).format() ? '-' : `${progress.toFixed(2)}%`;
         rewardObj.streak = streakAssociated.length > 0 && streakAssociated[0];
 
         return rewardObj;

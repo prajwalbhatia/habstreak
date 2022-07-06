@@ -34,8 +34,7 @@ const userReducer = (state = initialState, action) => {
             return { ...state, paymentData: {} }
         case LOGOUT:
             localStorage.clear();
-            // localStorage.removeItem('profile');
-            return { ...state, authData: null }
+            return { ...state}
         case SIGNIN_FAIL:
             return { ...state, error: action.data }
         case EMPTY_ERROR:

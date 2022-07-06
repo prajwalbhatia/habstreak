@@ -10,7 +10,7 @@ import Frame from "components/frame/frame";
 import { OutlinedPrimaryButton, SecondaryButton } from "components/button/button";
 
 //Actions
-import { updateuser, createPaymentRequest, emptyPaymentData } from "redux/actions/user";
+import { updateuser, createPaymentRequest, emptyPaymentData, getUserData } from "redux/actions/user";
 
 //CSS
 import './profile.css';
@@ -29,6 +29,7 @@ import { size } from 'lodash';
 function Profile(props) {
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.user.authData);
+  console.log('🚀 ~ file: profile.jsx ~ line 32 ~ Profile ~ authData', authData);
   const { paymentData } = useSelector((state) => state.user);
 
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
@@ -48,8 +49,8 @@ function Profile(props) {
 
 
   useEffect(() => {
-    dispatch(updateuser({}, authData.result.email))
-  } ,[])
+    dispatch(getUserData(authData.result.email))
+  }, [])
 
 
   useEffect(() => {
@@ -84,10 +85,10 @@ function Profile(props) {
               startTime,
               endTime
             }
-            , authData.result.email))
+            , authData))
 
 
-          localStorage.removeItem('planUpgradeModal')  
+          localStorage.removeItem('planUpgradeModal')
           dispatch(emptyPaymentData())
 
         },
@@ -243,7 +244,16 @@ function Profile(props) {
                           <div className='plan-type'>
                             <div>
                               <h2 className='jos-primary'>Prime</h2>
-                              <div><h3 className='rob-bold-12-primary'>Expires in {moment(authData?.result?.endTime).diff(moment(moment().format()), 'days')} days</h3></div>
+                              <div>
+                                <h3 className='rob-bold-12-primary'>
+                                  {
+                                    moment(authData?.result?.endTime).diff(moment(moment().format()), 'days') === 0
+                                      ?
+                                      'Expires today'
+                                      :
+                                      `Expires in ${moment(authData?.result?.endTime).diff(moment(moment().format()), 'days')} days`
+                                  }
+                                </h3></div>
                               <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>45</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
                               {/* <span className='jos-primary size-36'>FREE</span> */}
 

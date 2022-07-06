@@ -4,6 +4,9 @@ import { useLocation, withRouter } from 'react-router-dom';
 //Libraries
 import moment from 'moment';
 import { ClipLoader } from "react-spinners";
+import SunEditor from 'suneditor-react';
+import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
+import Parser from 'html-react-parser';
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +48,6 @@ function Streak(props) {
         rewards: []
     });
 
-
     //Getting the data from the state
     const streakDetail = useSelector((state) => state.streak.streakDetail);
     const streak = useSelector((state) => state.streak.streak);
@@ -67,21 +69,24 @@ function Streak(props) {
     //then we want to update out description array
     //with the latest data 
     useEffect(() => {
-        if (streakDetail.length > 0 && JSON.stringify(streaks) !== JSON.stringify(streakDetail)) {
-            let streaksData = [...streakDetail];
-            let descDetail = {};
-            let collapseDetail = {}
-            streaksData.forEach((detail) => {
-                descDetail[detail._id] = detail.description;
-                if (isSame(detail.date, moment().format()))
-                    collapseDetail[detail._id] = false
-                else
-                    collapseDetail[detail._id] = true
-            });
-            setDesc({ ...desc, ...descDetail });
-            setCollapseState({ ...collapseState, collapseDetail });
-            setStreaks([...streaksData]);
-        }
+        setTimeout(() => {
+            if (streakDetail.length > 0 && JSON.stringify(streaks) !== JSON.stringify(streakDetail)) {
+                let streaksData = [...streakDetail];
+                let descDetail = {};
+                let collapseDetail = {}
+                streaksData.forEach((detail) => {
+                    descDetail[detail._id] = detail.description;
+                    if (isSame(detail.date, moment().format()))
+                        collapseDetail[detail._id] = false
+                    else
+                        collapseDetail[detail._id] = true
+                });
+                setDesc({ ...desc, ...descDetail });
+                setCollapseState({ ...collapseState, collapseDetail });
+                setStreaks([...streaksData]);
+            }
+        }, 0);
+
     }, [streakDetail, desc, streaks, collapseState])
 
 
@@ -234,18 +239,52 @@ function Streak(props) {
                                                     {
                                                         status === 'Past'
                                                             ?
-                                                            <p className='size-14 mt-10'>{desc?.[detail?._id]}</p>
+                                                            <div className='mt-10'>{Parser(desc?.[detail?._id] || '')}</div>
                                                             :
-                                                            <InputElement
-                                                                placeholder={'Write details about today\'s task...'}
-                                                                uid={'fullName'}
-                                                                type="text"
-                                                                value={desc?.[detail?._id]}
-                                                                containerClass={'mt-10'}
-                                                                onChange={(e) => {
-                                                                    setDesc({ ...desc, [detail?._id]: e.target.value })
-                                                                }}
-                                                            />
+                                                            <div className='mt-20'>
+                                                                <SunEditor
+                                                                    autoFocus={false}
+                                                                    placeholder={'Write details about today\'s task...'}
+                                                                    setDefaultStyle="font-family: 'Open Sans'; font-size: 14px;"
+                                                                    setContents={
+                                                                        desc?.[detail?._id]
+                                                                    }
+                                                                    onChange={(output) => {
+                                                                        setDesc({ ...desc, [detail?._id]: output })
+                                                                    }}
+                                                                    setOptions={{
+                                                                        addTagsWhitelist: 'h1',
+                                                                        tabDisable: "false",
+                                                                        width: "100%",
+                                                                        toolbarWidth: "100%",
+                                                                        height: "auto",
+                                                                        mode: "inline",
+                                                                        formats: [
+                                                                            "p",
+                                                                            "blockquote",
+                                                                            "h1",
+                                                                            "h2",
+                                                                            "h3"
+                                                                        ],
+                                                                        buttonList: [
+                                                                            ["undo", "redo"],
+                                                                            ["formatBlock"],
+                                                                            ["fontSize"],
+                                                                            ['link'],
+                                                                            ['list'],
+                                                                            ['fullScreen'],
+                                                                            ['outdent', 'indent'],
+                                                                            ['fontColor', 'hiliteColor', 'textStyle'],
+                                                                            ['table'],
+                                                                            [
+                                                                                "bold",
+                                                                                "underline",
+                                                                                "italic",
+                                                                            ],
+                                                                        ]
+                                                                    }}
+                                                                />
+                                                            </div>
                                                     }
 
                                                     {

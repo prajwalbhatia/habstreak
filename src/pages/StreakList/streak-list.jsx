@@ -40,7 +40,7 @@ import {
 } from 'utilities';
 
 //CONSTANTS
-import { streakListTableHeadings, plansFeatures } from "constants/index";
+import { streakListTableHeadings, streakListTableHeadings2 , plansFeatures } from "constants/index";
 
 function StreakList(props) {
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ function StreakList(props) {
 
   //STATES
   const [tabData, setTabData] = useState([...streakTabData()]);
-  const [tabDataClone , setTabDataClone] = useState([...streakTabData()]);
+  const [tabDataClone, setTabDataClone] = useState([...streakTabData()]);
   const [currentTab, setCurrentTab] = useState('Running');
   const [tableData, setTableData] = useState([]);
   const [streaks, setStreaks] = useState([]);
@@ -108,7 +108,6 @@ function StreakList(props) {
   //WHEN STREAK TEXT IS CHANGED
   useEffect(() => {
     if (searchText === '') {
-      debugger
       setStreaks(streaksClone);
 
       const tabDataModified = tabDataFun();
@@ -131,12 +130,10 @@ function StreakList(props) {
   }, [searchText])
 
   useEffect(() => {
-    if (planType === "prime") 
-    {
+    if (planType === "prime") {
       setStreaks([...streaksData]);
     }
-    else
-    {
+    else {
       let limitedData = [...streaksData].splice(0, plansFeatures['free'].streaks);
       setStreaks([...limitedData]);
     }
@@ -150,11 +147,11 @@ function StreakList(props) {
   useEffect(() => {
     dispatch(getStreaksData());
     dispatch(search(''));
-    
+
     setCurrentTab(streakListTypeData);
     const data = tabDataFun();
     setTabData([...data])
-    
+
     if (location.state && location.state.goTo) {
       setCurrentTab(location.state.goTo);
       let tab = null;
@@ -236,6 +233,10 @@ function StreakList(props) {
       streakObj.reward = `${rewardEarned}/${totalRewardsCount}`;
       streakObj.description = streak.description
 
+      //We don't want to show rewards in unfinished and finished tab
+      if (streak.tag === 'unfinished' || streak.tag === 'finished')
+        delete streakObj.reward
+
       return streakObj;
     });
 
@@ -278,6 +279,10 @@ function StreakList(props) {
    */
   const updateStreak = (streak) => {
     dialogForCreateAndUpdateStreak('update', streak, streak._id);
+  }
+
+  const cloneStreak = (streak) => {
+    dialogForCreateAndUpdateStreak('clone', streak);
   }
 
   const statusFun = (currentTab) => {
@@ -346,6 +351,10 @@ function StreakList(props) {
       updateStreak(actionObj.data);
     }
 
+    else if (actionObj.actionType === 'cloneRow') {
+      cloneStreak(actionObj.data);
+    }
+
     else if (actionObj.actionType === 'navigate') {
       // if (currentTab !== 'Unfinished') {
       history.push({
@@ -377,7 +386,7 @@ function StreakList(props) {
             :
             <div className="streak-list-inner-container">
               <Table
-                tableHead={streakListTableHeadings}
+                tableHead={(currentTab === 'Finished' || currentTab === 'Unfinished') ? streakListTableHeadings2 :  streakListTableHeadings}
                 tabData={[...tabData]}
                 tableData={[...tableData]}
                 currentTab={currentTab}

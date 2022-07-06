@@ -87,6 +87,8 @@
 <glyph glyph-name="fullscreen-exit" unicode="&#xe827;" d="M238-150v238h-238v108h346v-346h-108z m-238 654v109h238v237h108v-346h-346z m654-654v346h346v-108h-237v-238h-109z m0 654v346h109v-237h237v-109h-346z" horiz-adv-x="1000" />
 
 <glyph glyph-name="pause" unicode="&#xe828;" d="M650-150v1000h275v-1000h-275z m-579 0v1000h275v-1000h-275z" horiz-adv-x="1000" />
+
+<glyph glyph-name="clone" unicode="&#xe829;" d="M867 650h-146v138c0 37-29 62-63 62h-525c-54 0-95-46-95-100v-637c0-34 29-63 62-63h133v-100c0-54 46-100 96-100h538c54 0 96 46 96 100v600c0 54-42 100-96 100z m-734-500v600h488v-100h-292c-54 0-96-46-96-100v-400h-100z m734-200h-538v600h538v-600z" horiz-adv-x="1000" />
 </font>
 </defs>
 </svg>

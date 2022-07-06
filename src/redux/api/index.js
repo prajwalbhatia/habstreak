@@ -17,7 +17,7 @@ const API = axios.create({ baseURL: process.env.REACT_APP_ENV === 'development' 
 API.interceptors.request.use(async (req) => {
   if (localStorage.getItem('profile')) {
     const user = JSON.parse(localStorage.getItem('profile'));
-    if (user.result.googleId) {
+    if (user.result.fromGoogle) {
       req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`
     }
     else {
@@ -68,6 +68,7 @@ export const logout = (token) => API.post('/user/logout', token);
 
 export const checkUserExist = (data) => API.post('/user/check' , data);
 export const updateUser = (userData, email) => API.patch(`/user/${email}`, userData);
+export const getUser = (email) => API.get(`/user/${email}`); 
 
 //PAYMAENT
 export const paymentRequest = () => API.post('/razorpay');

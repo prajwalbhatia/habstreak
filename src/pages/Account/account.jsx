@@ -161,13 +161,19 @@ function Account(props) {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     //Signining the user
     //and will send the user to verify email screen
+    //SIGNUP
     if (stage === 'signin') {
-      dispatch(signup(formData, history))
+      const userData = await checkUserExist({ email: formData?.email });
+      if (userData === true) {
+        dialogForError('User already exist');
+      }
+      else
+        dispatch(signup(formData, history))
     }
     //Logging the user if and only if user is verified
     //if not verified then will send to verify screen

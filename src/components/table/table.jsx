@@ -107,6 +107,14 @@ function Table(props) {
     })
   }
 
+  const cloneRow = (e, streak) => {
+    e.stopPropagation();
+    action({
+      actionType: 'cloneRow',
+      data: streak
+    })
+  }
+
   const navigate = (streak) => {
     action({
       actionType: 'navigate',
@@ -150,6 +158,18 @@ function Table(props) {
         return (
           <div key={index} className="s-14-rm-grey bor-16-right table-data">
             <div className="d-flex table-btns-container">
+              {
+                currentTab === 'Unfinished'
+                  ?
+                  <div
+                    onClick={(e) => cloneRow(e, data)}
+                    className="center-items edit-btn">
+                    <i className="demo-icon icon-clone" />
+                  </div>
+                  :
+                  null
+              }
+
               <div
                 onClick={(e) => deleteRow(e, data)}
                 className="center-items delete-btn">
@@ -271,6 +291,7 @@ function Table(props) {
           data.length > 0
             ?
             data.map((dataInner, index) => {
+              console.log('🚀 ~ file: table.jsx ~ line 294 ~ data.map ~ dataInner', dataInner);
               val += 1;
               if (val === 10) val = 0;
               return (

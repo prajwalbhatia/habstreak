@@ -21,6 +21,7 @@ import {
     logout,
     updateUser,
     paymentRequest,
+    getUser,
 } from '../api';
 
 export const emptyError = () => async (dispatch) => {
@@ -28,15 +29,32 @@ export const emptyError = () => async (dispatch) => {
     dispatch(action);
 }
 
-export const updateuser = (data, email) => async (dispatch) => {
+export const updateuser = (data, authData) => async (dispatch) => {
     try {
-        const updatedData = await updateUser(data, email);
+        const updatedData = await updateUser(data, authData.result.email);
+        const newObj = {
+            token: authData.token,
+            refreshToken: authData.refreshToken,
+            result: updatedData.data
+        }
+
+        const action = { type: AUTH, data: newObj }
+        dispatch(action);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getUserData = (email) => async (dispatch) => {
+    try {   
+        const userData = await getUser(email);
         const tokens = JSON.parse(localStorage.getItem('profile'))
         const newObj = {
             token: tokens.token,
             refreshToken: tokens.refreshToken,
-            result: updatedData.data
+            result: userData.data
         }
+
         const action = { type: AUTH, data: newObj }
         dispatch(action);
     } catch (error) {
@@ -64,6 +82,7 @@ export const signin = (formData, history) => async dispatch => {
         delete formData.fullName;
         const { data } = await signIn(formData);
         const action = { type: AUTH, data }
+        console.log('🚀 ~ file: user.js ~ line 67 ~ data', data);
         dispatch(action);
         // history.push('/dashboard');
     } catch (error) {

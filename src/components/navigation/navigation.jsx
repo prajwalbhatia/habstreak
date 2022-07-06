@@ -1,7 +1,7 @@
-import React, { useState ,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router";
 import { useLocation } from 'react-router-dom';
-import { useSelector , useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 //Libraries
 import moment from 'moment';
@@ -17,10 +17,10 @@ import "../../index.css";
 import { ReactComponent as Logo } from 'assests/images/Logo.svg';
 
 //UTILITIES
-import { logoutFun, dialogForPlanUpgrade} from 'utilities';
+import { logoutFun, dialogForPlanUpgrade } from 'utilities';
 
 //Actions
-import { updateuser } from "redux/actions/user";
+import { getUserData } from "redux/actions/user";
 
 
 function Navigation(props) {
@@ -28,14 +28,13 @@ function Navigation(props) {
   const location = useLocation();
   const dispatch = useDispatch();
 
-
   const [navigation, setNavigation] = useState([...navigationList]);
   const [user] = useState(JSON.parse(localStorage.getItem('profile')));
 
   const authData = useSelector((state) => state.user.authData);
 
   useEffect(() => {
-    dispatch(updateuser({}, authData.result.email))
+    dispatch(getUserData(authData.result.email))
   }, [])
 
 
@@ -52,14 +51,13 @@ function Navigation(props) {
 
     if (moment(currentDate).isAfter(moment(endDate))) {
       // logoutFun(history, user?.refreshToken)
-      dispatch(updateuser({}, authData.result.email))
+      dispatch(getUserData(authData.result.email))
     }
 
 
-    if (daysLeft === 1 && localStorage.getItem('planUpgradeModal') !== '1')
-    {
+    if (daysLeft === 1 && localStorage.getItem('planUpgradeModal') !== '1') {
       dialogForPlanUpgrade(history);
-      localStorage.setItem('planUpgradeModal' , 1)
+      localStorage.setItem('planUpgradeModal', 1)
     }
   }, []);
 
@@ -129,7 +127,7 @@ function Navigation(props) {
         <div
           className='avatar-container c-pointer display-none d-flex center-items'
           style={{
-            backgroundImage: `url(${user?.result?.imageUrl})`,
+            // backgroundImage: `url(${user?.result?.imageUrl})`,
           }}
           onClick={() => {
             history.push({
@@ -137,13 +135,14 @@ function Navigation(props) {
             })
           }}
         >
-          {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}
+          {/* {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>} */}
+          {<span>{user?.result?.name[0]}</span>}
         </div>
 
         <div className='personal-detail-container display-none'>
           <h4 className='name'>{user?.result?.name}</h4>
           <h4 className='email'>{user?.result?.email}</h4>
-          <h4 className='prime'>{user?.result?.planType  === "prime" ? user?.result?.planType.toUpperCase() : ""}</h4>
+          <h4 className='prime'>{user?.result?.planType === "prime" ? user?.result?.planType.toUpperCase() : ""}</h4>
 
         </div>
 
@@ -182,7 +181,7 @@ function Navigation(props) {
 
         <div
           className='logout-btn-container display-none'
-          onClick={() => logoutFun(history , user?.refreshToken)}
+          onClick={() => logoutFun(history, user?.refreshToken)}
         >
           <i className="demo-icon icon-logout" />
           <h5 className=''>Logout</h5>

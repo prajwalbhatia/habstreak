@@ -24,7 +24,7 @@ export const errorHandler = (error, errorInfo) => {
  */
 export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) => {
   const contentData =
-    type === 'create'
+    type === 'create' || type === 'clone'
       ?
       [{
         uid: "title",
@@ -76,15 +76,30 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
 
 
   Modal.show({
-    title: type === 'create' ? "Create Streak" : 'Update Streak',
+    title: type === 'update' ? "Update Streak" : 'Create Streak',
     icon: 'icon-streak',
-    initialData: type === 'create' ? {} : {
-      title: data?.title,
-      dateFrom: moment(data?.startDate).startOf('day').toString(),
-      dateTo: moment(data?.endDate).endOf('day').toString(),
-      description: data?.description
-    },
-    primaryButtonText: type === 'create' ? "Create" : 'Update',
+    initialData:
+      type === 'create'
+        ?
+        {} : (
+          type === 'clone'
+            ?
+            {
+              title: data?.title,
+              dateFrom: '',
+              dateTo: '',
+              description: data?.description
+            }
+            :
+            {
+              title: data?.title,
+              dateFrom: moment(data?.startDate).startOf('day').toString(),
+              dateTo: moment(data?.endDate).endOf('day').toString(),
+              description: data?.description
+            }
+
+        ),
+    primaryButtonText: type === 'update' ? "Update" : 'Create',
     secondaryButtonText: "Cancel",
 
     content: [
@@ -96,7 +111,7 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
 
       if (data.type === "primary") {
         delete data.type
-        if (type === 'create') {
+        if (type === 'create' || type === 'clone') {
           store.dispatch(createStreakData(data));
         }
         else
@@ -341,7 +356,7 @@ export const dialogForUpgrade = (history) => {
         history.push('/profile');
       }
       // else  
-        // history.push('/dashboard');
+      // history.push('/dashboard');
       Modal.hide();
     }
   });

@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
     "dotenv": "^10.0.0",
+    "html-react-parser": "^2.0.0",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -33,6 +34,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "screenfull-react": "0.0.4",
+    "suneditor-react": "^3.4.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -60,6 +62,7 @@
     ]
   },
   "devDependencies": {
+    "@ckeditor/ckeditor5-list": "^34.1.0",
     "netlify-cli": "^10.3.3"
   }
 }

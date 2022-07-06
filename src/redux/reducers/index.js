@@ -6,10 +6,19 @@ import user from "./user";
 import recentActivities from './recentActivities';
 import support from './support';
 
-export default combineReducers({
+const allReducers = combineReducers({
     streak,
     reward,
     user,
     recentActivities,
     support
-})
+});
+
+const rootReducer = (state, action) => {
+    if (action.type === 'LOGOUT') {
+        state = undefined;
+    }
+   return allReducers(state , action);
+}
+
+export default rootReducer;
