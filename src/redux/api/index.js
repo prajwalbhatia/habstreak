@@ -2,6 +2,7 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
+import { urls } from "constants/index";
 
 import { storeRefreshToken } from "redux/actions/user";
 
@@ -9,9 +10,19 @@ import {
   refreshToken,
 } from './user';
 
-const API = axios.create({ baseURL: process.env.REACT_APP_ENV === 'development' ? 'http://localhost:5000' : 'https://habstreak.herokuapp.com/' });
+const baseUrl = process.env.REACT_APP_ENV === 'development'
+  ?
+  (window.ReactNativeWebView ? urls.devMob : urls.dev)
+  :
+  (
+    process.env.REACT_APP_ENV === 'pre-production'
+      ?
+      urls.preProd
+      :
+      urls.prod
+  );
 
-// const API = axios.create({ baseURL: process.env.REACT_APP_ENV === 'development' ? 'http://192.168.1.43:5000' : 'https://habstreak.herokuapp.com/' });
+const API = axios.create({ baseURL: baseUrl });
 
 
 API.interceptors.request.use(async (req) => {
@@ -66,9 +77,9 @@ export const getRecentActivities = () => API.get(`/recentActivities`);
 export const logout = (token) => API.post('/user/logout', token);
 
 
-export const checkUserExist = (data) => API.post('/user/check' , data);
+export const checkUserExist = (data) => API.post('/user/check', data);
 export const updateUser = (userData, email) => API.patch(`/user/${email}`, userData);
-export const getUser = (email) => API.get(`/user/${email}`); 
+export const getUser = (email) => API.get(`/user/${email}`);
 
 //PAYMAENT
 export const paymentRequest = () => API.post('/razorpay');

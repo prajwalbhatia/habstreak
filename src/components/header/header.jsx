@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router";
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import "./header.css";
+import './header.css';
 
 //Redux
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
 
 //LIBRARIES
 import moment from 'moment';
@@ -13,9 +13,9 @@ import moment from 'moment';
 import { ReactComponent as Logo } from 'assests/images/Logo.svg';
 
 //Component 
-import Search from "../search/search";
-import { OutlinedPrimaryButton } from "components/button/button";
-import { IconButton } from "components/button/button";
+import Search from '../search/search';
+import { OutlinedPrimaryButton } from 'components/button/button';
+import { IconButton } from 'components/button/button';
 
 //UTILITIES
 import {
@@ -26,14 +26,14 @@ import {
     logoutFun,
     activityTitle,
     planDetail
-} from "utilities";
+} from 'utilities';
 
 //CONSTANTS
-import { plansFeatures } from "constants/index";
+import { plansFeatures } from 'constants/index';
 
 //Actions
-import { search } from "redux/actions/streak";
-import { useEffect } from "react";
+import { search } from 'redux/actions/streak';
+import { useEffect } from 'react';
 
 function Header(props) {
     const history = useHistory();
@@ -51,7 +51,7 @@ function Header(props) {
     const [user] = useState(JSON.parse(localStorage.getItem('profile')));
     const [streakCount, setStreakCount] = useState(0);
     const [rewardCount, setRewardCount] = useState(0);
-    const [planType, setPlanType] = useState("");
+    const [planType, setPlanType] = useState('');
 
     const { internalNavigation, headerText } = props;
 
@@ -104,7 +104,7 @@ function Header(props) {
                             className="d-flex center-items profile-container c-pointer"
                             onClick={() => {
                                 history.push({
-                                    pathname: `/profile`,
+                                    pathname: '/profile',
                                 })
                             }}
                         >

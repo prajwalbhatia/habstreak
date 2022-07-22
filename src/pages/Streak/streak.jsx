@@ -35,6 +35,9 @@ function Streak(props) {
     const location = useLocation();
     const dispatch = useDispatch();
     const [desc, setDesc] = useState({});
+    const [dayData, setDayData] = useState({});
+
+    
     const [streaks, setStreaks] = useState([]);
 
     const [collapseState, setCollapseState] = useState({
@@ -88,6 +91,12 @@ function Streak(props) {
         }, 0);
 
     }, [streakDetail, desc, streaks, collapseState])
+
+
+
+    useEffect(() => {
+        setDesc({ ...desc, ...dayData });
+    } , [dayData])
 
 
 
@@ -250,7 +259,7 @@ function Streak(props) {
                                                                         desc?.[detail?._id]
                                                                     }
                                                                     onChange={(output) => {
-                                                                        setDesc({ ...desc, [detail?._id]: output })
+                                                                        setDayData({[detail?._id]: output })
                                                                     }}
                                                                     setOptions={{
                                                                         addTagsWhitelist: 'h1',

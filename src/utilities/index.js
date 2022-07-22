@@ -93,8 +93,8 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
             :
             {
               title: data?.title,
-              dateFrom: moment(data?.startDate).startOf('day').toString(),
-              dateTo: moment(data?.endDate).endOf('day').toString(),
+              dateFrom: data?.startDate ? moment(data?.startDate).startOf('day').toString() : data?.dateFrom,
+              dateTo: data?.endDate ? moment(data?.endDate).endOf('day').toString() : data?.dateTo,
               description: data?.description
             }
 
@@ -106,6 +106,7 @@ export const dialogForCreateAndUpdateStreak = (type = 'create', data, streakId) 
       ...contentData
     ],
     btnClickHandler: (data) => {
+      // console.log('🚀 ~ file: index.js ~ line 109 ~ dialogForCreateAndUpdateStreak ~ data', data);
       data.dateFrom = moment(data.dateFrom).startOf('day').toString();
       data.dateTo = moment(data.dateTo).endOf('day').toString();
 
@@ -533,8 +534,17 @@ export const perPerDay = (dateFrom, dateTo) => {
 }
 
 export const logoutFun = (history, refreshToken) => {
-  history.replace('/');
-  store.dispatch(logoutCall(refreshToken));
+  const user = JSON.parse(localStorage.getItem('profile'));
+  if (user.result.fromGoogle) {
+    // localStorage.clear();
+    store.dispatch(logoutCall());
+    history.replace('/account');
+    // jumpToAccount('signup', history)
+  }
+  else {
+    store.dispatch(logoutCall(refreshToken));
+    history.replace('/');
+  }
 }
 
 export const streakTabData = () => {

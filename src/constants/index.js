@@ -109,10 +109,10 @@ export const rewardListTableHeadings = [
 
 
 export const plansFeatures = {
-  "free" : {
-    streaks : 2,
-    rewards : 2,
-    activities : false
+  "free": {
+    streaks: 2,
+    rewards: 2,
+    activities: false
   },
   "prime": {
     streaks: 100,
@@ -124,5 +124,12 @@ export const plansFeatures = {
     rewards: 100,
     activities: true
   }
+}
+
+export const urls = {
+  dev: 'http://localhost:5000',
+  devMob: 'http://192.168.1.49:5000',
+  preProd: 'https://habstreak-staging.herokuapp.com/',
+  prod: 'https://habstreak.herokuapp.com/'
 }
 

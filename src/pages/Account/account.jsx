@@ -101,7 +101,7 @@ function Account(props) {
       else
         setStage('verify')
     }
-    else if (authData && (stage === 'login')) {
+    else if (authData && stage === 'login') {
       if (authData?.result?.verified)
         history.push('/dashboard');
       else
@@ -148,10 +148,17 @@ function Account(props) {
     console.log('GOOGLE FAILURE', res)
   }
 
-  window.getProfile = (data) => {
+  window.getProfile = async (data) => {
     if (data) {
       const token = data?.idToken;
       const result = data?.user;
+
+      const userData = await checkUserExist({ email: result?.email });
+
+      if (userData === true) {
+        dialogForError('User already exist');
+        return;
+      }
 
       try {
         dispatch(auth({ result, token }));
@@ -163,7 +170,12 @@ function Account(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    userEntry();
+  }
 
+
+
+  const userEntry = async () => {
     //Signining the user
     //and will send the user to verify email screen
     //SIGNUP

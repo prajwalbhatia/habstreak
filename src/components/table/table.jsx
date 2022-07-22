@@ -1,6 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 
 //CSS

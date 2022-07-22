@@ -46,7 +46,7 @@ export const updateuser = (data, authData) => async (dispatch) => {
 }
 
 export const getUserData = (email) => async (dispatch) => {
-    try {   
+    try {
         const userData = await getUser(email);
         const tokens = JSON.parse(localStorage.getItem('profile'))
         const newObj = {
@@ -66,7 +66,6 @@ export const auth = (data) => async (dispatch) => {
     try {
 
         const userDetail = await createUser(data.result);
-
         data.result.planType = userDetail.data.planType;
         data.result.verified = userDetail.data.verified;
         const action = { type: AUTH, data }
@@ -82,7 +81,7 @@ export const signin = (formData, history) => async dispatch => {
         delete formData.fullName;
         const { data } = await signIn(formData);
         const action = { type: AUTH, data }
-        console.log('🚀 ~ file: user.js ~ line 67 ~ data', data);
+
         dispatch(action);
         // history.push('/dashboard');
     } catch (error) {
@@ -125,7 +124,9 @@ export const storeRefreshToken = (data) => async dispatch => {
 
 export const logoutCall = (refreshToken) => async (dispatch) => {
     try {
-        await logout({ refreshToken });
+        if (refreshToken)
+            await logout({ refreshToken });
+
         const action = { type: LOGOUT }
         dispatch(action);
     } catch (error) {

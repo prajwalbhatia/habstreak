@@ -1,4 +1,6 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+
 
 //CSS
 import "../../index.css";
@@ -8,6 +10,7 @@ import './policies.css';
 import { ReactComponent as Logo } from './img/Logo.svg';
 
 function TermsAndCondition() {
+  const history = useHistory();
   return (
     <div className='policy-main-container padding-global'>
       {/* Header */}
@@ -15,6 +18,9 @@ function TermsAndCondition() {
         <header className="landing-page-header d-flex">
           {/* LOGO */}
           <div className='logo-container'>
+            <div onClick={() => history.goBack()}>
+              {window.ReactNativeWebView && <i className="demo-icon icon-back" style={{ fontSize: '30px', color: '#F96E46' }} />}
+            </div>
             <Logo />
           </div>
         </header>
