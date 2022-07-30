@@ -32,7 +32,7 @@ import { dialogForError, goToHome } from "utilities/index";
 
 //API
 import {
-  checkUserExist
+  checkUserExist, checkUserExistFromGoogle
 } from '../../redux/api';
 
 const initialState = {
@@ -129,8 +129,9 @@ function Account(props) {
   const googleSuccess = async (res) => {
     const result = res?.profileObj;
     const userData = await checkUserExist({ email: result?.email });
+    const userDataFromGoogle = await checkUserExistFromGoogle({ email: result?.email });
 
-    if (userData.data === true) {
+    if (userData.data === true && !userDataFromGoogle.data) {
       dialogForError('User already exist with same email');
       return;
     }
@@ -342,9 +343,12 @@ function Account(props) {
   return (
     <div className="login-container">
       <div
-        onClick={() => goToHome(history)}
         className='left-container padding-global'>
-        <Logo />
+        <div
+          onClick={() => goToHome(history)}
+        >
+          <Logo />
+        </div>
         <p>A central hub where individual or teams can work, plan, and archive amazing things together.</p>
         <div className='center-items'>
           {

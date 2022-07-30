@@ -78,6 +78,8 @@ export const logout = (token) => API.post('/user/logout', token);
 
 
 export const checkUserExist = (data) => API.post('/user/check', data);
+export const checkUserExistFromGoogle = (data) => API.post('/user/checkFromGoogle', data);
+
 export const updateUser = (userData, email) => API.patch(`/user/${email}`, userData);
 export const getUser = (email) => API.get(`/user/${email}`);
 
