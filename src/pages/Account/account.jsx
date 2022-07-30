@@ -130,8 +130,8 @@ function Account(props) {
     const result = res?.profileObj;
     const userData = await checkUserExist({ email: result?.email });
 
-    if (userData === true) {
-      dialogForError('User already exist');
+    if (userData.data === true) {
+      dialogForError('User already exist with same email');
       return;
     }
 
