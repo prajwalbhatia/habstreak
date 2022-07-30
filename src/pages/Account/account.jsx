@@ -28,7 +28,7 @@ import { ReactComponent as Signup } from './img/Signup.svg';
 import { ReactComponent as Login } from './img/Login.svg';
 
 //UTILITIES
-import { dialogForError } from "utilities/index";
+import { dialogForError, goToHome } from "utilities/index";
 
 //API
 import {
@@ -341,7 +341,9 @@ function Account(props) {
   const clientId = process.env.REACT_APP_CLIENT_ID;
   return (
     <div className="login-container">
-      <div className='left-container padding-global'>
+      <div
+        onClick={() => goToHome(history)}
+        className='left-container padding-global'>
         <Logo />
         <p>A central hub where individual or teams can work, plan, and archive amazing things together.</p>
         <div className='center-items'>

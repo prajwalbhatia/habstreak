@@ -8,6 +8,7 @@ import './policies.css';
 
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
+import { goToHome } from 'utilities';
 
 function TermsAndCondition() {
   const history = useHistory();
@@ -21,7 +22,12 @@ function TermsAndCondition() {
             <div onClick={() => history.goBack()}>
               {window.ReactNativeWebView && <i className="demo-icon icon-back" style={{ fontSize: '30px', color: '#F96E46' }} />}
             </div>
-            <Logo />
+
+            <div 
+            onClick={() => goToHome(history)}
+            >
+              <Logo />
+            </div>
           </div>
         </header>
       </div>

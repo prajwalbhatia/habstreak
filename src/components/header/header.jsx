@@ -81,7 +81,8 @@ function Header(props) {
     return (
         <header className="header">
             <div className="d-flex justify-space-between small-screen-header">
-                <div className="brand-name-container">
+                <div
+                    className="brand-name-container">
                     <Logo />
                 </div>
 

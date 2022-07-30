@@ -13,7 +13,7 @@ import { PrimaryButton } from "components/button/button";
 import { useHistory } from 'react-router-dom';
 
 //UTILITIES
-import { jumpToAccount } from "utilities/index";
+import { goToHome, jumpToAccount } from "utilities/index";
 
 //CSS 
 import './landingHeader.css';
@@ -63,8 +63,10 @@ function LandingHeader({ navListing, sectionListing }) {
     <>
       <header className="landing-page-header d-flex padding-global">
         {/* LOGO */}
-        <div className='logo-container'>
-          <Logo/>
+        <div
+          onClick={() => goToHome(history)}
+          className='logo-container'>
+          <Logo />
         </div>
 
         {/* Navigation */}

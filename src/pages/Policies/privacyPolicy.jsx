@@ -9,6 +9,7 @@ import './policies.css';
 
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
+import { goToHome } from 'utilities';
 
 
 function PrivacyPolicy() {
@@ -20,7 +21,9 @@ function PrivacyPolicy() {
       <div className='global-background hero-background'>
         <header className="landing-page-header d-flex">
           {/* LOGO */}
-          <div className='logo-container'>
+          <div
+            onClick={() => goToHome(history)}
+            className='logo-container'>
             <div  >
               <div onClick={() => history.goBack()}>
                 {window.ReactNativeWebView && <i className="demo-icon icon-back" style={{ fontSize: '30px', color: '#F96E46' }} />}
@@ -33,7 +36,7 @@ function PrivacyPolicy() {
           <div id="home" className='main-navigation'>
           </div>
 
-          
+
         </header>
       </div>
 

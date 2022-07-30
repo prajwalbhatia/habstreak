@@ -421,7 +421,7 @@ function LandingPage() {
 
               <div className='socials mt-30'>
                 {/* <i className="demo-icon icon-facebook mr-20 contact-icon" /> */}
-                {/* <i className="demo-icon icon-instagram mr-20 contact-icon" /> */}
+                <i onClick={() => openInNewTab('https://www.instagram.com/prajwal_bhatia')} className="demo-icon icon-instagram mr-20 contact-icon" />
                 <i onClick={() => openInNewTab('https://twitter.com/bhatia_prajwal?t=m8OrMkj-hsks8OjwchvRqQ&s=09')}
                   className="demo-icon icon-twitter contact-icon" />
               </div>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+
 
 //CSS
 import "../../index.css";
@@ -6,14 +8,18 @@ import './policies.css';
 
 //IMAGES
 import { ReactComponent as Logo } from './img/Logo.svg';
+import { goToHome } from 'utilities';
 
 function CancellationPolicy() {
+  const history = useHistory();
   return (
     <div className='policy-main-container padding-global'>
       <div>
         <header className="landing-page-header d-flex">
           {/* LOGO */}
-          <div className='logo-container'>
+          <div
+            onClick={() => goToHome(history)}
+            className='logo-container'>
             <Logo />
           </div>
         </header>
