@@ -536,13 +536,19 @@ export const perPerDay = (dateFrom, dateTo) => {
 export const logoutFun = (history, refreshToken) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   if (user.result.fromGoogle) {
-    // localStorage.clear();
     store.dispatch(logoutCall());
-    history.replace('/account');
-    // jumpToAccount('signup', history)
+    // history.replace('/account');
   }
   else {
     store.dispatch(logoutCall(refreshToken));
+    // history.replace('/');
+  }
+
+  if (window.ReactNativeWebView) {
+    history.replace('/account');
+
+  }
+  else {
     history.replace('/');
   }
 }
