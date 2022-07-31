@@ -155,9 +155,10 @@ function Account(props) {
       const result = data?.user;
 
       const userData = await checkUserExist({ email: result?.email });
+      const userDataFromGoogle = await checkUserExistFromGoogle({ email: result?.email });
 
-      if (userData === true) {
-        dialogForError('User already exist');
+      if (userData.data === true && !userDataFromGoogle.data) {
+        dialogForError('User already exist with same email');
         return;
       }
 
