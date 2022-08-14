@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from "react-router-dom";
 
@@ -8,7 +8,7 @@ import './table.css';
 import { cloneDeep as _cloneDeep } from 'lodash';
 
 //CONSTANTS
-import { theme } from "constants/index";
+import { theme, plansFeatures } from "constants/index";
 
 //COMPONENTS
 import { OutlinedPrimaryButton } from "components/button/button";
@@ -23,8 +23,11 @@ function Table(props) {
   const { tableHead, tabData, tableData, action, currentTab, type } = props;
   const [planType, setPlanType] = useState("");
 
+
   const history = useHistory();
   const streaks = useSelector((state) => state.streak.streaks);
+  const rewards = useSelector((state) => state.reward.rewards);
+
   const authData = useSelector((state) => state.user.authData);
 
 
@@ -54,7 +57,6 @@ function Table(props) {
 
   const renderTableTab = () => {
     const data = _cloneDeep(tabData);
-    console.log('🚀 ~ file: table.jsx ~ line 57 ~ renderTableTab ~ data', data);
     return (
       <div className="tab-area">
         {
@@ -291,7 +293,7 @@ function Table(props) {
           data.length > 0
             ?
             data.map((dataInner, index) => {
-              console.log('🚀 ~ file: table.jsx ~ line 294 ~ data.map ~ dataInner', dataInner);
+              console.log('🚀 ~ file: table.jsx ~ line 296 ~ data.map ~ dataInner', dataInner);
               val += 1;
               if (val === 10) val = 0;
               return (
@@ -305,7 +307,20 @@ function Table(props) {
                   ></div>
 
                   <h3 className='font-rob-med mt-5'>{dataInner.title}</h3>
-                  <span className='rob-med-14-grey'>
+                  <span
+                    onClick={() => {
+                      if (type !== 'Streak' && typeof(dataInner?.streak) === "object") {
+                        history.push({
+                          pathname: `/streak/${dataInner?.streak?._id}`,
+                          state: {
+                            from: 'Reward',
+                            status: dataInner?.streak?.tag
+                          },
+
+                        });
+                      }
+                    }}
+                    className={dataInner?.streak?.title ? 'rob-med-14-grey c-pointer' : 'rob-med-14-grey'}>
                     {
                       type === 'Streak'
                         ?
@@ -407,10 +422,18 @@ function Table(props) {
         click={type === 'Reward' ?
           () => {
             const filterStreak = streaks.filter(streak => streak.tag !== 'unfinished')
-            dialogForCreateAndUpdateReward('create', {}, '', filterStreak)
+            if (rewards.length < plansFeatures[planType].rewards)
+              dialogForCreateAndUpdateReward('create', {}, '', filterStreak);
+            else
+              dialogForUpgrade(history);
           }
           :
-          () => dialogForCreateAndUpdateStreak()
+          () => {
+            if (streaks.length < plansFeatures[planType].streaks)
+              dialogForCreateAndUpdateStreak();
+            else
+              dialogForUpgrade(history);
+          }
         }
         btnContainerClass="mt-30 small-screen-btn"
         btnClass='h-60 br-16'

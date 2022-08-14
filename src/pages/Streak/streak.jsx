@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useRef} from 'react';
 import { useLocation, withRouter } from 'react-router-dom';
 
 //Libraries
@@ -32,6 +32,7 @@ import { InputElement } from "components/form-elements/form-elements";
 import { OutlinedPrimaryButton } from "components/button/button";
 
 function Streak(props) {
+    const streakContainerRef = useRef(null);
     const location = useLocation();
     const dispatch = useDispatch();
     const [desc, setDesc] = useState({});
@@ -98,7 +99,14 @@ function Streak(props) {
         setDesc({ ...desc, ...dayData });
     } , [dayData])
 
-
+    useEffect(() => {
+        //   window.scrollTo(0,0);
+        if(streakContainerRef)
+        {
+            console.log('streakContainerRef' , streakContainerRef.current.scrollTo)
+             streakContainerRef.current?.scrollTo(0 , 0);
+        }
+    } , [streakContainerRef])
 
     useEffect(() => {
         if (streak && streak[0]) {
@@ -462,7 +470,10 @@ function Streak(props) {
                                                 className='center-items trophy-container'
                                                 style={{ left: `calc(${reward.perc}% - 3rem)` }}
                                             >
-                                                <span className='rob-med-10-primary title'>{reward.date}</span>
+                                                <div className='title reward-info '>
+                                                    <span className='rob-med-10-primary'>{reward.date}</span>
+                                                    <span className='rob-med-10-primary reward-title'>{reward.title}</span>
+                                                </div>
                                                 <i className="demo-icon icon-reward" />
                                             </div>
                                         );
@@ -502,7 +513,7 @@ function Streak(props) {
                             <ClipLoader loading size={40} color="var(--primaryColor)" />
                         </div>
                         :
-                        <div className="d-flex streak-details-container">
+                        <div ref={streakContainerRef} className="d-flex streak-details-container">
                             <div className='left-container'>
                                 <div className='d-flex justify-space-between container-heading'>
                                     <h3 className='jos-18-primary task-heading'>Tasks</h3>

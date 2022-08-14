@@ -117,7 +117,7 @@ function Header(props) {
                             >
                                 {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}
                             </div>
-                            <h4 className="text-center ml-10">{user?.result?.name}</h4>
+                            <h4 className="text-center" style={{marginLeft : '10px'}}>{user?.result?.name}</h4>
                         </div>
                         <ol className='d-flex flex-dir-col mt-20'>
                             <li

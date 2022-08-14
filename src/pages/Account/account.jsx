@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GoogleLogin } from 'react-google-login';
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom';
+
+//Libraries
+import { ClipLoader } from "react-spinners";
 
 //COMPONENTS
 import { InputElement } from "components/form-elements/form-elements";
@@ -28,12 +31,13 @@ import { ReactComponent as Signup } from './img/Signup.svg';
 import { ReactComponent as Login } from './img/Login.svg';
 
 //UTILITIES
-import { dialogForError, goToHome } from "utilities/index";
+import { dialogForError, goToHome, sendEventToMobile } from "utilities/index";
 
 //API
 import {
   checkUserExist, checkUserExistFromGoogle
 } from '../../redux/api';
+import { resendOtp } from 'redux/api/user';
 
 const initialState = {
   fullName: '',
@@ -52,6 +56,8 @@ function Account(props) {
   const history = useHistory();
   const location = useLocation();
   const authData = useSelector((state) => state.user.authData);
+  const loading = useSelector((state) => state.user.loading);
+
 
   let error = useSelector((state) => state.user.error);
   //HOOKS
@@ -65,6 +71,25 @@ function Account(props) {
   const [errMsg, setErrMsg] = useState({ email: '' });
   const [successMsg, setSuccessMsg] = useState({});
   const [isValid, setIsValid] = useState(false);
+  const [loadingFile, setLoadingFile] = useState(false);
+  const [resendButton , setResendButton] = useState(false);
+
+  const [countDown, setCountDown] = useState(
+    60
+  );
+
+  useEffect(() => {
+    console.log('countDown', countDown)
+    const interval = setInterval(() => {
+
+      if (countDown >= 1 && stage === 'verify') {
+        setCountDown(countDown - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [countDown, resendButton , stage]);
+
   //STATES
 
   //USE EFFECTS
@@ -95,19 +120,20 @@ function Account(props) {
   }, [location])
 
   useEffect(() => {
-    if (authData && stage === 'signin') {
+    if (authData && (stage === 'signin' || stage === 'login')) {
       if (authData?.result?.verified)
-        history.push('/dashboard');
+        history.replace('/dashboard');
       else
-        setStage('verify')
+        setStage('verify');
     }
-    else if (authData && stage === 'login') {
-      if (authData?.result?.verified)
-        history.push('/dashboard');
-      else
-        setStage('verify')
-    }
-  }, [authData, history]);
+
+    // else if (authData && stage === 'login') {
+    //   if (authData?.result?.verified)
+    //     history.push('/dashboard');
+    //   else
+    //     setStage('verify')
+    // }
+  }, [authData]);
 
   useEffect(() => {
     if (stage)
@@ -127,6 +153,7 @@ function Account(props) {
 
   //FUNCTIONS
   const googleSuccess = async (res) => {
+    setLoadingFile(true);
     const result = res?.profileObj;
     const userData = await checkUserExist({ email: result?.email });
     const userDataFromGoogle = await checkUserExistFromGoogle({ email: result?.email });
@@ -143,6 +170,7 @@ function Account(props) {
     } catch (error) {
       console.log(error)
     }
+    setLoadingFile(false);
   }
 
   const googleFailure = (res) => {
@@ -161,12 +189,13 @@ function Account(props) {
         dialogForError('User already exist with same email');
         return;
       }
-
+      // else {
       try {
         dispatch(auth({ result, token }));
       } catch (error) {
         console.log(error)
       }
+      // }
     }
   }
 
@@ -331,256 +360,281 @@ function Account(props) {
   }
 
 
-  const mobileAppGoogleLogin = () => {
-    const event = {
-      event: 'google-login',
-      data: {}
-    }
-    window.ReactNativeWebView.postMessage(JSON.stringify(event));
-  }
+
   //FUNCTIONS
 
   const clientId = process.env.REACT_APP_CLIENT_ID;
   return (
-    <div className="login-container">
-      <div
-        className='left-container padding-global'>
-        <div
-          onClick={() => goToHome(history)}
-        >
-          <Logo />
-        </div>
-        <p>A central hub where individual or teams can work, plan, and archive amazing things together.</p>
-        <div className='center-items'>
-          {
-            stage === 'login'
-              ?
-              <Login />
-              :
-              <Signup />
-          }
-        </div>
-      </div>
-      <div className='right-container'>
-        <form onSubmit={handleSubmit}>
-          <div className='d-flex justify-end'>
-            <p className='size-16-8f'>ENG (USA)</p>
-            <i className="demo-icon  icon-language size-16-8f" />
+    <>
+      {
+        loading || loadingFile
+          ?
+          <div className="loader-container" style={{ height: '100vh' }}>
+            <ClipLoader loading size={40} color="var(--primaryColor)" />
           </div>
-
-
-          <p className='size-10-8f roboto-medium mt-35'>
-            {stage === 'signin'
-              ? 'START FOR FREE' :
-              (stage === 'login' ?
-                'ENJOY YOUR STREAK!'
-                : 'Verify TO ENJOY!')}
-          </p>
-
-          <h1>{stage === 'signin'
-            ? 'Sign up to Habstreak'
-            :
-            (
-              stage === 'login'
-                ?
-                'Login to Habstreak'
-                :
-                'Verify your email'
-            )
-          }</h1>
-
-          <p className='already-member'>
-            {stage === 'signin'
-              ?
-              'Already a Member?' :
-              (stage === 'login'
-                ?
-                'Are you a new member?'
-                :
-                'An OTP is send to your email'
-              )}
-            <span className='c-pointer' onClick={switchMode}>
-              {stage === 'signin'
-                ?
-                'Login'
-                :
-                (stage === 'login' ? 'Sign up' : '')}</span>
-          </p>
-
-
-          {
-            stage === 'signin' &&
-            <InputElement
-              placeholder={'Firstname Lastname'}
-              uid={'fullName'}
-              lable={'FULL NAME'}
-              type="text"
-              value={formData['fullName']}
-              containerClass={'mt-25'}
-              onChange={handleChange}
-              onBlur={validation}
-              errMsg={errMsg['fullName']}
-              successMsg={successMsg['fullName']}
-              icon={<i className="demo-icon icon-person size-16-8f" />}
-            />
-          }
-
-          {
-            (stage === 'signin' || stage === 'login')
-            &&
-            <>
-              <InputElement
-                placeholder={'name@gmail.com'}
-                lable={'EMAIL'}
-                uid={'email'}
-                type="email"
-                value={formData['email']}
-                containerClass={'mt-25'}
-                onChange={handleChange}
-                onBlur={validation}
-                errMsg={errMsg['email']}
-                successMsg={successMsg['email']}
-                icon={<i className="demo-icon icon-email size-16-8f" />}
-              />
-
-              <InputElement
-                placeholder={'8 characters and 1 capital letter'}
-                lable={'PASSWORD'}
-                uid={'password'}
-                type={showPassword ? "text" : "password"}
-                containerClass={'mt-25'}
-                value={formData['password']}
-                onChange={handleChange}
-                onBlur={stage ? validation : null}
-                errMsg={stage ? errMsg['password'] : null}
-                successMsg={stage ? successMsg['password'] : null}
-                icon={<i
-                  onClick={togglePassword}
-                  className="demo-icon icon-lock size-16-8f c-pointer"
-                />}
-              />
-            </>
-          }
-
-
-          {
-            stage === 'signin'
-            &&
-            <InputElement
-              placeholder={'8 characters and 1 capital letter'}
-              lable={'CONFIRM PASSWORD'}
-              uid={'confirmPassword'}
-              value={formData['confirmPassword']}
-              type={showConfirmPassword ? "text" : "password"}
-              containerClass={'mt-25'}
-              onChange={handleChange}
-              onBlur={validation}
-              errMsg={errMsg['confirmPassword']}
-              successMsg={successMsg['confirmPassword']}
-              icon={
-                <i
-                  onClick={toggleConfirmPassword}
-                  className="demo-icon icon-lock size-16-8f c-pointer"
-                />}
-            />
-          }
-
-          {
-            stage === 'verify'
-            &&
-            <div style={{ display: 'flex' }}>
-              <InputElement
-                placeholder={'X'}
-                uid={'otp1'}
-                value={formData['otp1']}
-                type={"string"}
-                onChange={handleChange}
-                containerClass='otp-box mt-25'
-              />
-
-              <InputElement
-                placeholder={'X'}
-                uid={'otp2'}
-                reference={otp2ref}
-                value={formData['otp2']}
-                type={"string"}
-                onChange={handleChange}
-                containerClass='otp-box mt-25'
-              />
-
-              <InputElement
-                placeholder={'X'}
-                reference={otp3ref}
-                uid={'otp3'}
-                value={formData['otp3']}
-                type={"string"}
-                onChange={handleChange}
-                containerClass='otp-box mt-25'
-              />
-
-              <InputElement
-                placeholder={'X'}
-                uid={'otp4'}
-                reference={otp4ref}
-                value={formData['otp4']}
-                type={"string"}
-                onChange={handleChange}
-                containerClass='otp-box mt-25'
-              />
+          :
+          <div className="login-container">
+            <div
+              className='left-container padding-global'>
+              <div
+                onClick={() => goToHome(history)}
+              >
+                <Logo />
+              </div>
+              <p>A central hub where individual or teams can work, plan, and archive amazing things together.</p>
+              <div className='center-items'>
+                {
+                  stage === 'login'
+                    ?
+                    <Login />
+                    :
+                    <Signup />
+                }
+              </div>
             </div>
-          }
-
-
-          <PrimaryButton
-            name={stage === 'signin' ? 'CREATE ACCOUNT' : (stage === 'login' ? 'LOGIN' : 'VERIFY')}
-            click={() => { }}
-            btnContainerClass="mt-30"
-            btnClass={(isValid || stage === 'verify') ? 'create-account-btn' : 'create-account-btn in-valid'}
-            type="submit"
-            disabled={(isValid || stage === 'verify') ? false : true}
-          />
-
-
-          {
-            (stage === 'signin' || stage === 'login')
-            &&
-            <>
-              <p className='size-10-8f mt-35'>{stage ? 'Or Signup With' : 'Or Login With'}</p>
-
-              <div className='socials'>
-                <div onClick={mobileAppGoogleLogin} className='icon-container'>
-                  <i className="demo-icon  icon-google" />
+            <div className='right-container'>
+              <form onSubmit={handleSubmit}>
+                <div className='d-flex justify-end'>
+                  <p className='size-16-8f'>ENG (USA)</p>
+                  <i className="demo-icon  icon-language size-16-8f" />
                 </div>
 
-                {!window.ReactNativeWebView
+
+                <p className='size-10-8f roboto-medium mt-35'>
+                  {stage === 'signin'
+                    ? 'START FOR FREE' :
+                    (stage === 'login' ?
+                      'ENJOY YOUR STREAK!'
+                      : 'Verify TO ENJOY!')}
+                </p>
+
+                <h1>{stage === 'signin'
+                  ? 'Sign up to Habstreak'
+                  :
+                  (
+                    stage === 'login'
+                      ?
+                      'Login to Habstreak'
+                      :
+                      'Verify your email'
+                  )
+                }</h1>
+
+                <p className='already-member'>
+                  {stage === 'signin'
+                    ?
+                    'Already a Member?' :
+                    (stage === 'login'
+                      ?
+                      'Are you a new member?'
+                      :
+                      'An OTP is send to your email'
+                    )}
+                  <span className='c-pointer' onClick={switchMode}>
+                    {stage === 'signin'
+                      ?
+                      'Login'
+                      :
+                      (stage === 'login' ? 'Sign up' : '')}</span>
+                </p>
+
+                {
+                  stage === 'verify'
+                    ?
+                    <p
+                    onClick={() => {
+                      if(countDown === 0)
+                      {
+                        setResendButton(!resendButton);
+                        setCountDown(60);
+
+                        resendOtp({ userId: authData?.result?._id })
+                      }
+                    }} 
+                    className='already-member c-pointer color-primary'>
+                      <span className={countDown === 0 ? 'resend-btn' : 'resend-btn resend-btn-disable'}>RESEND OTP</span> in {countDown} sec
+                    </p>
+                    :
+                    null
+                }
+
+
+                {
+                  stage === 'signin' &&
+                  <InputElement
+                    placeholder={'Firstname Lastname'}
+                    uid={'fullName'}
+                    lable={'FULL NAME'}
+                    type="text"
+                    value={formData['fullName']}
+                    containerClass={'mt-25'}
+                    onChange={handleChange}
+                    onBlur={validation}
+                    errMsg={errMsg['fullName']}
+                    successMsg={successMsg['fullName']}
+                    icon={<i className="demo-icon icon-person size-16-8f" />}
+                  />
+                }
+
+                {
+                  (stage === 'signin' || stage === 'login')
                   &&
-                  <GoogleLogin
-                    clientId={clientId}
-                    buttonText=""
-                    onSuccess={googleSuccess}
-                    onFailure={googleFailure}
-                    cookiePolicy={'single_host_origin'}
-                    className='google-btn'
-                  />}
-              </div>
-            </>
-          }
+                  <>
+                    <InputElement
+                      placeholder={'name@gmail.com'}
+                      lable={'EMAIL'}
+                      uid={'email'}
+                      type="email"
+                      value={formData['email']}
+                      containerClass={'mt-25'}
+                      onChange={handleChange}
+                      onBlur={validation}
+                      errMsg={errMsg['email']}
+                      successMsg={successMsg['email']}
+                      icon={<i className="demo-icon icon-email size-16-8f" />}
+                    />
 
-          <p className='t-and-c'>By creating an account means you're okay with
-            <span
-              onClick={() => {
-                history.push('/terms-and-condition')
-              }}
-            >Terms &amp; Condition</span> and <span
-              onClick={() => {
-                history.push('/privacy-policy')
-              }}>Privacy Policy</span>
-          </p>
+                    <InputElement
+                      placeholder={'8 characters and 1 capital letter'}
+                      lable={'PASSWORD'}
+                      uid={'password'}
+                      type={showPassword ? "text" : "password"}
+                      containerClass={'mt-25'}
+                      value={formData['password']}
+                      onChange={handleChange}
+                      onBlur={stage ? validation : null}
+                      errMsg={stage ? errMsg['password'] : null}
+                      successMsg={stage ? successMsg['password'] : null}
+                      icon={<i
+                        onClick={togglePassword}
+                        className="demo-icon icon-lock size-16-8f c-pointer"
+                      />}
+                    />
+                  </>
+                }
 
-        </form>
-      </div>
 
-    </div>
+                {
+                  stage === 'signin'
+                  &&
+                  <InputElement
+                    placeholder={'8 characters and 1 capital letter'}
+                    lable={'CONFIRM PASSWORD'}
+                    uid={'confirmPassword'}
+                    value={formData['confirmPassword']}
+                    type={showConfirmPassword ? "text" : "password"}
+                    containerClass={'mt-25'}
+                    onChange={handleChange}
+                    onBlur={validation}
+                    errMsg={errMsg['confirmPassword']}
+                    successMsg={successMsg['confirmPassword']}
+                    icon={
+                      <i
+                        onClick={toggleConfirmPassword}
+                        className="demo-icon icon-lock size-16-8f c-pointer"
+                      />}
+                  />
+                }
+
+                {
+                  stage === 'verify'
+                  &&
+                  <div style={{ display: 'flex' }}>
+                    <InputElement
+                      placeholder={'X'}
+                      uid={'otp1'}
+                      value={formData['otp1']}
+                      type={window.ReactNativeWebView ? "number" : "string"}
+                      onChange={handleChange}
+                      containerClass='otp-box mt-25'
+                    />
+
+                    <InputElement
+                      placeholder={'X'}
+                      uid={'otp2'}
+                      reference={otp2ref}
+                      value={formData['otp2']}
+                      type={window.ReactNativeWebView ? "number" : "string"}
+                      onChange={handleChange}
+                      containerClass='otp-box mt-25'
+                    />
+
+                    <InputElement
+                      placeholder={'X'}
+                      reference={otp3ref}
+                      uid={'otp3'}
+                      value={formData['otp3']}
+                      type={window.ReactNativeWebView ? "number" : "string"}
+                      onChange={handleChange}
+                      containerClass='otp-box mt-25'
+                    />
+
+                    <InputElement
+                      placeholder={'X'}
+                      uid={'otp4'}
+                      reference={otp4ref}
+                      value={formData['otp4']}
+                      type={window.ReactNativeWebView ? "number" : "string"}
+                      onChange={handleChange}
+                      containerClass='otp-box mt-25'
+                    />
+                  </div>
+                }
+
+
+                <PrimaryButton
+                  name={stage === 'signin' ? 'CREATE ACCOUNT' : (stage === 'login' ? 'LOGIN' : 'VERIFY')}
+                  click={() => { }}
+                  btnContainerClass="mt-30"
+                  btnClass={(isValid || stage === 'verify') ? 'create-account-btn' : 'create-account-btn in-valid'}
+                  type="submit"
+                  disabled={(isValid || stage === 'verify') ? false : true}
+                />
+
+
+                {
+                  (stage === 'signin' || stage === 'login')
+                  &&
+                  <>
+                    <p className='size-10-8f mt-35'>{stage ? 'Or Signup With' : 'Or Login With'}</p>
+
+                    <div className='socials'>
+                      <div onClick={() => sendEventToMobile('google-login')} className='icon-container'>
+                        <i className="demo-icon  icon-google" />
+                      </div>
+
+                      {!window.ReactNativeWebView
+                        &&
+                        <GoogleLogin
+                          clientId={clientId}
+                          buttonText=""
+                          onSuccess={googleSuccess}
+                          onFailure={googleFailure}
+                          cookiePolicy={'single_host_origin'}
+                          className='google-btn'
+                        />}
+                    </div>
+                  </>
+                }
+
+                <p className='t-and-c'>By creating an account means you're okay with
+                  <span
+                    onClick={() => {
+                      history.push('/terms-and-condition')
+                    }}
+                  >Terms &amp; Condition</span> and <span
+                    onClick={() => {
+                      history.push('/privacy-policy')
+                    }}>Privacy Policy</span>
+                </p>
+
+              </form>
+            </div>
+
+          </div>
+      }
+
+    </>
   );
 }
 

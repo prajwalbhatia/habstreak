@@ -10,6 +10,7 @@ import { createRewardData, updateRewardData, deleteRewardBulk, deleteRewardData 
 
 import { size } from "lodash";
 import { logoutCall } from "redux/actions/user";
+import { logout } from "redux/api";
 
 //FUNCTIONS
 export const errorHandler = (error, errorInfo) => {
@@ -537,20 +538,31 @@ export const logoutFun = (history, refreshToken) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   if (user.result.fromGoogle) {
     store.dispatch(logoutCall());
-    // history.replace('/account');
+
+    if (window.ReactNativeWebView) {
+      history.replace('/account');
+    }
+    else {
+      history.replace('/');
+    }
   }
   else {
-    store.dispatch(logoutCall(refreshToken));
-    // history.replace('/');
+    logout({ refreshToken })
+      .then(() => {
+        store.dispatch(logoutCall());
+
+        if (window.ReactNativeWebView) {
+          history.replace('/account');
+        }
+        else {
+          history.replace('/');
+        }
+      })
   }
 
-  if (window.ReactNativeWebView) {
-    history.replace('/account');
+  if(window.ReactNativeWebView)
+    sendEventToMobile('loggedOut');
 
-  }
-  else {
-    history.replace('/');
-  }
 }
 
 export const streakTabData = () => {
@@ -644,3 +656,13 @@ export const openInNewTab = (url) => {
 export const goToHome = (history) => {
   history.replace('/');
 }
+
+export const sendEventToMobile = (eventName) => {
+  const event = {
+    event: eventName,
+    data: {}
+  }
+  window.ReactNativeWebView.postMessage(JSON.stringify(event));
+  return null;
+}
+

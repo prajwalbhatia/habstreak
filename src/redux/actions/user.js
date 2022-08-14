@@ -8,6 +8,9 @@ import {
     SIGNUP_FAIL,
     VERIFY_EMAIL,
     PAYMENT_REQUEST_EMPTY,
+    SIGN_IN,
+    SIGN_UP,
+    VERIFY_EMAIL_SUCCESS
 } from '../constants/action-type';
 
 import {
@@ -76,6 +79,8 @@ export const auth = (data) => async (dispatch) => {
 }
 
 export const signin = (formData, history) => async dispatch => {
+      const action = { type: SIGN_IN }
+    dispatch(action);
     try {
         delete formData.confirmPassword;
         delete formData.fullName;
@@ -83,7 +88,6 @@ export const signin = (formData, history) => async dispatch => {
         const action = { type: AUTH, data }
 
         dispatch(action);
-        // history.push('/dashboard');
     } catch (error) {
         const action = { type: SIGNIN_FAIL, data: error.response.data.error.message }
         dispatch(action);
@@ -91,20 +95,23 @@ export const signin = (formData, history) => async dispatch => {
 }
 
 export const signup = (formData, history) => async dispatch => {
+      const action = { type: SIGN_UP }
+    dispatch(action);
     try {
         const { data } = await signUp(formData);
         const action = { type: AUTH, data }
         dispatch(action);
-        // history.push('/dashboard');
     } catch (error) {
         console.log(error);
     }
 }
 
 export const verifyemail = (emailData, history) => async dispatch => {
+    const action = { type: VERIFY_EMAIL }
+    dispatch(action);
     try {
         const { data } = await verifyEmail(emailData);
-        const action = { type: VERIFY_EMAIL, data }
+        const action = { type: VERIFY_EMAIL_SUCCESS, data }
         dispatch(action);
         history.push('/dashboard');
     } catch (error) {

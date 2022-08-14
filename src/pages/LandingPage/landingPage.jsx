@@ -36,6 +36,7 @@ function LandingPage() {
   const dispatch = useDispatch();
 
   let error = useSelector((state) => state.user.error);
+  const authData = useSelector((state) => state.user.authData);
 
 
   //REF
@@ -69,6 +70,7 @@ function LandingPage() {
     //and it is not verified then we have to clear
     //local storage
     const user = JSON.parse(localStorage.getItem('profile'));
+
     if (user) {
       const isVerified = user?.result?.verified;
       if (!isVerified) {

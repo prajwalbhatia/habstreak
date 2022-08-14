@@ -46,6 +46,9 @@ export const REFRESH_TOKEN = 'REFRESH_TOKEN';
 export const SIGNIN_FAIL = 'SIGNIN_FAIL';
 export const SIGNUP_FAIL = 'SIGNUP_FAIL';
 export const GET_USER = 'GET_USER';
+export const SIGN_IN = 'SIGN_IN';
+export const SIGN_UP = 'SIGN_IN';
+export const VERIFY_EMAIL_SUCCESS = 'VERIFY_EMAIL_SUCCESS';
 
 export const VERIFY_EMAIL = 'VERIFY_EMAIL';
 
