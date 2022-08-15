@@ -33,6 +33,8 @@ const userReducer = (state = initialState, action) => {
             return { ...state, loading: false, authData: action?.data }
         case SIGN_IN:
             return { ...state, loading: true }
+        case SIGNUP_FAIL:
+            return { ...state, loading: false , error : action.data}    
         case SIGN_UP:
             return { ...state, loading: true }
         case VERIFY_EMAIL:

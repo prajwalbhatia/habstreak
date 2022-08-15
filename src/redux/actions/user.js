@@ -102,6 +102,8 @@ export const signup = (formData, history) => async dispatch => {
         const action = { type: AUTH, data }
         dispatch(action);
     } catch (error) {
+        const action = { type: SIGNUP_FAIL, data: error.response.data.error.message }
+        dispatch(action);
         console.log(error);
     }
 }
