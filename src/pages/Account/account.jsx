@@ -72,7 +72,7 @@ function Account(props) {
   const [successMsg, setSuccessMsg] = useState({});
   const [isValid, setIsValid] = useState(false);
   const [loadingFile, setLoadingFile] = useState(false);
-  const [resendButton , setResendButton] = useState(false);
+  const [resendButton, setResendButton] = useState(false);
 
   const [countDown, setCountDown] = useState(
     60
@@ -88,7 +88,7 @@ function Account(props) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [countDown, resendButton , stage]);
+  }, [countDown, resendButton, stage]);
 
   //STATES
 
@@ -160,6 +160,7 @@ function Account(props) {
 
     if (userData.data === true && !userDataFromGoogle.data) {
       dialogForError('User already exist with same email');
+      setLoadingFile(false);
       return;
     }
 
@@ -188,16 +189,15 @@ function Account(props) {
 
       if (userData.data === true && !userDataFromGoogle.data) {
         dialogForError('User already exist with same email');
+        setLoadingFile(false);
         return;
       }
-      // else {
       try {
         dispatch(auth({ result, token }));
       } catch (error) {
         console.log(error)
       }
       setLoadingFile(false);
-      // }
     }
   }
 
@@ -444,16 +444,15 @@ function Account(props) {
                   stage === 'verify'
                     ?
                     <p
-                    onClick={() => {
-                      if(countDown === 0)
-                      {
-                        setResendButton(!resendButton);
-                        setCountDown(60);
+                      onClick={() => {
+                        if (countDown === 0) {
+                          setResendButton(!resendButton);
+                          setCountDown(60);
 
-                        resendOtp({ userId: authData?.result?._id })
-                      }
-                    }} 
-                    className='already-member c-pointer color-primary'>
+                          resendOtp({ userId: authData?.result?._id })
+                        }
+                      }}
+                      className='already-member c-pointer color-primary'>
                       <span className={countDown === 0 ? 'resend-btn' : 'resend-btn resend-btn-disable'}>RESEND OTP</span> in {countDown} sec
                     </p>
                     :
