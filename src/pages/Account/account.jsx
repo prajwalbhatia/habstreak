@@ -178,6 +178,7 @@ function Account(props) {
   }
 
   window.getProfile = async (data) => {
+    setLoadingFile(true);
     if (data) {
       const token = data?.idToken;
       const result = data?.user;
@@ -195,6 +196,7 @@ function Account(props) {
       } catch (error) {
         console.log(error)
       }
+      setLoadingFile(false);
       // }
     }
   }
