@@ -12,6 +12,8 @@ import './landingPage.css';
 
 import { useHistory } from 'react-router-dom';
 
+import { urls } from "constants/index";
+
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 
@@ -254,7 +256,7 @@ function LandingPage() {
                   style={{ position: 'relative' }}
                 >
                   <ReactPlayer
-                    url={process.env.REACT_APP_ENV === 'development' ? "http://localhost:5000/habstreak_guide.mp4" : 'https://habstreak.herokuapp.com/habstreak_guide.mp4'}
+                    url={process.env.REACT_APP_ENV === 'development' ? `${urls.dev}habstreak_guide.mp4` : `${urls.prod}habstreak_guide.mp4`}
                     width="100%"
                     height="100%"
                     playing={playIcon}

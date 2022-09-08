@@ -25,6 +25,7 @@ import { errorHandler, planDetail } from 'utilities';
 
 //CONSTANTS
 import { size } from 'lodash';
+import { urls } from "constants/index";
 
 function Profile(props) {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ function Profile(props) {
         "currency": paymentData.currency,
         "name": "Habstreak",
         "description": "",
-        "image": process.env.REACT_APP_ENV === 'development' ? "http://localhost:5000/logo.svg" : 'https://habstreak.herokuapp.com/logo.svg',
+        "image": process.env.REACT_APP_ENV === 'development' ? `${urls.dev}logo.svg` : `${urls.prod}logo.svg`,
         "order_id": paymentData.id,
         "handler": function (response) {
           let startTime = "";
