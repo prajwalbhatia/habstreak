@@ -8,7 +8,7 @@ import Navigation from "components/navigation/navigation";
 //CSS
 import "./frame.css";
 
-export default function Frame(props) {
+function Frame(props) {
     const {
         containerClass,
         withHeader,
@@ -65,5 +65,6 @@ Frame.defaultProps = {
 }
 
 
+export default React.memo(Frame);
 
 

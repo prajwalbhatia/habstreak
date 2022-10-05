@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import ReactPlayer from 'react-player';
+import React, { useState, useEffect, lazy } from 'react';
+import ClipLoader from "react-spinners/ClipLoader";
 
 //Component 
 import { PrimaryButton } from "components/button/button";
@@ -12,54 +12,34 @@ import './landingPage.css';
 
 import { useHistory } from 'react-router-dom';
 
-import { urls } from "constants/index";
-
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 
 //Actions
 import {
-  sendMessage as sendSupportMessage,
   emptyError
 } from "redux/actions/support"
 
 //UTILITIES
-import { jumpToAccount, dialogForError, openInNewTab } from "utilities/index";
+import { jumpToAccount, dialogForError } from "utilities/index";
 
 //IMAGES
-import { ReactComponent as Logo } from './img/Logo.svg';
 import { ReactComponent as Hero } from './img/hero.svg';
-import { ReactComponent as Intro } from './img/Intro.svg';
-import { ReactComponent as Prime } from './img/Prime.svg';
-import screenfull from 'screenfull';
+
+import { Suspense } from 'react';
+
+const Guide = lazy(() => import('components/landing-page/Guide'));
+const Pricing = lazy(() => import('components/landing-page/Pricing'));
+const Contact = lazy(() => import('components/landing-page/Contact'));
+const Footer = lazy(() => import('components/landing-page/Footer'));
 
 function LandingPage() {
   const history = useHistory();
   const dispatch = useDispatch();
 
   let error = useSelector((state) => state.user.error);
-  const authData = useSelector((state) => state.user.authData);
-
-
-  //REF
-  const playerContainerRef = useRef();
 
   //STATES
-  const [selectedNav, setSelectedNav] = useState('home');
-  const [playIcon, setPlayIcon] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [errMsg, setErrMsg] = useState({ email: '' });
-  const [successMsg, setSuccessMsg] = useState({});
-  const [formData, setFormData] = useState({});
-  const [playerReady, setPlayerReady] = useState(false);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
-
   useEffect(() => {
     if (error.length > 0) {
       dialogForError(error);
@@ -83,78 +63,12 @@ function LandingPage() {
 
   }, [])
 
-  const handleScroll = (e) => {
-    let scroll = window.scrollY;
-    if (scroll && scroll < 400)
-      setSelectedNav('home');
-  }
+
+
+
+
 
   //FUNCTIONS
-  const handleLinkClick = (e) => {
-    if (!e.target.getAttribute('data-value'))
-      setSelectedNav('home');
-    else if (e.target.getAttribute('data-value') === 'aboutUs') {
-      history.push('/about-us')
-    }
-    else {
-      document.getElementById(e.target.getAttribute('data-value')).scrollIntoView({ behavior: 'smooth' });
-      setSelectedNav(e.target.getAttribute('data-value'));
-    }
-  }
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const validation = (e) => {
-    //EMAIL VALIDATION
-    if (e.target.name === 'email') {
-      if (!formData[e.target.name]) {
-        setErrMsg({ ...errMsg, [e.target.name]: 'Email can\'t be empty' });
-      }
-      else if (typeof formData[e.target.name] !== "undefined") {
-        let lastAtPos = formData[e.target.name].lastIndexOf("@");
-        let lastDotPos = formData[e.target.name].lastIndexOf(".");
-
-        if (
-          !(
-            lastAtPos < lastDotPos &&
-            lastAtPos > 0 &&
-            formData[e.target.name].indexOf("@@") === -1 &&
-            lastDotPos > 2 &&
-            formData[e.target.name].length - lastDotPos > 2
-          )
-        ) {
-          setErrMsg({ ...errMsg, [e.target.name]: 'Email is not valid' });
-        }
-        else {
-          delete errMsg[[e.target.name]];
-          setErrMsg({ ...errMsg });
-          setSuccessMsg({ ...successMsg, [e.target.name]: 'Looks Great!' });
-        }
-      }
-    }
-  }
-
-  const sendMessage = () => {
-    console.log('SEND MESSAGE', errMsg)
-    if (Object.keys(formData).length === 2 && formData.email.length > 0 && formData.message.length > 0 && Object.keys(errMsg).length === 0) {
-      dispatch(sendSupportMessage(formData));
-      setTimeout(() => {
-        setFormData({ email: "", message: "" });
-        setErrMsg({ email: '' });
-        setSuccessMsg({ email: 'Message sent' })
-      }, 1000);
-
-      setTimeout(() => {
-        setSuccessMsg({ email: '' })
-      }, 2000);
-    }
-  }
-
-  //FUNCTIONS
-
-
   return (
     <div>
       <div className='landing-page'>
@@ -238,266 +152,31 @@ function LandingPage() {
           </div>
 
         </section>
+        <Suspense fallback={<div className="loader-container">
+          <ClipLoader loading size={40} color="var(--primaryColor)" />
+        </div>}>
+          <Guide />
+        </Suspense>
 
-        <section id="guide" className='global-background guide-section guide-background padding-global'>
-          <header className='guide-heading'>Guide</header>
+        <Suspense fallback={<div className="loader-container">
+          <ClipLoader loading size={40} color="var(--primaryColor)" />
+        </div>}>
+          <Pricing/>
+        </Suspense>
 
-          <div className='d-flex mt-40 guide-container' >
-            <div className="left-section">
-              <h1 className='h1-40'>Enjoying the process is important</h1>
-              <p className='p-18'>Take baby steps daily to complete the impossible looking tasks and make impossible task says I M POSSIBLE.</p>
-            </div>
-
-
-            <div className="right-section" style={{ position: 'relative' }}>
-              <div className='player-container' >
-                <div
-                  ref={playerContainerRef}
-                  style={{ position: 'relative' }}
-                >
-                  <ReactPlayer
-                    url={process.env.REACT_APP_ENV === 'development' ? `${urls.dev}habstreak_guide.mp4` : `${urls.prod}habstreak_guide.mp4`}
-                    width="100%"
-                    height="100%"
-                    playing={playIcon}
-                    className={playerReady ? 'react-player' : 'react-player player-shimmer'}
-                    onReady={() => {
-                      setPlayerReady(true);
-                    }}
-                    onStart={() => {
-                      // setPlayerReady(false);
-                    }}
-                  />
-
-
-
-                  {
-                    playerReady
-                    &&
-                    <>
-                      <div className='fullscreen-icon'
-                        onClick={() => {
-                          screenfull.toggle(playerContainerRef.current)
-                          console.log('TOGGLE', screenfull.isFullscreen)
-
-                          setIsFullScreen(!isFullScreen);
-
-                          // }
-                        }}>
-                        {
-                          isFullScreen
-                            ?
-                            <i className="demo-icon icon-fullscreen-exit full-screen-icon" />
-                            :
-                            <i className="demo-icon icon-fullscreen full-screen-icon" />
-                        }
-                      </div>
-
-
-                      <div className='play-pause-icon'
-                        onClick={() => {
-                          setPlayIcon(!playIcon)
-                        }}>
-                        {
-                          !playIcon
-                            ?
-                            <i className="demo-icon icon-play play-icon" />
-                            :
-                            <i className="demo-icon icon-pause play-icon" />
-                        }
-                      </div>
-                    </>
-
-                  }
-                </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        <section id="pricing" className='global-background pricing-section price-background padding-global'>
-          <header className='price-heading'>Pricing</header>
-
-          <div className='d-flex pack-container'>
-            <div className='flex-dir-col price-box free-pricing-container'>
-              <div className='d-flex price-heading-box free-box'>
-                <div className='icon-container'>
-                  <Intro />
-                </div>
-                <div className='price-info-container ml-10'>
-                  <div className='title-container'>
-                    <h2 className='font-jos'>INTRO</h2>
-                  </div>
-                  <div className='price-container'>
-                    {/* <span className='rob-bold-12-black'>$</span><span className='foont-jos size-36'>19</span><span className='rob-reg-14-black'>.99 / PER MONTH</span> */}
-                    <span className='foont-jos size-36'>FREE</span>
-                  </div>
-
-                </div>
-              </div>
-
-              <div className='flex-auto'>
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>No of streaks</span>
-                  <span className='rob-reg-14-black'>2</span>
-                </div>
-
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>No of rewards</span>
-                  <span className='rob-reg-14-black'>2</span>
-                </div>
-
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>Dashboard Summary</span>
-                  <span className='rob-reg-14-black'>Yes</span>
-                </div>
-
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>Recent Activities</span>
-                  <span className='rob-reg-14-black'>No</span>
-                </div>
-              </div>
-
-              <div className='center-items mb-10'>
-                <div className='d-flex plan-btn-container center-items mt-20'>
-                  <h3 className='font-18 font-jos font-bold'>Default Plan</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className='flex-dir-col price-box prime-pricing-container'>
-              <div className='d-flex price-heading-box prime-box'>
-                <div className='icon-container'>
-                  <Prime />
-                </div>
-                <div className='price-info-container ml-10'>
-                  <div className='title-container'>
-                    <h2 className='font-jos'>PRIME</h2>
-                  </div>
-                  <div className='price-container'>
-                    <span className='rob-bold-12-black'>Rs</span><span className='foont-jos size-36 ml-5'>45</span><span className='rob-reg-14-black'>.00 / PER MONTH</span>
-                  </div>
-
-                </div>
-              </div>
-
-              <div className='flex-auto'>
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>No of streaks</span>
-                  <span className='rob-reg-14-black'>100</span>
-                </div>
-
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>No of rewards</span>
-                  <span className='rob-reg-14-black'>100</span>
-                </div>
-
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>Dashboard Summary</span>
-                  <span className='rob-reg-14-black'>Yes</span>
-                </div>
-
-                <div className='mt-20 plan-info d-flex '>
-                  <span className='rob-reg-14-black'>Recent Activities</span>
-                  <span className='rob-reg-14-black'>Yes</span>
-                </div>
-              </div>
-
-              <div className='center-items mb-10'>
-                <div onClick={() => { jumpToAccount('signup', history) }} className='d-flex plan-btn-container center-items mt-20 prime-btn c-pointer'>
-                  <h3 className='font-18 font-jos font-bold'>Choose Plan</h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="contact" className='contact-section contact-background padding-global'>
-          {/* <hr></hr>
-            <div className='h-1'></div> */}
-          <div className='container'>
-            <div className='left-section'>
-              <Logo />
-              <p className='mt-20'>When you will rewards yourself on small small milestones than you will feel exciting and motivated to complete that task and you will not break the streak.</p>
-
-              <div className='socials mt-30'>
-                {/* <i className="demo-icon icon-facebook mr-20 contact-icon" /> */}
-                <i onClick={() => openInNewTab('https://www.instagram.com/prajwal_bhatia')} className="demo-icon icon-instagram mr-20 contact-icon" />
-                <i onClick={() => openInNewTab('https://twitter.com/bhatia_prajwal?t=m8OrMkj-hsks8OjwchvRqQ&s=09')}
-                  className="demo-icon icon-twitter contact-icon" />
-              </div>
-            </div>
-            <div className='middle-section'>
-              {/* <Footer /> */}
-            </div>
-            <div className='right-section'>
-              <h4 className='write-ur-text'>Write us</h4>
-
-              <TextInputElement
-                placeholder={'Write message'}
-                uid={'message'}
-                onChange={handleChange}
-                value={formData['message']}
-                type={'text'}
-                containerClass={'mt-20'}
-              />
-
-
-              <InputElement
-                placeholder={'name@gmail.com'}
-                uid={'email'}
-                type="text"
-                value={formData['email']}
-                containerClass={'mt-20'}
-                onBlur={validation}
-                errMsg={errMsg['email']}
-                successMsg={successMsg['email']}
-                icon={<i className="demo-icon icon-email size-16-8f" />}
-                onChange={handleChange}
-
-              />
-
-              <PrimaryButton
-                name={'Send'}
-                click={sendMessage}
-                btnContainerClass="d-flex justify-end"
-                btnClass='header-btn landing-login-btn send-btn mt-30'
-              />
-            </div>
-          </div>
-        </section>
+        <Suspense fallback={<div className="loader-container">
+          <ClipLoader loading size={40} color="var(--primaryColor)" />
+        </div>}>
+          <Contact  />
+        </Suspense>
         {/* </main> */}
 
         {/* Footer */}
-        <div className='d-flex justify-center mt-50 footer-container'>
-          <footer className="footer">
-            <div className='d-flex'>
-              <div className='footer-navigation'>
-                <ol
-                  className='d-flex'
-                  onClick={handleLinkClick}
-                >
-                  <li className='home color-fff' data-value='home'>Home</li>
-                  <li className='feature color-fff' data-value='feature'>Feature</li>
-                  <li className='guide color-fff' data-value='guide'>Guide</li>
-                  <li className='contact color-fff' data-value='contact'>Contact</li>
-                </ol>
-              </div>
-
-              <div className='d-flex flex-1 justify-end'>
-                <p className='color-fff'>Copyright © by Habstreak 2022</p>
-              </div>
-
-            </div>
-          </footer>
-
-          <div className='d-flex flex-1 justify-center small-screen-footer-text'>
-            <p className='rob-reg-10-grey'>Copyright © by Habstreak 2022</p>
-          </div>
-        </div>
+        <Suspense fallback={<div className="loader-container">
+          <ClipLoader loading size={40} color="var(--primaryColor)" />
+        </div>}>
+          <Footer/>
+        </Suspense>
 
         <div className='d-flex justify-center policies'>
           <span onClick={() => {

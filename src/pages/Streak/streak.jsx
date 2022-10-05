@@ -3,7 +3,7 @@ import { useLocation, withRouter } from 'react-router-dom';
 
 //Libraries
 import moment from 'moment';
-import { ClipLoader } from "react-spinners";
+import ClipLoader from "react-spinners/ClipLoader";
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 import Parser from 'html-react-parser';

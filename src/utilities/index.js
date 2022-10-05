@@ -8,7 +8,7 @@ import moment from 'moment';
 import { createStreakData, updateStreakData, deleteStreakData, deleteStreakAndRewardData } from "redux/actions/streak";
 import { createRewardData, updateRewardData, deleteRewardBulk, deleteRewardData } from "redux/actions/reward";
 
-import { size } from "lodash";
+import size from 'lodash/size';
 import { logoutCall } from "redux/actions/user";
 import { logout } from "redux/api";
 

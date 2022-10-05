@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from "react-router-dom";
 
-
 //CSS
 import './table.css';
-import { cloneDeep as _cloneDeep } from 'lodash';
-
-//CONSTANTS
+import cloneDeep from 'lodash/cloneDeep';
 import { theme, plansFeatures } from "constants/index";
 
 //COMPONENTS
@@ -38,7 +35,7 @@ function Table(props) {
 
   //FUNCTIONS
   const renderTableHeading = () => {
-    const head = _cloneDeep(tableHead);
+    const head = cloneDeep(tableHead);
     return (
       <>
         <div key={0} className="table-head-data first-head"></div>
@@ -56,7 +53,7 @@ function Table(props) {
 
 
   const renderTableTab = () => {
-    const data = _cloneDeep(tabData);
+    const data = cloneDeep(tabData);
     return (
       <div className="tab-area">
         {
@@ -229,8 +226,8 @@ function Table(props) {
   }
 
   const renderTableData = () => {
-    const data = _cloneDeep(tableData);
-    const head = _cloneDeep(tableHead);
+    const data = cloneDeep(tableData);
+    const head = cloneDeep(tableHead);
     let val = 0;
     return (
       <>
@@ -284,7 +281,7 @@ function Table(props) {
 
 
   const tableDataForSmallScreen = () => {
-    const data = _cloneDeep(tableData);
+    const data = cloneDeep(tableData);
     let val = 0;
     return (
       <div className='d-flex o-scroll table-card-container'>

@@ -3,7 +3,7 @@ import { GoogleLogin } from 'react-google-login';
 import { useHistory, useLocation } from 'react-router-dom';
 
 //Libraries
-import { ClipLoader } from "react-spinners";
+import ClipLoader from "react-spinners/ClipLoader";
 
 //COMPONENTS
 import { InputElement } from "components/form-elements/form-elements";

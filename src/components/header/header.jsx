@@ -36,6 +36,8 @@ import { search } from 'redux/actions/streak';
 import { useEffect } from 'react';
 
 function Header(props) {
+
+    console.log('********HEADER***' , props)
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -225,4 +227,4 @@ function Header(props) {
     );
 }
 
-export default Header;
+export default React.memo(Header);

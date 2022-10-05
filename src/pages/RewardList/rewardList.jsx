@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
 import moment from 'moment';
-import { ClipLoader } from "react-spinners";
+import ClipLoader from "react-spinners/ClipLoader";
 
 //Actions
 import { getRewardsData, emptyError } from "redux/actions/reward";

@@ -22,6 +22,7 @@ import { getUserData } from 'redux/actions/user';
 import { navigationList, navigationIcons } from './navigationList';
 
 function Navigation() {
+  console.log("********NAVIGATION***")
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -229,4 +230,4 @@ function Navigation() {
   );
 }
 
-export default Navigation;
+export default React.memo(Navigation);

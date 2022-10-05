@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
 import moment from 'moment';
-import { ClipLoader } from "react-spinners";
-import { groupBy as _groupBy, size as _size, map as _map } from "lodash";
+import ClipLoader from "react-spinners/ClipLoader";
+import groupBy from 'lodash/groupBy';
+import map from 'lodash/map';
+import size from 'lodash/size';
 
 //COMPONENTS
 import Frame from "components/frame/frame";
@@ -137,7 +139,7 @@ function Dashboard(props) {
       activity.time = modifiedTime;
       return activity;
     })
-    const groupedByDate = _groupBy(modifiedActivities, 'date');
+    const groupedByDate = groupBy(modifiedActivities, 'date');
     const currentDate = moment(moment().format()).format('ll');
     if (groupedByDate[currentDate])
       setGroupedActivities({ [currentDate]: groupedByDate[currentDate] });
@@ -228,15 +230,15 @@ function Dashboard(props) {
   }
 
   const recentActivityCardJsx = () => {
-    const isEmpty = _size(groupedActivities) === 0;
+    const isEmpty = size(groupedActivities) === 0;
     if (!isEmpty) {
       return (
-        _map(groupedActivities, (value, key) => {
+        map(groupedActivities, (value, key) => {
           return (
             <div key={key} className='date-data'>
               <span className='date-content'>{key}</span>
               {
-                _map(value, (val, index) => {
+                map(value, (val, index) => {
                   return (
                     <div key={index} className='info-container'>
                       <h3 className='time'>{val.time}</h3>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
 import moment from 'moment';
-import { ClipLoader } from "react-spinners";
+import ClipLoader from "react-spinners/ClipLoader";
 
 //COMPONENTS
 import Frame from "components/frame/frame";
@@ -24,7 +24,7 @@ import Fallback from 'utilities/fallback/fallback.js';
 import { errorHandler, planDetail } from 'utilities';
 
 //CONSTANTS
-import { size } from 'lodash';
+import size from 'lodash/size';
 import { urls } from "constants/index";
 
 function Profile(props) {

@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { React, useState } from "react";
 
 //LIBRARIES
-import { cloneDeep, map as _map, size as _size } from "lodash";
+import cloneDeep from 'lodash/cloneDeep';
+import map from 'lodash/map';
+import size from 'lodash/size';
+
 import Calendar from 'react-calendar';
 import moment from 'moment';
 
@@ -182,12 +185,12 @@ function Modal(props) {
     const handleClick = (type) => {
         if (type === 'primary') {
             if (modalType === 'create') {
-                const isEmpty = _size(formData) === 0;
-                const allFieldsAreFilled = _size(formData) === 5;
+                const isEmpty = size(formData) === 0;
+                const allFieldsAreFilled = size(formData) === 5;
 
                 if (!isEmpty && allFieldsAreFilled) {
                     let emptyField = false;
-                    _map(formData, (item) => {
+                    map(formData, (item) => {
                         if (item.length === 0)
                             emptyField = true;
                     });

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense } from 'react';
 
 //Third party libraries
 import {
@@ -6,50 +6,55 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
+import ClipLoader from "react-spinners/ClipLoader";
 
 import ProtectedRoute from 'ProtectedRoutes';
-
-//Paged
-import DashboardPage from 'pages/Dashboard/dashboard';
-import StreakListPage from 'pages/StreakList/streak-list';
-import Streak from "pages/Streak/streak";
-import RewardList from "pages/RewardList/rewardList";
-import RecentActivities from 'pages/RecentActivities/recentActivities';
-import AccountPage from 'pages/Account/account';
-import LandingPage from 'pages/LandingPage/landingPage';
-import ProfilePage from 'pages/Profile/profile';
-import TermsAndCondition from 'pages/Policies/tearmsAndCondition';
-import PrivacyPolicy from 'pages/Policies/privacyPolicy';
-import CancellationPolicy from 'pages/Policies/cancellationPolicy';
-import AboutUs from 'pages/AboutUs/about';
-import SuccessPage from 'pages/GoogleResponse/success';
-import Errorpage from 'pages/GoogleResponse/error';
 
 import "./fontello/css/habstreak.css"
 import './App.css';
 
+//PAGED
+const DashboardPage = lazy(() => import('pages/Dashboard/dashboard'));
+const StreakListPage = lazy(() => import('pages/StreakList/streak-list'));
+const Streak = lazy(() => import('pages/Streak/streak'));
+const RewardList = lazy(() => import('pages/RewardList/rewardList'));
+const RecentActivities = lazy(() => import('pages/RecentActivities/recentActivities'));
+const AccountPage = lazy(() => import('pages/Account/account'));
+const LandingPage = lazy(() => import('pages/LandingPage/landingPage'));
+const ProfilePage = lazy(() => import('pages/Profile/profile'));
+const TermsAndCondition = lazy(() => import('pages/Policies/tearmsAndCondition'));
+const PrivacyPolicy = lazy(() => import('pages/Policies/privacyPolicy'));
+const CancellationPolicy = lazy(() => import('pages/Policies/cancellationPolicy'));
+const AboutUs = lazy(() => import('pages/AboutUs/about'));
+const SuccessPage = lazy(() => import('pages/GoogleResponse/success'));
+const Errorpage = lazy(() => import('pages/GoogleResponse/error'));
+
 function App(props) {
   return (
-    <Router>
-      <div id="modal-container-id"></div>
-      <Switch>
-        <ProtectedRoute path="/dashboard" component={DashboardPage} />
-        <ProtectedRoute exact path="/streak-list" component={StreakListPage} />
-        <ProtectedRoute path="/streak/:id" component={Streak} />
-        <ProtectedRoute path="/recent-activities" component={RecentActivities} />
-        <ProtectedRoute path="/reward-list" component={RewardList} />
-        <ProtectedRoute path="/success" component={SuccessPage} />
-        <ProtectedRoute path="/error" component={Errorpage} />
-        <ProtectedRoute path="/profile" component={ProfilePage} />
-        <Route path="/account" component={AccountPage} />
-        <Route path="/terms-and-condition" component={TermsAndCondition} />
-        <Route path="/privacy-policy" component={PrivacyPolicy} />
-        <Route path="/refund-policy" component={CancellationPolicy} />
-        <Route path="/about-us" component={AboutUs} />
+    <Suspense fallback={<div className="loader-container">
+      <ClipLoader loading size={40} color="var(--primaryColor)" />
+    </div>}>
+      <Router>
+        <div id="modal-container-id"></div>
+        <Switch>
+          <ProtectedRoute path="/dashboard" component={DashboardPage} />
+          <ProtectedRoute exact path="/streak-list" component={StreakListPage} />
+          <ProtectedRoute path="/streak/:id" component={Streak} />
+          <ProtectedRoute path="/recent-activities" component={RecentActivities} />
+          <ProtectedRoute path="/reward-list" component={RewardList} />
+          <ProtectedRoute path="/success" component={SuccessPage} />
+          <ProtectedRoute path="/error" component={Errorpage} />
+          <ProtectedRoute path="/profile" component={ProfilePage} />
+          <Route path="/account" component={AccountPage} />
+          <Route path="/terms-and-condition" component={TermsAndCondition} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/refund-policy" component={CancellationPolicy} />
+          <Route path="/about-us" component={AboutUs} />
 
-        <Route path="/" component={LandingPage} />
-      </Switch>
-    </Router>
+          <Route path="/" component={LandingPage} />
+        </Switch>
+      </Router>
+    </Suspense>
   );
 }
 

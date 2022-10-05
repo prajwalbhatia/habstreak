@@ -5,8 +5,7 @@ import { Select, MenuItem } from '@material-ui/core';
 
 //CSS
 import "./form-element.css";
-import { noop } from 'lodash';
-
+import noop from 'lodash/noop';
 
 export function InputElement({ lable, type, uid, placeholder, containerClass, icon, errMsg, successMsg, reference, ...rest }) {
   return (

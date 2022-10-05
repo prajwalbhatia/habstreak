@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 //css
 import { IconButton } from "components/button/button";
@@ -56,4 +56,4 @@ function Search(props) {
     )
 }
 
-export default Search;
+export default React.memo(Search);

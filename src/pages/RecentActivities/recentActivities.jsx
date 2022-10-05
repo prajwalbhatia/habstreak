@@ -4,8 +4,11 @@ import { useHistory } from "react-router-dom";
 
 //Libraries
 import moment from 'moment';
-import { ClipLoader } from "react-spinners";
-import { groupBy as _groupBy, size as _size, map as _map } from "lodash";
+import ClipLoader from "react-spinners/ClipLoader";
+
+import groupBy from 'lodash/groupBy';
+import map from 'lodash/map';
+import size from 'lodash/size';
 
 //COMPONENTS
 import Frame from "../../components/frame/frame";
@@ -152,26 +155,26 @@ function RecentActivities() {
       activity.time = modifiedTime;
       return activity;
     })
-    const groupedByDate = _groupBy(modifiedActivities, 'date');
+    const groupedByDate = groupBy(modifiedActivities, 'date');
     setGroupedActivities(groupedByDate);
   }, [activities]);
 
   const recentActivityCardJsx = () => {
-    const isEmpty = _size(groupedActivities) === 0;
+    const isEmpty = size(groupedActivities) === 0;
 
     if (!isEmpty && planType.length > 0 && planType !== "free") {
       return (
-        _map(groupedActivities, (value, key) => {
+        map(groupedActivities, (value, key) => {
           return (
             <div key={key} className='date-data'>
               <span className='date-content'>{key}</span>
               {
-                _map(value, (val, index) => {
+                map(value, (val, index) => {
                   return (
                     <div key={index} className='info-container'>
                       <div className='icon-container center-items'>
                         {iconType(val.type)}
-                        {index < _size(value) - 1 ? <div className='line'></div> : null}
+                        {index < size(value) - 1 ? <div className='line'></div> : null}
                       </div>
 
                       <div className='flex-dir-col action-info'>

@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Libraries
 import moment from 'moment';
-import { ClipLoader } from "react-spinners";
-import { cloneDeep as _cloneDeep } from "lodash";
+import ClipLoader from "react-spinners/ClipLoader";
+import cloneDeep from 'lodash/cloneDeep';
 
 //Actions
 import { getStreaksData, streakListType, search } from "../../redux/actions/streak";
@@ -209,7 +209,7 @@ function StreakList(props) {
 
 
   const modifyStreaks = (streaks) => {
-    const streakData = _cloneDeep(streaks);
+    const streakData = cloneDeep(streaks);
     const currentDate = moment().format();
 
     const modified = streakData.map((streak) => {
