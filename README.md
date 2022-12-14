@@ -12,7 +12,7 @@
 
 
 <p align="center">
-    <a href="https://habstrek.com" target="blank">View Demo</a>
+    <a href="https://habstreak.com" target="blank">View Demo</a>
 </p>
 
 # 👋 Introducing `Habstreak`
