@@ -12,7 +12,7 @@
 
 
 <p align="center">
-    <a href="https://habstreak.com" target="blank">View Demo</a>
+    <a href="https://habstreak.com" target="_blank">View Demo</a>
 </p>
 
 # 👋 Introducing `Habstreak`
@@ -77,7 +77,7 @@ We all need support and motivation. `HABSTREAK` is not an exception. Please give
 
 If you found the app helpful, consider supporting us with a coffee.
 
-<a href="https://www.buymeacoffee.com/prajwal6bhJ">
+<a href="https://www.buymeacoffee.com/prajwal6bhJ" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50px">
 </a> 
 
