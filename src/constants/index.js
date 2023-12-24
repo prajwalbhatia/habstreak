@@ -132,6 +132,6 @@ export const urls = {
   preProd: 'https://habstreak-staging.herokuapp.com/',
   // prod: 'https://habstreak-api.azurewebsites.net/'
   // prod: 'https://habstreak.tracexpense.in/'
-  prod: 'https://habstreak-api-466406ce42df.herokuapp.com/
+  prod: 'https://habstreak-api-466406ce42df.herokuapp.com/'
 }
 
