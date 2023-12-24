@@ -131,6 +131,7 @@ export const urls = {
   devMob: 'http://192.168.29.23:5000',
   preProd: 'https://habstreak-staging.herokuapp.com/',
   // prod: 'https://habstreak-api.azurewebsites.net/'
-  prod: 'https://habstreak.tracexpense.in/'
+  // prod: 'https://habstreak.tracexpense.in/'
+  prod: 'https://habstreak-api-466406ce42df.herokuapp.com/
 }
 
