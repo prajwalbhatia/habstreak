@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://habstreak.com" target="_blank">
-        <img src="./src/assests/images/Logo-Icon.svg" alt="habstreak-logo" width="225"/>
+        <img src="./src/Assests/Images/Logo-Icon.svg" alt="habstreak-logo" width="225"/>
     </a>
     
 </p>
@@ -10,12 +10,14 @@
 
 <h3 align="center">Get things done and reward yourself.</h3>
 
+
 <p align="center">
     <a href="https://habstreak.com" target="_blank">View Demo</a>
 </p>
 
 # 👋 Introducing `Habstreak`
 `Habstreak` is an platform that will help to get more things done. It allows you to complete your task in a fun way by rewarding yourself. So the concept is that you will create a streak for any task you want to complete and to keep yourself motivated or to complete that particular streak you will assign yourself a reward for completing a milestone for that particular streak.
+
 
 Liked it? Please give a ⭐️ to <b>Habstreak</b> to build its triceps 💪 stronger.
 
@@ -50,13 +52,14 @@ Please access HABSTREAK using the URL:
 - Use `HABSTREAK` seamlessly from any device.
 
 # 🍔 Built With
-- [React JS](https://reactjs.org/): The coolest Frontend framework on the planet
-- [Redux](https://redux.js.org/) : State Management for frontend apps
-- [momentjs](https://momentjs.com/): Date formatting
-- [axios](https://github.com/axios/axios): Makes API calls easy
-- [html-react-parser](https://www.npmjs.com/package/html-react-parser): The parser converts an HTML string to one or more React elements.
-- [lodash](https://lodash.com/): Utility Library
-- [Netlify](https://www.netlify.com/): Best for Hosting a Frontend app
+- **TypeScript:** Strongly-typed language for enhanced development.
+- **React:** Declarative and component-based UI library.
+- **Redux Toolkit:** Simplified state management using Redux.
+- **RTK Query:** Powerful data fetching and state management library.
+- **Folder Structure:** Organized directory structure for better code organization.
+- **Linting and Formatting:** ESLint and Prettier for code consistency.
+- **SCSS:** Styling with the power of Sass.
+- **Axios:** HTTP client for making API requests.
 
 # 🦄 Upcoming Features
 `HABSTREAK` has all the potentials to grow further. Here are some of the upcoming features planned(not in any order),

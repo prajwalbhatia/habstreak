@@ -1,0 +1,111 @@
+.profile-inner-container {
+    height: calc(100vh - (6rem + 5rem + 5rem));
+    margin-top: 2em;
+    flex-wrap: wrap;
+    overflow: auto;
+  
+    .left-container,
+    .right-container {
+      background-color: #FBFBFB;
+      border-radius: 2rem;
+      margin-right: 3em;
+      padding: 3em;
+      min-width: 30rem;
+    }
+  
+    .left-container {
+      .pic-container {
+        .picture-box {
+          height: 14vw;
+          width: 14vw;
+          border-radius: 50%;
+          box-shadow: 0px .3rem .6rem var(--boxShadow);
+          margin-top: 2em;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: contain;
+          background-color: var(--primaryColor);
+  
+          span {
+            font-family: RobotoBold;
+            font-size: 8vw;
+            color: #fff;
+          }
+        }
+  
+        .btns-container {
+          max-width: 140px;
+          margin-left: 2em;
+          justify-content: center;
+  
+          .secondary-btn {
+            color: #D63E3E;
+          }
+        }
+      }
+  
+    }
+  
+    .right-container {
+      margin-right: 0;
+  
+      .plan-container {
+        .plan-details {
+          height: 100%;
+          background-color: #fff;
+          box-shadow: 0px .3rem .6rem var(--boxShadow);
+          border-radius: 2rem;
+          position: relative;
+  
+          .plan-info {
+            padding: 0 2em;
+            justify-content: space-between;
+          }
+  
+          .plan-type {
+            padding: 1.6em;
+            position: relative;
+            height: 12rem;
+            background-color: #fff;
+            box-shadow: 0px .3rem .6rem var(--boxShadow);
+            border-radius: 2rem;
+          }
+  
+        }
+      }
+  
+      .plan-btn-container {
+        margin-top: 4em;
+  
+        .change-plan-btn {
+          max-width: 12rem;
+  
+        }
+      }
+    }
+  
+  }
+  
+  
+  
+  @media only screen and (max-width: 1230px) {
+    .profile-inner-container {
+      .left-container {
+        margin-right: 0;
+        min-width: none;
+      }
+  
+      .right-container {
+        margin-top: 2rem;
+        // min-width: none;
+  
+      }
+    }
+  }
+  
+  
+  @media only screen and (max-width: 860px) {
+   .profile-inner-container {
+     height: calc(100vh - (33rem));
+   }
+  }
