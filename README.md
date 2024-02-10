@@ -17,7 +17,6 @@
 # 👋 Introducing `Habstreak`
 `Habstreak` is an platform that will help to get more things done. It allows you to complete your task in a fun way by rewarding yourself. So the concept is that you will create a streak for any task you want to complete and to keep yourself motivated or to complete that particular streak you will assign yourself a reward for completing a milestone for that particular streak.
 
-
 Liked it? Please give a ⭐️ to <b>Habstreak</b> to build its triceps 💪 stronger.
 
 ### Many Thanks to all the `Stargazers` who has supported this project with stars(⭐)
