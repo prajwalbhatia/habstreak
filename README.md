@@ -10,7 +10,6 @@
 
 <h3 align="center">Get things done and reward yourself.</h3>
 
-
 <p align="center">
     <a href="https://habstreak.com" target="_blank">View Demo</a>
 </p>
