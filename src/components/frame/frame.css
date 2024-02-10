@@ -1,1 +1,0 @@
-.frame{height:100vh;overflow:hidden;margin-left:calc(var(--navigationWidth));padding:var(--pagesPaddingHorizontal) var(--pagesPaddingHorizontal)}.frame .frame-children{position:relative}@media only screen and (max-width:860px){.frame{margin-left:0;height:calc(100vh - (var(--navigationSmallHeight)));overflow:auto;padding:2em}}
