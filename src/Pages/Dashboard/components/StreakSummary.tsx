@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { Skeleton } from "@mui/material";
 
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 
@@ -15,7 +16,6 @@ import {
   isSameOrAfter,
   perPerDay,
   planDetail,
-  getLatestRecentActivities,
 } from "Utilities";
 
 import {
@@ -32,21 +32,17 @@ import {
   navigateToStreak,
   navigateToStreakList,
 } from "../helpers/dashboard.helpers";
-import { Skeleton } from "@mui/material";
 
 const StreakSummary = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const authData = useSelector((state: any) => state.authDataStore);
 
   const [taskCount, setTaskCount] = useState<number>(0);
   const [streakCount, setStreakCount] = useState<number>(0);
   const [planType, setPlanType] = useState("");
 
-  const [
-    createStreak,
-    { isSuccess: createStreakSuccess, isLoading: createStreakLoading },
-  ] = useCreateStreakMutation();
+  const [createStreak, { isLoading: createStreakLoading }] =
+    useCreateStreakMutation();
 
   const [createStreakDetail] = useCreateStreakDetailMutation();
 
@@ -56,6 +52,7 @@ const StreakSummary = () => {
     isFetching: streakListFetching,
     refetch: streakRefetch,
   } = useGetStreaksQuery({});
+
 
   useEffect(() => {
     if (streakList && streakList.length) {
@@ -75,7 +72,6 @@ const StreakSummary = () => {
       const filterStreaks = running.filter(
         (streak: StreakInterface, index: number) => {
           if (
-            index <= 2 &&
             moment(streak.dateFrom).isSameOrBefore(currentDate)
           ) {
             return streak;
@@ -93,13 +89,6 @@ const StreakSummary = () => {
   useEffect(() => {
     if (authData) setPlanType(planDetail(authData?.planType));
   }, [authData]);
-
-  useEffect(() => {
-    if (streakRefetch) {
-      streakRefetch();
-      getLatestRecentActivities(dispatch);
-    }
-  }, [createStreakSuccess]);
 
   const streakCardJsx = useCallback(
     (streakList: StreakListInterface[]) => {
@@ -254,8 +243,8 @@ const StreakSummary = () => {
         {createStreakLoading || streakListLoading || streakListFetching
           ? Array(
               createStreakLoading
-                ? streakList.length + 1 || 1
-                : streakList.length
+                ? Math.min(streakList?.length + 1 || 1, 3)
+                : streakList?.length || 0
             )
               .fill(1)
               .map((_, index) => (

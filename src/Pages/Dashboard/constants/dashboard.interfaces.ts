@@ -49,3 +49,14 @@ export interface StreakInterface {
 export interface RewardInterface {
   rewardEarned: boolean;
 }
+
+export interface ProgressCardProps {
+  title: string;
+  iconClass: string;
+  percentageData: string;
+  count: number;
+  onClick: () => void;
+  icon : string;
+  type : string
+}
+
