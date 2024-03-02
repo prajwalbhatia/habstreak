@@ -13,7 +13,9 @@ export const StrealSlice = createApi({
     createStreak: builder.mutation({
       query: (body) => ({ url: streakURL, method: "POST", body }),
       onQueryStarted(arg, api) {
+        console.log('Query started: createStreak');
         api.queryFulfilled.then(() => {
+          console.log('Query fulfilled: createStreak');
           api.dispatch(
             RecentActivitiesSlice.util.invalidateTags(["GetActivities"])
           );

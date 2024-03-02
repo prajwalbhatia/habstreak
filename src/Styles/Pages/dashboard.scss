@@ -41,7 +41,7 @@
           overflow-x: auto;
           min-height: 30rem;
   
-          .streak-card {
+          .streak-card , .streak-card-skeleton {
             min-width: 21rem;
             min-height: 25rem;
             max-height: 25rem;
@@ -118,6 +118,11 @@
                 cursor: pointer;
               }
             }
+          }
+
+          .streak-card-skeleton
+          {
+            background-color: rgba(0, 0, 0, 0.11);
           }
   
           .streak-card:hover {

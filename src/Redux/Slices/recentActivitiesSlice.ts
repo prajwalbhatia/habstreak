@@ -6,10 +6,11 @@ const recentActivitiesURL = "/recentActivities";
 export const RecentActivitiesSlice = createApi({
   reducerPath: "recentActivities",
   baseQuery: axiosBaseQuery,
-  tagTypes: ['GetActivities'],
+  tagTypes: ["GetActivities"],
   endpoints: (builder) => ({
     getRecentActivities: builder.query({
       query: () => ({ url: recentActivitiesURL, method: "GET" }),
+      providesTags: ["GetActivities"]
     }),
   }),
 });

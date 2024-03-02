@@ -40,6 +40,8 @@ import { useGetRecentActivitiesQuery } from "../../Redux/Slices/recentActivities
 import { storeSearchText } from "../../Redux/Slices/searchTextSlice";
 import { noop } from "lodash";
 import { useCreateStreakDetailMutation } from "../../Redux/Slices/streakDetailSlices";
+import store from "../../Redux/Store/store";
+import { clearResults } from "../../Redux/Slices/clearPersistSlice";
 
 declare var window: any;
 
@@ -118,7 +120,14 @@ const Header: React.FC<HeaderProps> = ({
 
   const [showListing, setShowListing] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [user] = useState(JSON.parse(localStorage.getItem("profile") || ""));
+  const [user] = useState(() => {
+    const localData = localStorage.getItem("profile");
+    if (localData) {
+      return JSON.parse(localData);
+    } else {
+      return "";
+    }
+  });
   const [streakCount, setStreakCount] = useState<number>(0);
   const [rewardCount, setRewardCount] = useState<number>(0);
   const [planType, setPlanType] = useState<string>("free");
@@ -134,21 +143,20 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const logoutFun = async (navigate: any, refreshToken: string) => {
-    // const logoutData : logoutDataInterface = await logout({ refreshToken });
-    await logout({ refreshToken });
+    const logoutData: any = await logout({ refreshToken });
 
-    // if(logoutData?.data?.message === 'You logged out successfully')
-    // {
+    if (logoutData?.data?.message === "You logged out successfully") {
+      localStorage.clear();
+      store.dispatch(clearResults());
 
-    // }
+      if (window.ReactNativeWebView) {
+        navigate("/");
+      } else {
+        navigate("/");
+      }
 
-    if (window.ReactNativeWebView) {
-      navigate("/account");
-    } else {
-      navigate("/");
+      if (window.ReactNativeWebView) sendEventToMobile("loggedOut");
     }
-
-    if (window.ReactNativeWebView) sendEventToMobile("loggedOut");
   };
 
   useEffect(() => {
@@ -325,7 +333,6 @@ const Header: React.FC<HeaderProps> = ({
                     "",
                     filterStreak,
                     (type: string, data: object) => {
-
                       if (type === "create") {
                         createReward(data);
                       }
@@ -350,7 +357,7 @@ const Header: React.FC<HeaderProps> = ({
                             streakId: streak?.data._id,
                             rewards: [],
                           };
- 
+
                           try {
                             await createStreakDetail(streadDetail);
                           } catch (error) {}

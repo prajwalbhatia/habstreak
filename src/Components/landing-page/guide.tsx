@@ -7,7 +7,7 @@ import { urls } from "Constants/index";
 
 function Guide() {
   //REF
-  const playerContainerRef = useRef();
+  const playerContainerRef = useRef<any>(null);
 
   //STATES
   const [playIcon, setPlayIcon] = useState(false);
@@ -32,10 +32,7 @@ function Guide() {
 
         <div className="right-section" style={{ position: "relative" }}>
           <div className="player-container">
-            <div
-              ref={playerContainerRef.current}
-              style={{ position: "relative" }}
-            >
+            <div ref={playerContainerRef} style={{ position: "relative" }}>
               <ReactPlayer
                 url={
                   process.env.REACT_APP_ENV === "development"

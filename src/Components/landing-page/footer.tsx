@@ -9,13 +9,15 @@ function Footer() {
   const [, setSelectedNav] = useState("home");
 
   //FUNCTIONS
-  const handleLinkClick = (e : any) => {
+  const handleLinkClick = (e: any) => {
     if (!e.target.getAttribute("data-value")) setSelectedNav("home");
     else if (e.target.getAttribute("data-value") === "aboutUs") {
       navigate("/about-us");
     } else {
-      //   document.getElementById(e.target.getAttribute('data-value')).scrollIntoView({ behavior: 'smooth' });
-      setSelectedNav(e.target.getAttribute("data-value"));
+      const id = e.target.getAttribute("data-value");
+      const element = document.getElementById(id);
+      element && element.scrollIntoView({ behavior: "smooth" });
+      setSelectedNav(id);
     }
   };
 

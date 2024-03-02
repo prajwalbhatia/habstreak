@@ -163,10 +163,10 @@ function StreakList() {
   }, [searchText]);
 
   useEffect(() => {
-    if (planType === "prime") {
+    if (planType === "prime" && streaksData) {
       setStreaks([...streaksData]);
     } else {
-      let limitedData = [...streaksData].splice(
+      let limitedData = streaksData && [...streaksData].splice(
         0,
         plansFeatures["free"].streaks
       );

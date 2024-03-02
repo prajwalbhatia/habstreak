@@ -90,11 +90,17 @@ function RecentActivities() {
   const navigate = useNavigate();
   const [groupedActivities, setGroupedActivities] = useState({});
   const [planType, setPlanType] = useState("");
+  console.log("🚀 ~ RecentActivities ~ planType:", planType);
 
   const authData = useSelector((state: any) => state.authDataStore);
+  console.log('🚀 ~ RecentActivities ~ authData:', authData)
 
-  const { data: activities, isFetching: activitiessFetching , isLoading : activitiesLoading } =
-    useGetRecentActivitiesQuery({}, { skip: planType !== "prime" });
+  const {
+    data: activities,
+    isFetching: activitiessFetching,
+    isLoading: activitiesLoading,
+  } = useGetRecentActivitiesQuery({} , { skip: planType !== "prime" });
+    console.log('🚀 ~ RecentActivities ~ activities:', activities)
 
   useEffect(() => {
     if (planType === "free") {

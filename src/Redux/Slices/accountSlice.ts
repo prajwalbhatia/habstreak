@@ -6,6 +6,7 @@ const accountURL = "/user";
 export const AccountSlice = createApi({
   reducerPath: "account",
   baseQuery: axiosBaseQuery,
+  tagTypes: ["GetUserData"],
   endpoints: (builder) => ({
     auth: builder.mutation({
       query: (body) => ({ url: accountURL, method: "POST", body }),
@@ -59,7 +60,8 @@ export const AccountSlice = createApi({
       }),
     }),
     getUser: builder.query({
-      query: (email) => ({ url: `${accountURL}/${email}`, method: "GET" }),
+      query: ({email}) => ({ url: `${accountURL}/${email}`, method: "GET" }),
+      providesTags: ["GetUserData"],
     }),
     updateUser: builder.mutation({
       query: (body) => ({
@@ -67,13 +69,10 @@ export const AccountSlice = createApi({
         method: "PATCH",
         body : body?.userData,
       }),
+      invalidatesTags : ['GetUserData']
     }),
   }),
 });
-
-
-// export const updateUser = (userData, email) => API.patch(`/user/${email}`, userData);
-
 
 export const {
   useAuthMutation,
