@@ -163,7 +163,9 @@
           overflow-x: auto;
           min-height: 30rem;
   
-          .progress-card {
+          .progress-card,
+          .progress-card-skeleton 
+          {
             flex: 1;
             background-color: #fff;
             border-radius: 2.5rem;
@@ -212,7 +214,7 @@
                 }
               }
   
-              .title-icon-unsucc {
+              .title-icon-unsuccessful {
                 background-color: #E2EBFF;
   
                 i {
@@ -251,11 +253,11 @@
                 background: #FFCB47;
               }
   
-              .bar-comp-unsucc {
+              .bar-comp-unsuccessful {
                 background: #235DDF;
               }
   
-              .perc {
+              .percentage {
                 color: var(--primaryColor);
               }
   
@@ -267,7 +269,7 @@
                 color: #FFCB47;
               }
   
-              .prog-unsucc {
+              .prog-unsuccessful {
                 color: #235DDF;
               }
   
@@ -299,13 +301,18 @@
               }
             }
   
-            .count-container-unsucc {
+            .count-container-unsuccessful {
               background-color: #E2EBFF;
   
               h4 {
                 color: #235DDF;
               }
             }
+          }
+
+          .progress-card-skeleton 
+          {
+            background-color: rgba(0, 0, 0, 0.11);
           }
         }
       }

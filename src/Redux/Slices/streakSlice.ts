@@ -5,7 +5,7 @@ import { RewardSlice } from "./rewardSlice";
 
 const streakURL = "/streak";
 
-export const StrealSlice = createApi({
+export const StreakSlice = createApi({
   reducerPath: "streak",
   baseQuery: axiosBaseQuery,
   tagTypes: ["GetStreaks", "GetStreak"],
@@ -13,14 +13,13 @@ export const StrealSlice = createApi({
     createStreak: builder.mutation({
       query: (body) => ({ url: streakURL, method: "POST", body }),
       onQueryStarted(arg, api) {
-        console.log('Query started: createStreak');
         api.queryFulfilled.then(() => {
-          console.log('Query fulfilled: createStreak');
           api.dispatch(
             RecentActivitiesSlice.util.invalidateTags(["GetActivities"])
           );
         });
       },
+      invalidatesTags : ["GetStreaks"]
     }),
     getStreaks: builder.query({
       query: () => ({ url: streakURL, method: "GET" }),
@@ -88,6 +87,6 @@ export const {
   useUpdateStreakMutation,
   useDeleteStreakAndRewardMutation,
   useGetStreakQuery,
-} = StrealSlice;
+} = StreakSlice;
 
-export default StrealSlice.reducer;
+export default StreakSlice.reducer;

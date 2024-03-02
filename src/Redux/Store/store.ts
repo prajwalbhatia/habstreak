@@ -5,7 +5,7 @@ import { PaymentSlice } from "../../Redux/Slices/paymentSlice";
 import { RecentActivitiesSlice } from "../../Redux/Slices/recentActivitiesSlice";
 import { RewardSlice } from "../../Redux/Slices/rewardSlice";
 import { StrealDetailSlice } from "../../Redux/Slices/streakDetailSlices";
-import { StrealSlice } from "../../Redux/Slices/streakSlice";
+import { StreakSlice } from "../../Redux/Slices/streakSlice";
 
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
@@ -30,7 +30,7 @@ const store = configureStore({
       .concat(RecentActivitiesSlice.middleware)
       .concat(RewardSlice.middleware)
       .concat(StrealDetailSlice.middleware)
-      .concat(StrealSlice.middleware),
+      .concat(StreakSlice.middleware),
 });
 
 export default store;
