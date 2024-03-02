@@ -3,39 +3,34 @@ import { useEffect, useState, useRef } from "react";
 import { GoogleLogin } from "react-google-login";
 import { useNavigate, useLocation } from "react-router-dom";
 
-//Libraries
 import ClipLoader from "react-spinners/ClipLoader";
 
-//COMPONENTS
 import { InputElement } from "Components/form-elements/form-elements";
 import { PrimaryButton } from "Components/buttons/buttons";
 
-//Redux
 import {
   useAuthMutation,
   useSigninMutation,
   useSignupMutation,
   useVerifyEmailMutation,
   useResendOtpMutation,
-  useRefreshTokenMutation,
   useCheckUserExistMutation,
   useCheckUserExistFromGoogleMutation,
 } from "../../Redux/Slices/accountSlice";
 
-//CSS
 import "Styles/Pages/account.scss";
 import "index.scss";
 
-//IMAGES
 import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
 import { ReactComponent as Signup } from "Assests/Images/Signup.svg";
 import { ReactComponent as Login } from "Assests/Images/Login.svg";
 
-//UTILITIES
 import { dialogForError, goToHome, sendEventToMobile } from "Utilities/index";
 import { size } from "lodash";
 import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
 import { useDispatch } from "react-redux";
+
+declare var window: any;
 
 interface errSuccMsgInterface {
   email?: "";
@@ -54,10 +49,15 @@ const initialState = {
 function Account(props: any) {
   const [auth, { error: authError, isLoading: authLoading }] =
     useAuthMutation();
-  const [signup, { error: signupError, isLoading: signupLoading }] =
-    useSignupMutation();
-  const [signin, { error: signinError, isLoading: signinLoading }] =
-    useSigninMutation();
+  const [
+    signup,
+    { error: signupError, isLoading: signupLoading, reset: resetSignup },
+  ] = useSignupMutation();
+  const [
+    signin,
+    { error: signinError, isLoading: signinLoading, reset: resetSignin },
+  ] = useSigninMutation();
+
   const [
     verifyEmail,
     { error: verifyEmailError, isLoading: verifyEmailLoading },
@@ -82,43 +82,36 @@ function Account(props: any) {
   const otp3ref = useRef<HTMLInputElement | null>(null);
   const otp4ref = useRef<HTMLInputElement | null>(null);
 
-  //HOOKS
-  //   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  //   const authData = useSelector((state: any) => state);
-  // const authData = useSelector((state: any) => state);
-
-  //   const loading = useSelector((state) => state.user.loading);
-
-  //   let error = useSelector((state) => state.user.error);
-  //HOOKS
 
   const storageData = localStorage?.getItem("profile");
   const dispatch = useDispatch();
 
-  //STATES
   const [user] = useState(storageData ? JSON.parse(storageData) : "");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [stage, setStage] = useState("login");
+  console.log("🚀 ~ Account ~ stage:", stage);
   const [formData, setFormData] = useState<any>(initialState);
+  console.log("🚀 ~ Account ~ formData:", formData);
   const [errMsg, setErrMsg] = useState<errSuccMsgInterface>({});
   const [successMsg, setSuccessMsg] = useState<errSuccMsgInterface>({});
   const [isValid, setIsValid] = useState(false);
+  console.log("🚀 ~ Account ~ isValid:", isValid);
   const [loadingFile, setLoadingFile] = useState(false);
 
   const [resendButton, setResendButton] = useState(false);
 
   const [countDown, setCountDown] = useState(60);
   const [authData, setAuthData] = useState<any>({});
+  console.log("🚀 ~ Account ~ authData:", authData);
 
   useEffect(() => {
-    if(authData?.result)
-    {
+    if (authData?.result) {
       dispatch(storeAuthData(authData?.result));
     }
-  } , [authData])
+  }, [authData]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -130,9 +123,6 @@ function Account(props: any) {
     return () => clearInterval(interval);
   }, [countDown, resendButton, stage]);
 
-  //STATES
-
-  //USE EFFECTS
   useEffect(() => {
     const err: any =
       authError ||
@@ -147,6 +137,11 @@ function Account(props: any) {
 
     if (errText) {
       dialogForError(errText);
+      setFormData(initialState);
+      setErrMsg({});
+      setSuccessMsg({});
+      resetSignup();
+      resetSignin();
     }
   }, [
     authError,
@@ -219,7 +214,27 @@ function Account(props: any) {
     const token = res?.tokenId;
 
     try {
-      auth({ result, token });
+      const goolgeLogin: any = await auth({
+        email: result?.email,
+        name: result?.name,
+      });
+
+      if (goolgeLogin?.data?.verified) {
+        result.verified = goolgeLogin.data.verified;
+        result.planType = goolgeLogin.data.planType;
+        localStorage.setItem("profile", JSON.stringify({ result, token }));
+
+        console.log("result123", { result: { result, token } });
+
+        dispatch(storeAuthData({ ...result, token }));
+
+        // setAuthData({result  : { result, token }});
+        if (window.ReactNativeWebView) sendEventToMobile("loggedIn");
+
+        if (goolgeLogin?.data?.verified) {
+          navigate("/dashboard");
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -421,8 +436,25 @@ function Account(props: any) {
     }
 
     //VALIDATION
-    if (Object.keys(errMsg).length === 0) setIsValid(true);
-    else setIsValid(false);
+    if (stage === "login") {
+      if (
+        Object.keys(errMsg).length === 0 &&
+        formData["email"].length > 0 &&
+        formData["password"].length > 0
+      )
+        setIsValid(true);
+      else setIsValid(false);
+    } else {
+      if (
+        Object.keys(errMsg).length === 0 &&
+        formData["fullName"].length > 0 &&
+        formData["email"].length > 0 &&
+        formData["password"].length > 0 &&
+        formData["confirmPassword"].length > 0
+      )
+        setIsValid(true);
+      else setIsValid(false);
+    }
   };
 
   //FUNCTIONS
@@ -667,16 +699,18 @@ function Account(props: any) {
                         <i className="demo-icon  icon-google" />
                       </div>
 
-                      {/* {!window.ReactNativeWebView && ( */}
-                      <GoogleLogin
-                        clientId={clientId}
-                        buttonText=""
-                        onSuccess={googleSuccess}
-                        onFailure={googleFailure}
-                        cookiePolicy={"single_host_origin"}
-                        className="google-btn"
-                      />
-                      {/* )} */}
+                      {!window.ReactNativeWebView && clientId && (
+                        // {clientId ? (
+                        <GoogleLogin
+                          clientId={clientId}
+                          buttonText=""
+                          onSuccess={googleSuccess}
+                          onFailure={googleFailure}
+                          cookiePolicy={"single_host_origin"}
+                          className="google-btn"
+                        />
+                        // ) : null}
+                      )}
                     </div>
                   </>
                 )}

@@ -14,8 +14,8 @@ interface ButtonProps {
   index?: number;
   name: string;
   loading?: boolean;
-  disabled? : boolean;
-  typeVal?: 'button' | 'submit' | undefined
+  disabled?: boolean;
+  typeVal?: "button" | "submit" | undefined;
 }
 
 export const PrimaryButton: FC<ButtonProps> = ({
@@ -65,7 +65,7 @@ export const SecondaryButton: FC<ButtonProps> = ({
         type="button"
         {...rest}
       >
-         {loading ? <ClipLoader size={20} /> : rest.name}
+        {loading ? <ClipLoader size={20} /> : rest.name}
         {tooltip ? (
           <div>
             <span className="tooltip" data-tooltip={tooltipData}></span>
@@ -93,7 +93,7 @@ export const OutlinedPrimaryButton: FC<ButtonProps> = ({
         type="button"
         {...rest}
       >
-         {loading ? <ClipLoader size={20} /> : rest.name}
+        {loading ? <ClipLoader size={20} color={"#F96E46"} /> : rest.name}
         {tooltip ? (
           <div>
             <span className="tooltip" data-tooltip={tooltipData}></span>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import moment from "moment";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -24,16 +24,30 @@ import { dialogForError, errorHandler, planDetail } from "Utilities";
 
 import size from "lodash/size";
 import { urls } from "Constants/index";
+import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
 
 declare var window: any;
 
 function Profile(props: any) {
   const authData = useSelector((state: any) => state.authDataStore);
-  const { data: userData, isLoading: userLoading } = useGetUserQuery({});
+  const dispatch = useDispatch();
+
+  const [user] = useState(() => {
+    const localData = localStorage.getItem("profile");
+    if (localData) {
+      return JSON.parse(localData);
+    } else {
+      return "";
+    }
+  });
+
+  const { data: userData, isLoading: userLoading } = useGetUserQuery(
+    { email: user?.result?.email },
+    { skip: !user?.result?.email }
+  );
 
   const [paymentData, setPaymentData] = useState<any>({});
 
-  const [user] = useState(JSON.parse(localStorage.getItem("profile") || ""));
   const [planType, setPlanType] = useState("");
   const [updateUser, { isLoading: updateUserLoading }] =
     useUpdateUserMutation();
@@ -42,10 +56,12 @@ function Profile(props: any) {
     usePaymentRequestMutation();
 
   useEffect(() => {
-    if (authData) {
-      setPlanType(planDetail(authData?.planType));
+    if (userData) {
+      setPlanType(planDetail(userData?.planType));
+      dispatch(storeAuthData(userData));
     }
-  }, [authData]);
+  }, [userData]);
+  console.log("🚀 ~ Profile ~ userData:", userData);
 
   useEffect(() => {
     if (size(paymentData) > 0) {
@@ -67,9 +83,9 @@ function Profile(props: any) {
           let startTime = "";
           let endTime = "";
 
-          if (authData?.result?.startTime && authData?.result?.endTime) {
-            startTime = authData?.result?.startTime;
-            endTime = moment(authData?.result?.endTime)
+          if (userData?.startTime && userData?.endTime) {
+            startTime = userData?.startTime;
+            endTime = moment(userData?.endTime)
               .add(31, "days")
               .endOf("day")
               .format();
@@ -272,14 +288,12 @@ function Profile(props: any) {
                           <h2 className="jos-primary">Prime</h2>
                           <div>
                             <h3 className="rob-bold-12-primary">
-                              {moment(authData?.result?.endTime).diff(
+                              {moment(userData?.endTime).diff(
                                 moment(moment().format()),
                                 "days"
                               ) === 0
                                 ? "Expires today"
-                                : `Expires in ${moment(
-                                    authData?.result?.endTime
-                                  ).diff(
+                                : `Expires in ${moment(userData?.endTime).diff(
                                     moment(moment().format()),
                                     "days"
                                   )} days`}

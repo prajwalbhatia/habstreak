@@ -656,6 +656,13 @@ export const sendEventToMobile = (eventName: any) => {
     event: eventName,
     data: {},
   };
-  window.ReactNativeWebView.postMessage(JSON.stringify(event));
+  window.ReactNativeWebView?.postMessage(JSON.stringify(event));
   return null;
 };
+
+export const getLatestRecentActivities  = (dispatch : any) => {
+  dispatch({
+    type: 'recentActivities/invalidateTags',
+    payload: ['GetActivities'],
+  });
+}

@@ -11,7 +11,11 @@ import map from "lodash/map";
 import size from "lodash/size";
 
 import Frame from "Components/frame/frame";
-import { OutlinedPrimaryButton } from "Components/buttons/buttons";
+
+import { errorHandler, activityTitle } from "Utilities";
+import Fallback from "Utilities/fallback/fallback";
+
+import { theme } from "Constants/index";
 
 import {
   useGetStreaksQuery,
@@ -19,102 +23,38 @@ import {
 } from "../../Redux/Slices/streakSlice";
 import { useGetRewardsQuery } from "../../Redux/Slices/rewardSlice";
 import { useGetRecentActivitiesQuery } from "../../Redux/Slices/recentActivitiesSlice";
+import { useCreateStreakDetailMutation } from "../../Redux/Slices/streakDetailSlices";
 
 import {
-  errorHandler,
-  isSameOrBefore,
-  activityTitle,
-  isSameOrAfter,
-  planDetail,
-  dialogForUpgrade,
-  dialogForCreateAndUpdateStreak,
-  isSame,
-  perPerDay,
-  dialogForError,
-} from "Utilities";
-import Fallback from "Utilities/fallback/fallback";
-
-import { icons, theme, plansFeatures } from "Constants/index";
+  ActivityInterface,
+  RewardInterface,
+  StreakInterface,
+} from "./constants/dashboard.interfaces";
 
 import "Styles/Pages/dashboard.scss";
 import "index.scss";
-import { useCreateStreakDetailMutation } from "../../Redux/Slices/streakDetailSlices";
-
-interface StreakInterace {
-  _id: string;
-  title: string;
-  dateFrom: string;
-  dateTo: string;
-  days: string;
-  description: string;
-  userId: string;
-  __v: number;
-  rewards: object;
-  tag?: string;
-}
-
-interface RewardInterface {
-  rewardEarned: boolean;
-  _id: string;
-  userId: string;
-  title: string;
-  streakId: string;
-  date: string;
-  __v: number;
-}
-
-interface ActivityInterface {
-  _id: string;
-  userId: string;
-  type: string;
-  title: string;
-  date?: string;
-  time: string;
-  __v: number;
-}
-
-interface PercentageDataInterface {
-  streakSuccess: string;
-  streakUnsuccessful: number;
-  streakCompleted: number;
-  rewardsCollectedPerc: string;
-  rewardsCollected: number;
-  streakUnsuccessfulPerc: string;
-}
-
-interface StreakInterface {
-  tag: string;
-  dateFrom: string;
-  dateTo: string;
-}
-
-interface RewardInterface {
-  rewardEarned: boolean;
-}
+import StreakSummary from "./components/StreakSummary";
 
 function Dashboard() {
   const navigate = useNavigate();
 
   const [groupedActivities, setGroupedActivities] = useState({});
-  const [planType, setPlanType] = useState("");
 
-  const [streakCount, setStreakCount] = useState<number>(0);
   const [percentageData, setPercentageData] = useState<{
     streakSuccess: string;
     streakCompleted: number;
-    rewardsCollectedPerc: string;
+    rewardsCollectedPercentage: string;
     rewardsCollected: number;
-    streakUnsuccessfulPerc: string;
+    streakUnsuccessfulPercentage: string;
     streakUnsuccessful: number;
   }>({
     streakSuccess: "0",
     streakCompleted: 0,
-    rewardsCollectedPerc: "0",
+    rewardsCollectedPercentage: "0",
     rewardsCollected: 0,
-    streakUnsuccessfulPerc: "0",
+    streakUnsuccessfulPercentage: "0",
     streakUnsuccessful: 0,
   });
-  const [taskCount, setTaskCount] = useState<number>(0);
 
   const {
     data: streakList,
@@ -132,45 +72,13 @@ function Dashboard() {
     refetch: activitiesRefetch,
   } = useGetRecentActivitiesQuery({});
 
-  const [createStreak, { isSuccess: createStreakSuccess }] =
-    useCreateStreakMutation();
-
-  const [createStreakDetail, { isSuccess: createStreakDetsilSuccess }] =
-    useCreateStreakDetailMutation();
-
-  const authData = useSelector((state: any) => state.authDataStore);
-
   useEffect(() => {
     if (streakList && streakList.length) {
-      const currentDate = moment().format();
       const finished = streakList.filter(
         (streak: StreakInterface) => streak.tag === "finished"
       );
       const unfinishedStreak = streakList.filter(
         (streak: StreakInterface) => streak.tag === "unfinished"
-      );
-
-      const running = streakList.filter((streak: StreakInterface) => {
-        if (
-          (moment(streak.dateFrom).isSameOrBefore(currentDate) ||
-            moment(streak.dateTo).isSameOrAfter(currentDate)) &&
-          !streak.tag
-        ) {
-          return streak;
-        }
-        return null;
-      });
-
-      const filterStreaks = running.filter(
-        (streak: StreakInterface, index: number) => {
-          if (
-            index <= 2 &&
-            moment(streak.dateFrom).isSameOrBefore(currentDate)
-          ) {
-            return streak;
-          }
-          return null;
-        }
       );
 
       const earned = rewardList
@@ -187,31 +95,25 @@ function Dashboard() {
         totalStreak > 0
           ? ((successfulStreak / totalStreak) * 100).toFixed(2)
           : "0";
-      const rewardsCollectedPerc =
+      const rewardsCollectedPercentage =
         totalRewards > 0
           ? ((rewardsCollected / totalRewards) * 100).toFixed(2)
           : "0";
-      const streakUnsuccessfulPerc =
+      const streakUnsuccessfulPercentage =
         totalStreak > 0
           ? ((streakUnsuccessful / totalStreak) * 100).toFixed(2)
           : "0";
 
-      setStreakCount(streakList.length);
       setPercentageData({
         streakSuccess: successfulStreakPerc,
         streakCompleted: successfulStreak,
-        rewardsCollectedPerc: rewardsCollectedPerc,
+        rewardsCollectedPercentage: rewardsCollectedPercentage,
         rewardsCollected,
-        streakUnsuccessfulPerc,
+        streakUnsuccessfulPercentage,
         streakUnsuccessful,
       });
-      setTaskCount(filterStreaks.length);
     }
   }, [streakList, rewardList]);
-
-  useEffect(() => {
-    if (authData) setPlanType(planDetail(authData?.planType));
-  }, [authData]);
 
   useEffect(() => {
     if (recentActivitiesList && recentActivitiesList.length) {
@@ -235,86 +137,6 @@ function Dashboard() {
       } else setGroupedActivities({});
     }
   }, [recentActivitiesList]);
-
-  useEffect(() => {
-    if (streakRefetch && activitiesRefetch) {
-      streakRefetch();
-      activitiesRefetch();
-    }
-  }, [createStreakSuccess]);
-
-  const streakCardJsx = (streakList: StreakInterace[]) => {
-    const currentDate = moment().format();
-
-    //Streaks that are artice currently or will become active in future (i.e upcoming)
-    //Finished and unfinished streak will be excluded
-
-    const running = streakList.filter((streak: StreakInterace) => {
-      if (
-        (isSameOrBefore(streak.dateFrom, currentDate) ||
-          isSameOrAfter(streak.dateTo, currentDate)) &&
-        !streak.tag
-      ) {
-        return streak;
-      } else return null;
-    });
-
-    if (running.length > 0) {
-      const filterStreaks = running.filter(
-        (streak: StreakInterace, index: number) => {
-          if (index <= 2 && isSameOrBefore(streak.dateFrom, currentDate))
-            return streak;
-        }
-      );
-      if (filterStreaks.length > 0) {
-        return filterStreaks.map((streak: StreakInterace, index: number) => {
-          if (streak.tag !== "unfinished") {
-            const { dateFrom, dateTo, _id } = streak;
-            const todayDate = moment(new Date());
-            const percPerDay = perPerDay(dateFrom, dateTo);
-
-            const daysDone = isSame(todayDate, dateFrom)
-              ? 0
-              : todayDate.diff(dateFrom, "days");
-            const progress = percPerDay * daysDone;
-            return (
-              <div
-                key={index}
-                className="flex-dir-col streak-card"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/streak/${_id}`, { state: { from: "Dashboard" } });
-                }}
-              >
-                <div
-                  className="center-items card-icon"
-                  style={{ background: theme[index] }}
-                >
-                  <i className={`demo-icon ${icons[index]}`} />
-                </div>
-                <h4>{streak.title}</h4>
-                <h6 className="mt-10">Running</h6>
-                <h1 style={{ color: theme[index] }}>{`${progress.toFixed(
-                  2
-                )}%`}</h1>
-                <span>{`${streak.days} day to go`}</span>
-                <div
-                  className="d-flex go-btn"
-                  style={{ background: theme[index] }}
-                >
-                  <i className="demo-icon icon-going-in" />
-                </div>
-              </div>
-            );
-          }
-        });
-      } else {
-        return <h2>No Current Tasks</h2>;
-      }
-    } else {
-      return <h2>No Current Tasks</h2>;
-    }
-  };
 
   const recentActivityCardJsx = () => {
     const isEmpty = size(groupedActivities) === 0;
@@ -399,10 +221,12 @@ function Dashboard() {
               <div className="d-flex bar">
                 <div
                   className="bar-complete bar-comp-reward"
-                  style={{ width: `${percentageData.rewardsCollectedPerc}%` }}
+                  style={{
+                    width: `${percentageData.rewardsCollectedPercentage}%`,
+                  }}
                 ></div>
               </div>
-              <h4 className="perc prog-reward">{`${percentageData.rewardsCollectedPerc}%`}</h4>
+              <h4 className="perc prog-reward">{`${percentageData.rewardsCollectedPercentage}%`}</h4>
             </div>
             <div
               className="count-container count-container-reward c-pointer"
@@ -425,10 +249,12 @@ function Dashboard() {
               <div className="d-flex bar">
                 <div
                   className="bar-complete bar-comp-unsucc"
-                  style={{ width: `${percentageData.streakUnsuccessfulPerc}%` }}
+                  style={{
+                    width: `${percentageData.streakUnsuccessfulPercentage}%`,
+                  }}
                 ></div>
               </div>
-              <h4 className="perc prog-unsucc">{`${percentageData.streakUnsuccessfulPerc}%`}</h4>
+              <h4 className="perc prog-unsucc">{`${percentageData.streakUnsuccessfulPercentage}%`}</h4>
             </div>
             <div
               className="count-container count-container-unsucc c-pointer"
@@ -467,80 +293,7 @@ function Dashboard() {
           <>
             <div className="d-flex dashboard-inner-container">
               <div className="flex-dir-col left-container">
-                <div className="d-flex task-container">
-                  <div className="flex-dir-col summary">
-                    <h2>Tasks for today</h2>
-                    <h4>
-                      You have{" "}
-                      <span
-                        onClick={() => navigate("/streak-list")}
-                        className="color-primary c-pointer"
-                      >
-                        {taskCount} task
-                      </span>{" "}
-                      to complete today
-                    </h4>
-                    <OutlinedPrimaryButton
-                      name={"Add New Streak"}
-                      click={() => {
-                        if (streakCount < plansFeatures[planType].streaks)
-                          dialogForCreateAndUpdateStreak(
-                            "create",
-                            {},
-                            "",
-                            async (type: string, data: object) => {
-                              if (type === "create") {
-                                try {
-                                  const streak: any = await createStreak({});
-
-                                  if (streak?.error) {
-                                    dialogForError(
-                                      streak?.error?.data?.error?.message || ""
-                                    );
-                                  } else {
-                                    if (
-                                      isSame(streak?.data?.dateFrom, Date.now())
-                                    ) {
-                                      const streadDetail = {
-                                        date: streak?.data?.dateFrom,
-                                        streakId: streak?.data._id,
-                                        rewards: [],
-                                      };
-                                      try {
-                                        const streakDetail: any =
-                                          await createStreakDetail(
-                                            streadDetail
-                                          );
-                                        if (streakDetail?.error) {
-                                          dialogForError(
-                                            streakDetail?.error?.data?.error
-                                              ?.message || ""
-                                          );
-                                        }
-                                      } catch (error) {}
-                                    }
-                                  }
-                                } catch (error) {}
-                              }
-                            }
-                          );
-                        else dialogForUpgrade(navigate);
-                      }}
-                      btnContainerClass="add-btn"
-                      btnClass="h-40"
-                    />
-                  </div>
-
-                  <div
-                    className={
-                      taskCount === 0
-                        ? "d-flex streaks center-items"
-                        : "d-flex streaks"
-                    }
-                  >
-                    {streakCardJsx(streakList || [])}
-                  </div>
-                </div>
+                <StreakSummary />
                 <div className="flex-dir-col data-container">
                   {progressDataJsx()}
                 </div>
