@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { Skeleton } from "@mui/material";
@@ -15,7 +14,6 @@ import {
   isSameOrBefore,
   isSameOrAfter,
   perPerDay,
-  planDetail,
 } from "Utilities";
 
 import {
@@ -23,6 +21,7 @@ import {
   useGetStreaksQuery,
 } from "../../../Redux/Slices/streakSlice";
 import { useCreateStreakDetailMutation } from "../../../Redux/Slices/streakDetailSlices";
+import useGetPlanType from "Hooks/useGetPlanType";
 
 import {
   StreakInterface,
@@ -35,11 +34,10 @@ import {
 
 const StreakSummary = () => {
   const navigate = useNavigate();
-  const authData = useSelector((state: any) => state.authDataStore);
 
   const [taskCount, setTaskCount] = useState<number>(0);
   const [streakCount, setStreakCount] = useState<number>(0);
-  const [planType, setPlanType] = useState("");
+  const planType = useGetPlanType();
 
   const [createStreak, { isLoading: createStreakLoading }] =
     useCreateStreakMutation();
@@ -52,7 +50,6 @@ const StreakSummary = () => {
     isFetching: streakListFetching,
     refetch: streakRefetch,
   } = useGetStreaksQuery({});
-
 
   useEffect(() => {
     if (streakList && streakList.length) {
@@ -71,9 +68,7 @@ const StreakSummary = () => {
 
       const filterStreaks = running.filter(
         (streak: StreakInterface, index: number) => {
-          if (
-            moment(streak.dateFrom).isSameOrBefore(currentDate)
-          ) {
+          if (moment(streak.dateFrom).isSameOrBefore(currentDate)) {
             return streak;
           }
           return null;
@@ -85,10 +80,6 @@ const StreakSummary = () => {
       setTaskCount(filterStreaks.length);
     }
   }, [streakList]);
-
-  useEffect(() => {
-    if (authData) setPlanType(planDetail(authData?.planType));
-  }, [authData]);
 
   const streakCardJsx = useCallback(
     (streakList: StreakListInterface[]) => {
@@ -129,7 +120,7 @@ const StreakSummary = () => {
                     key={index}
                     className="flex-dir-col streak-card"
                     onClick={(e) =>
-                      navigateToStreak(e, navigate, Number(_id), "Dashboard")
+                      navigateToStreak(e, navigate, _id, "Dashboard")
                     }
                   >
                     <div
@@ -244,7 +235,7 @@ const StreakSummary = () => {
           ? Array(
               createStreakLoading
                 ? Math.min(streakList?.length + 1 || 1, 3)
-                : streakList?.length || 0
+                : streakList?.length || 1
             )
               .fill(1)
               .map((_, index) => (

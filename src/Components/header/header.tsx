@@ -19,7 +19,6 @@ import {
   dialogForUpgrade,
   dialogForMessage,
   activityTitle,
-  planDetail,
   sendEventToMobile,
   isSame,
 } from "Utilities";
@@ -42,6 +41,8 @@ import { noop } from "lodash";
 import { useCreateStreakDetailMutation } from "../../Redux/Slices/streakDetailSlices";
 import store from "../../Redux/Store/store";
 import { clearResults } from "../../Redux/Slices/clearPersistSlice";
+import useGetPlanType from "Hooks/useGetPlanType";
+import { Skeleton } from "@mui/material";
 
 declare var window: any;
 
@@ -85,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({
     // , { error: logoutError }
   ] = useLogoutMutation();
 
-  const authData = useSelector((state: any) => state.authDataStore);
+  const planType = useGetPlanType();
 
   const {
     data: streaks,
@@ -130,7 +131,6 @@ const Header: React.FC<HeaderProps> = ({
   });
   const [streakCount, setStreakCount] = useState<number>(0);
   const [rewardCount, setRewardCount] = useState<number>(0);
-  const [planType, setPlanType] = useState<string>("free");
 
   const notification = () => {
     setShowNotification(!showNotification);
@@ -171,10 +171,6 @@ const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     if (rewards) setRewardCount(rewards?.length || 0);
   }, [rewards]);
-
-  useEffect(() => {
-    if (authData) setPlanType(planDetail(authData?.planType));
-  }, [authData]);
 
   return (
     <header className="header">
@@ -245,7 +241,12 @@ const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="header-text-container">
-        <h1 className="heading">{headerText}</h1>
+        {headerText ? (
+          <h1 className="heading">{headerText}</h1>
+        ) : (
+          <Skeleton variant="text" sx={{ minWidth: 200, minHeight: 40 }} />
+        )}
+
         {withInternalNavigation && (
           <div
             onClick={() => navigate(-1)}

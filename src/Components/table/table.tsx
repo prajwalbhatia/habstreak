@@ -1,34 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-//CSS
 import "Styles/Components/table.scss";
 import cloneDeep from "lodash/cloneDeep";
 import { theme, plansFeatures } from "Constants/index";
 
-//COMPONENTS
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 
-//Redux
-import { useSelector } from "react-redux";
-//Redux
 import { useGetStreaksQuery } from "../../Redux/Slices/streakSlice";
-
 import { useGetRewardsQuery } from "../../Redux/Slices/rewardSlice";
+import useGetPlanType from "Hooks/useGetPlanType";
 
-//UTILITIES
 import {
   dialogForUpgrade,
   planDetail,
   dialogForCreateAndUpdateStreak,
   dialogForCreateAndUpdateReward,
 } from "Utilities";
+import { Skeleton } from "@mui/material";
 
-function Table(props: any) {
-  const { tableHead, tabData, tableData, action, currentTab, type } = props;
-  const [planType, setPlanType] = useState("");
+const  Table : any = (props: any) => {
+  const { tableHead, tabData, tableData, action, currentTab, type , loading } = props;
+  const planType = useGetPlanType();
 
   const navigate = useNavigate();
   //   const streaks = useSelector((state) => state.streak.streaks);
@@ -50,12 +45,6 @@ function Table(props: any) {
     refetch: rewardListRefetch,
   } = useGetRewardsQuery({});
 
-  //   const authData = useSelector((state) => state.user.authData);
-  const authData = useSelector((state: any) => state.authDataStore);
-
-  useEffect(() => {
-    if (authData) setPlanType(planDetail(authData?.planType));
-  }, [authData]);
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -134,12 +123,12 @@ function Table(props: any) {
     });
   };
 
-    const navigateTo = (streak  : any) => {
-      action({
-        actionType: "navigate",
-        data: streak,
-      });
-    };
+  const navigateTo = (streak: any) => {
+    action({
+      actionType: "navigate",
+      data: streak,
+    });
+  };
 
   const dataRow = (headingData: any, data: any, index: any) => {
     switch (headingData.uid) {
@@ -214,14 +203,6 @@ function Table(props: any) {
           <div
             onClick={() => {
               if (data[headingData.uid]?.title) {
-                // history.push({
-                //   pathname: `/streak/${data[headingData.uid].id}`,
-                //   state: {
-                //     from: "Reward",
-                //     status: data[headingData.uid].state,
-                //   },
-                // });
-
                 navigate(`/streak/${data[headingData.uid].id}`);
               }
             }}
@@ -259,15 +240,24 @@ function Table(props: any) {
             val += 1;
             if (val === 10) val = 0;
             return (
-              <div
-                onClick={() => navigateTo(dataInner)}
-                key={index}
-                className="d-flex table-row"
-              >
-                {head.map((headingData: any, index: any) => {
-                  return dataRow(headingData, dataInner, index);
-                })}
-              </div>
+              <>
+                {loading ? (
+                  <Skeleton
+                    variant="rounded"
+                    sx={{ minWidth: 150, minHeight: 50 , margin : 1}}
+                  />
+                ) : (
+                  <div
+                    onClick={() => navigateTo(dataInner)}
+                    key={index}
+                    className="d-flex table-row"
+                  >
+                    {head.map((headingData: any, index: any) => {
+                      return dataRow(headingData, dataInner, index);
+                    })}
+                  </div>
+                )}
+              </>
             );
           })
         ) : (
@@ -323,13 +313,6 @@ function Table(props: any) {
                       type !== "Streak" &&
                       typeof dataInner?.streak === "object"
                     ) {
-                      //   history.push({
-                      //     pathname: `/streak/${dataInner?.streak?._id}`,
-                      //     state: {
-                      //       from: "Reward",
-                      //       status: dataInner?.streak?.tag,
-                      //     },
-                      //   });
                       navigate(`/streak/${dataInner?.streak?._id}`);
                     }
                   }}

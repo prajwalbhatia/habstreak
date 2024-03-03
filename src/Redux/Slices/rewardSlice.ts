@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "../../Axios/axiosBaseQuery";
 import { RecentActivitiesSlice } from "./recentActivitiesSlice";
+import { StreakSlice } from "./streakSlice";
 
 const rewardURL = "/reward";
 
@@ -33,6 +34,10 @@ export const RewardSlice = createApi({
         api.queryFulfilled.then(() => {
           api.dispatch(
             RecentActivitiesSlice.util.invalidateTags(['GetActivities'])
+          );
+
+          api.dispatch(
+            StreakSlice.util.invalidateTags(['GetStreak'])
           );
         });
       },

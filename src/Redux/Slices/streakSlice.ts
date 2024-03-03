@@ -45,7 +45,7 @@ export const StreakSlice = createApi({
           );
         });
       },
-      invalidatesTags: ["GetStreaks"],
+      invalidatesTags: ["GetStreaks" , "GetStreak"],
     }),
     deleteStreak: builder.mutation({
       query: (id) => ({

@@ -3,14 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
 import moment from "moment";
-import ClipLoader from "react-spinners/ClipLoader";
 import cloneDeep from "lodash/cloneDeep";
 import { ErrorBoundary } from "react-error-boundary";
 
 import Frame from "Components/frame/frame";
 import Table from "Components/table/table";
+
+import {
+  errorHandler,
+  dialogForCreateAndUpdateStreak,
+  dialogBeforeDeleting,
+  isAfter,
+  streakTabData,
+  activeTab,
+  dialogForError,
+} from "Utilities";
+import Fallback from "Utilities/fallback/fallback";
+
+import {
+  streakListTableHeadings,
+  streakListTableHeadings2,
+  plansFeatures,
+} from "Constants/index";
+import {
+  RewardInterface,
+  StreakListInterface,
+} from "./constants/StreakList.interfaces";
+import {
+  finishedStreaks,
+  runningStreaks,
+  unfinishedStreaks,
+  upcomingStreaks,
+} from "./helpers/StreakList.renderers";
 
 import {
   useGetStreaksQuery,
@@ -20,69 +45,28 @@ import {
 } from "../../Redux/Slices/streakSlice";
 import { storeStreakListType } from "../../Redux/Slices/streakListTypeSlice";
 import { storeSearchText } from "../../Redux/Slices/searchTextSlice";
-
-import {
-  errorHandler,
-  dialogForCreateAndUpdateStreak,
-  dialogBeforDeletng,
-  isSameOrAfter,
-  isSameOrBefore,
-  isAfter,
-  streakTabData,
-  activeTab,
-  planDetail,
-  dialogForError,
-} from "Utilities";
-import Fallback from "Utilities/fallback/fallback";
+import useGetPlanType from "Hooks/useGetPlanType";
 
 import "Styles/Pages/streakList.scss";
 import "index.scss";
-
-import {
-  streakListTableHeadings,
-  streakListTableHeadings2,
-  plansFeatures,
-} from "Constants/index";
-
-interface StreakInterace {
-  _id: string;
-  title: string;
-  dateFrom: string;
-  dateTo: string;
-  days: string;
-  description: string;
-  userId: string;
-  __v: number;
-  rewards: [];
-  tag?: string;
-}
-
-interface RewardInterface {
-  rewardEarned: boolean;
-  _id: string;
-  userId: string;
-  title: string;
-  streakId: string;
-  date: string;
-  __v: number;
-}
 
 function StreakList() {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
+  const planType = useGetPlanType();
+
   //STATES
   const [tabData, setTabData] = useState([...streakTabData()]);
   const [tabDataClone, setTabDataClone] = useState([...streakTabData()]);
   const [currentTab, setCurrentTab] = useState("Running");
   const [tableData, setTableData] = useState<any>([]);
-  const [streaks, setStreaks] = useState<StreakInterace[]>([]);
-  const [running, setRunning] = useState<StreakInterace[]>([]);
-  const [upcoming, setUpcoming] = useState<StreakInterace[]>([]);
-  const [finished, setFinished] = useState<StreakInterace[]>([]);
-  const [unfinished, setUnfinished] = useState<StreakInterace[]>([]);
-  const [planType, setPlanType] = useState<string>("");
+  const [streaks, setStreaks] = useState<StreakListInterface[]>([]);
+  const [running, setRunning] = useState<StreakListInterface[]>([]);
+  const [upcoming, setUpcoming] = useState<StreakListInterface[]>([]);
+  const [finished, setFinished] = useState<StreakListInterface[]>([]);
+  const [unfinished, setUnfinished] = useState<StreakListInterface[]>([]);
 
   const {
     data: streaksData,
@@ -101,11 +85,8 @@ function StreakList() {
 
   //Getting the data from the state
   const streakListTypeData = useSelector((state: any) => state.streakListType);
-  const authData = useSelector((state: any) => state.authDataStore);
-
   const searchText = useSelector((state: any) => state.searchText);
 
-  //FUNCTIONS
   const tabDataFun = useCallback(() => {
     return [...tabDataClone].map((tab) => {
       if (tab.title === streakListTypeData) tab.active = true;
@@ -114,28 +95,6 @@ function StreakList() {
       return tab;
     });
   }, [streakListTypeData, tabDataClone]);
-
-  const runningStreaks = () => {
-    const currentDate = moment().format();
-    return [...streaks].filter((streak: StreakInterace) => {
-      if (
-        isSameOrBefore(streak.dateFrom, currentDate) &&
-        isSameOrAfter(streak.dateTo, currentDate) &&
-        !streak.tag
-      ) {
-        return streak;
-      } else return null;
-    });
-  };
-
-  const upcomingStreak = () => {
-    const currentDate = moment().format();
-    return [...streaks].filter((streak: StreakInterace) => {
-      if (isAfter(streak.dateFrom, currentDate) && !streak.tag) {
-        return streak;
-      } else return null;
-    });
-  };
 
   //WHEN STREAK TEXT IS CHANGED
   useEffect(() => {
@@ -146,7 +105,7 @@ function StreakList() {
       setTabData(tabDataModified);
     } else {
       const streaks = [...streaksData];
-      const filterStreaks = streaks.filter((streak: StreakInterace) =>
+      const filterStreaks = streaks.filter((streak: StreakListInterface) =>
         streak.title.toLowerCase().includes(searchText.toLowerCase())
       );
 
@@ -166,17 +125,12 @@ function StreakList() {
     if (planType === "prime" && streaksData) {
       setStreaks([...streaksData]);
     } else {
-      let limitedData = streaksData && [...streaksData].splice(
-        0,
-        plansFeatures["free"].streaks
-      );
+      let limitedData =
+        streaksData &&
+        [...streaksData].splice(0, plansFeatures["free"].streaks);
       setStreaks([...limitedData]);
     }
   }, [planType, streaksData]);
-
-  useEffect(() => {
-    if (authData) setPlanType(planDetail(authData?.planType));
-  }, [authData]);
 
   useEffect(() => {
     dispatch(storeSearchText(""));
@@ -203,15 +157,10 @@ function StreakList() {
 
   useEffect(() => {
     if (searchText === "") {
-      const unfinished = streaks.filter(
-        (streak: StreakInterace) => streak.tag === "unfinished"
-      );
-      const finished = streaks.filter(
-        (streak: StreakInterace) => streak.tag === "finished"
-      );
-
-      const running: StreakInterace[] = runningStreaks();
-      const upcoming: StreakInterace[] = upcomingStreak();
+      const unfinished: StreakListInterface[] = unfinishedStreaks(streaks);
+      const finished: StreakListInterface[] = finishedStreaks(streaks);
+      const running: StreakListInterface[] = runningStreaks(streaks);
+      const upcoming: StreakListInterface[] = upcomingStreaks(streaks);
 
       setRunning([...running]);
       setUpcoming([...upcoming]);
@@ -226,7 +175,7 @@ function StreakList() {
 
       setTabData([...dataOfTabs]);
 
-      let tabData: StreakInterace[] = [];
+      let tabData: StreakListInterface[] = [];
       switch (currentTab) {
         case "Running":
           tabData = [...running];
@@ -255,11 +204,11 @@ function StreakList() {
     else updateTableData(true, [], []);
   }, [searchText]);
 
-  const modifyStreaks = (streaks: StreakInterace[]) => {
+  const modifyStreaks = (streaks: StreakListInterface[]) => {
     const streakData = cloneDeep(streaks);
     const currentDate = moment().format();
 
-    const modified = streakData.map((streak: StreakInterace) => {
+    const modified = streakData.map((streak: StreakListInterface) => {
       let status = "";
       if (isAfter(streak.dateFrom, currentDate) && !streak.tag)
         status = "Upcoming";
@@ -296,7 +245,7 @@ function StreakList() {
   const updateTableData = (
     searchData = false,
     streaksArr = streaks,
-    tabData: StreakInterace[]
+    tabData: StreakListInterface[]
   ) => {
     let selectedData = [];
     if (searchData) {
@@ -317,22 +266,22 @@ function StreakList() {
    * @param {Object} e - event
    * @param {String} id - Id of streak to delete
    */
-  const deleteStreakVal = (streak: StreakInterace) => {
-    dialogBeforDeletng(streak, "streak", async (type, id) => {
+  const deleteStreakVal = (streak: StreakListInterface) => {
+    dialogBeforeDeleting(streak, "streak", async (type, id) => {
       if (type === "delete") {
-        const deleteStereakResponse: any = await deleteStreak(id);
-        if (deleteStereakResponse?.error) {
+        const deleteStreakResponse: any = await deleteStreak(id);
+        if (deleteStreakResponse?.error) {
           dialogForError(
-            deleteStereakResponse?.error?.data?.error?.message || ""
+            deleteStreakResponse?.error?.data?.error?.message || ""
           );
         }
       } else if (type === "specialDelete") {
-        const deleteStereakAndRewardResponse: any = await deleteStreakAndReward(
+        const deleteStreakAndRewardResponse: any = await deleteStreakAndReward(
           id
         );
-        if (deleteStereakAndRewardResponse?.error) {
+        if (deleteStreakAndRewardResponse?.error) {
           dialogForError(
-            deleteStereakAndRewardResponse?.error?.data?.error?.message || ""
+            deleteStreakAndRewardResponse?.error?.data?.error?.message || ""
           );
         }
       }
@@ -344,7 +293,7 @@ function StreakList() {
    *
    * @param {Object} streak - data we want to update
    */
-  const updateStreakData = (streak: StreakInterace) => {
+  const updateStreakData = (streak: StreakListInterface) => {
     dialogForCreateAndUpdateStreak(
       "update",
       streak,
@@ -364,7 +313,7 @@ function StreakList() {
     );
   };
 
-  const cloneStreak = (streak: StreakInterace) => {
+  const cloneStreak = (streak: StreakListInterface) => {
     dialogForCreateAndUpdateStreak("clone", streak, streak._id, () => {
       refetch && refetch();
     });
@@ -448,27 +397,26 @@ function StreakList() {
       }}
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
-        { streakListIsFetching || updateStreakLoading || deleteStreakLoading || deleteStreakAndRewardLoading ? (
-          <div className="loader-container">
-            <ClipLoader loading size={40} color="var(--primaryColor)" />
-          </div>
-        ) : (
-          <div className="streak-list-inner-container">
-            <Table
-              tableHead={
-                currentTab === "Finished" || currentTab === "Unfinished"
-                  ? streakListTableHeadings2
-                  : streakListTableHeadings
-              }
-              tabData={[...tabData]}
-              tableData={[...tableData]}
-              currentTab={currentTab}
-              action={tableAction}
-              type="Streak"
-              // streaksCount={streaks.length}
-            />
-          </div>
-        )}
+        <div className="streak-list-inner-container">
+          <Table
+            tableHead={
+              currentTab === "Finished" || currentTab === "Unfinished"
+                ? streakListTableHeadings2
+                : streakListTableHeadings
+            }
+            tabData={[...tabData]}
+            tableData={[...tableData]}
+            currentTab={currentTab}
+            action={tableAction}
+            type="Streak"
+            loading={
+              streakListIsFetching ||
+              updateStreakLoading ||
+              deleteStreakLoading ||
+              deleteStreakAndRewardLoading
+            }
+          />
+        </div>
       </ErrorBoundary>
     </Frame>
   );

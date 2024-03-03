@@ -3,15 +3,21 @@ import { axiosBaseQuery } from "../../Axios/axiosBaseQuery";
 
 const streakDetailURL = "/streakDetail";
 
-export const StrealDetailSlice = createApi({
+export const StreakDetailSlice = createApi({
   reducerPath: "streakDetail",
   baseQuery: axiosBaseQuery,
+  tagTypes: ["GetStreakDetail"],
   endpoints: (builder) => ({
     createStreakDetail: builder.mutation({
       query: (body) => ({ url: streakDetailURL, method: "POST", body }),
+      invalidatesTags: ["GetStreakDetail"],
     }),
     getStreakDetail: builder.query({
-      query: ({streakId}) => ({ url: `${streakDetailURL}/${streakId}`, method: "GET" }),
+      query: ({ streakId }) => ({
+        url: `${streakDetailURL}/${streakId}`,
+        method: "GET",
+      }),
+      providesTags: ["GetStreakDetail"],
     }),
     updateStreakDetail: builder.mutation({
       query: (body) => ({
@@ -19,6 +25,7 @@ export const StrealDetailSlice = createApi({
         method: "PATCH",
         body: body?.data,
       }),
+      invalidatesTags: ["GetStreakDetail"],
     }),
     deleteStreakDetail: builder.mutation({
       query: (body) => ({
@@ -26,10 +33,16 @@ export const StrealDetailSlice = createApi({
         method: "DELETE",
         body: body?.data,
       }),
+      invalidatesTags: ["GetStreakDetail"],
     }),
   }),
 });
 
-export const { useCreateStreakDetailMutation , useDeleteStreakDetailMutation , useGetStreakDetailQuery , useUpdateStreakDetailMutation } = StrealDetailSlice;
+export const {
+  useCreateStreakDetailMutation,
+  useDeleteStreakDetailMutation,
+  useGetStreakDetailQuery,
+  useUpdateStreakDetailMutation,
+} = StreakDetailSlice;
 
-export default StrealDetailSlice.reducer;
+export default StreakDetailSlice.reducer;

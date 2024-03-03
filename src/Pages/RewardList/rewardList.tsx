@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
-
 import moment from "moment";
-import ClipLoader from "react-spinners/ClipLoader";
-
-import "Styles/Pages/rewardsList.scss";
-import "index.scss";
-
 import { ErrorBoundary } from "react-error-boundary";
-import Fallback from "Utilities/fallback/fallback";
 
+import { useGetStreaksQuery } from "../../Redux/Slices/streakSlice";
+import {
+  useGetRewardsQuery,
+  useUpdateRewardMutation,
+  useDeleteRewardMutation,
+} from "../../Redux/Slices/rewardSlice";
+import useGetPlanType from "Hooks/useGetPlanType";
+
+import Fallback from "Utilities/fallback/fallback";
 import {
   dialogForCreateAndUpdateReward,
   errorHandler,
-  dialogBeforDeletng,
+  dialogBeforeDeleting,
   progressFun,
   isBefore,
   isSameOrAfter,
@@ -25,26 +26,17 @@ import {
   activeTab,
   rewardTabData,
   dialogForError,
-  planDetail,
 } from "Utilities";
 
-//COMPONENTS
 import Frame from "Components/frame/frame";
 import Table from "Components/table/table";
 
-//CONSTANTS
 import { rewardListTableHeadings, plansFeatures } from "Constants/index";
 
-//Redux
-import { useGetStreaksQuery } from "../../Redux/Slices/streakSlice";
+import "Styles/Pages/rewardsList.scss";
+import "index.scss";
 
-import {
-  useGetRewardsQuery,
-  useUpdateRewardMutation,
-  useDeleteRewardMutation,
-} from "../../Redux/Slices/rewardSlice";
-
-function RewardList(props: any) {
+function RewardList() {
   const location = useLocation();
 
   const [tabData, setTabData] = useState([...rewardTabData()]);
@@ -56,13 +48,9 @@ function RewardList(props: any) {
 
   const [rewardsEarned, setRewardsEarned] = useState<any>([]);
   const [rewardsToBuy, setRewardsToBuy] = useState<any>([]);
-  const [planType, setPlanType] = useState("");
+  const planType = useGetPlanType();
 
-  const {
-    data: streaks,
-    isFetching: streakListIsFetching,
-    refetch: streakListRefetch,
-  } = useGetStreaksQuery({});
+  const { data: streaks, refetch: streakListRefetch } = useGetStreaksQuery({});
 
   const {
     data: rewardsData,
@@ -75,8 +63,6 @@ function RewardList(props: any) {
 
   const [deleteReward, { isLoading: deleteRewardLoading }] =
     useDeleteRewardMutation();
-
-  const authData = useSelector((state: any) => state.authDataStore);
 
   const searchText = "";
 
@@ -115,10 +101,6 @@ function RewardList(props: any) {
   }, [rewardsData, planType]);
 
   useEffect(() => {
-    if (authData) setPlanType(planDetail(authData?.planType));
-  }, [authData]);
-
-  useEffect(() => {
     if (searchText === "") {
       setRewards(rewardsData);
       const tabDataModified = tabDataFun();
@@ -126,10 +108,7 @@ function RewardList(props: any) {
     } else {
       const rewards = [...rewardsData];
       const filterRewards = rewards.filter((reward: any) =>
-        reward.title.toLowerCase().includes(
-          searchText
-          // .toLowerCase()
-        )
+        reward.title.toLowerCase().includes(searchText)
       );
 
       setRewards(filterRewards);
@@ -285,13 +264,8 @@ function RewardList(props: any) {
     setTableData([...modifiedData]);
   };
 
-  /**
-   *
-   * @param {Object} e - event
-   * @param {String} id - Id of streak to delete
-   */
   const deleteRewardFun = (reward: any) => {
-    dialogBeforDeletng(reward, "reward", async (data, id) => {
+    dialogBeforeDeleting(reward, "reward", async (data, id) => {
       try {
         const deleteRewardResponse: any = await deleteReward(id);
         if (deleteRewardResponse?.error) {
@@ -307,10 +281,6 @@ function RewardList(props: any) {
     });
   };
 
-  /**
-   *
-   * @param {Object} actionObj
-   */
   const tableAction = (actionObj: any) => {
     if (actionObj.actionType === "tabClicked") {
       if (actionObj.data === "To Buy") {
@@ -373,25 +343,18 @@ function RewardList(props: any) {
       }}
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
-        {rewardListIsFetching ||
-        updateRewardLoading ||
-        deleteRewardLoading 
-        ?
-       (
-          <div className="loader-container">
-            <ClipLoader loading size={40} color="var(--primaryColor)" />
-          </div>
-        ) : (
-          <div className="rewards-area">
-            <Table
-              tableHead={rewardListTableHeadings}
-              tabData={[...tabData]}
-              tableData={[...tableData]}
-              action={tableAction}
-              type="Reward"
-            />
-          </div>
-        )}
+        <div className="rewards-area">
+          <Table
+            tableHead={rewardListTableHeadings}
+            tabData={[...tabData]}
+            tableData={[...tableData]}
+            action={tableAction}
+            type="Reward"
+            loading={
+              rewardListIsFetching || updateRewardLoading || deleteRewardLoading
+            }
+          />
+        </div>
       </ErrorBoundary>
     </Frame>
   );
