@@ -14,7 +14,6 @@ import { useState } from "react";
 
 function Dashboard() {
   const [refetchVal, setRefetchVal] = useState(false);
-  console.log('🚀 ~ Dashboard ~ refetchVal:', refetchVal)
   return (
     <Frame
       withHeader={true}
@@ -24,12 +23,9 @@ function Dashboard() {
       containerClass="dashboard"
       updateData={() => {
         setRefetchVal(true);
-
         setTimeout(() => {
           setRefetchVal(false);
         }, 0);
-        // streakRefetch();
-        // activitiesRefetch();
       }}
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>

@@ -6,7 +6,7 @@ import { AccountSlice } from "../../Redux/Slices/accountSlice";
 import { PaymentSlice } from "../../Redux/Slices/paymentSlice";
 import { RecentActivitiesSlice } from "../../Redux/Slices/recentActivitiesSlice";
 import { RewardSlice } from "../../Redux/Slices/rewardSlice";
-import { StrealDetailSlice } from "../../Redux/Slices/streakDetailSlices";
+import { StreakDetailSlice } from "../../Redux/Slices/streakDetailSlices";
 import { StreakSlice } from "../../Redux/Slices/streakSlice";
 
 import authDataReducer from "../../Redux/Slices/authDataStoreSlice";
@@ -19,7 +19,7 @@ export const reducers = {
   [PaymentSlice.reducerPath]: PaymentSlice.reducer,
   [RecentActivitiesSlice.reducerPath]: RecentActivitiesSlice.reducer,
   [RewardSlice.reducerPath]: RewardSlice.reducer,
-  [StrealDetailSlice.reducerPath]: StrealDetailSlice.reducer,
+  [StreakDetailSlice.reducerPath]: StreakDetailSlice.reducer,
   [StreakSlice.reducerPath]: StreakSlice.reducer,
   authDataStore: authDataReducer,
   streakListType: streakListTypeReducer,

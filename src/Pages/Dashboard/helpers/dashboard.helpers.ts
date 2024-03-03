@@ -13,7 +13,7 @@ export const navigateToRecentActivities = (navigate: any) => {
 export const navigateToStreak = (
   e: any,
   navigate: any,
-  id: number,
+  id: string,
   from: string
 ) => {
   e.stopPropagation();

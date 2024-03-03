@@ -10,10 +10,10 @@ import "Assests/Images/fontello/css/habstreak.css";
 import "./App.css";
 
 //PAGED
-const DashboardPage = lazy(() => import("Pages/Dashboard/dashboard"));
-const StreakListPage = lazy(() => import("Pages/StreakList/streakList"));
-const Streak = lazy(() => import("Pages/Streak/streak"));
-const RewardList = lazy(() => import("Pages/RewardList/rewardList"));
+const DashboardPage = lazy(() => import("Pages/Dashboard/Dashboard"));
+const StreakListPage = lazy(() => import("Pages/StreakList/StreakList"));
+const Streak = lazy(() => import("Pages/Streak/Streak"));
+const RewardList = lazy(() => import("Pages/RewardList/RewardList"));
 const RecentActivities = lazy(
   () => import("Pages/RecentActivities/recentActivities")
 );

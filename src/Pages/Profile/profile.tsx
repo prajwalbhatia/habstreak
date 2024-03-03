@@ -13,6 +13,7 @@ import {
 } from "../../Redux/Slices/accountSlice";
 
 import { usePaymentRequestMutation } from "../../Redux/Slices/paymentSlice";
+import useGetPlanType from "Hooks/useGetPlanType";
 
 import "Styles/Pages/profile.scss";
 import "index.scss";
@@ -48,7 +49,8 @@ function Profile(props: any) {
 
   const [paymentData, setPaymentData] = useState<any>({});
 
-  const [planType, setPlanType] = useState("");
+  const planType = useGetPlanType();
+
   const [updateUser, { isLoading: updateUserLoading }] =
     useUpdateUserMutation();
 
@@ -57,11 +59,9 @@ function Profile(props: any) {
 
   useEffect(() => {
     if (userData) {
-      setPlanType(planDetail(userData?.planType));
       dispatch(storeAuthData(userData));
     }
   }, [userData]);
-  console.log("🚀 ~ Profile ~ userData:", userData);
 
   useEffect(() => {
     if (size(paymentData) > 0) {

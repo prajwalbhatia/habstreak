@@ -386,7 +386,7 @@ export const dialogForUpgrade = (navigate: any) => {
  * @param {Object} data - Object of data (either streak or reward)
  * @param {String} type  - type of dialog (reward or streak)
  */
-export const dialogBeforDeletng = (data: any, type: any , btnClick : ( type : string , id : string) => {}) => {
+export const dialogBeforeDeleting = (data: any, type: any , btnClick : ( type : string , id : string) => {}) => {
   Modal.show({
     type: "delete",
     title: type === "streak" ? "Delete Streak" : "Delete Reward",
