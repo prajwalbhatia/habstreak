@@ -1,27 +1,15 @@
-import React, { FC, ReactNode, MouseEvent } from "react";
+import { FC, ReactNode, MouseEvent } from "react";
 import noop from "lodash/noop";
 import ClipLoader from "react-spinners/ClipLoader";
 
-// Css
-import "Styles/Components/buttons.scss";
+import { ButtonProps, IconButtonProps } from "Components/Interfaces/interfaces";
 
-interface ButtonProps {
-  btnContainerClass?: string;
-  btnClass?: string;
-  click: (event: MouseEvent<HTMLButtonElement>) => void;
-  tooltip?: boolean;
-  tooltipData?: string;
-  index?: number;
-  name: string;
-  loading?: boolean;
-  disabled?: boolean;
-  typeVal?: "button" | "submit" | undefined;
-}
+import "Styles/Components/buttons.scss";
 
 export const PrimaryButton: FC<ButtonProps> = ({
   btnContainerClass,
   btnClass,
-  click,
+  click = noop,
   tooltip,
   tooltipData,
   index,
@@ -51,7 +39,7 @@ export const PrimaryButton: FC<ButtonProps> = ({
 export const SecondaryButton: FC<ButtonProps> = ({
   btnContainerClass,
   btnClass,
-  click,
+  click = noop,
   tooltip,
   tooltipData,
   loading,
@@ -79,7 +67,7 @@ export const SecondaryButton: FC<ButtonProps> = ({
 export const OutlinedPrimaryButton: FC<ButtonProps> = ({
   btnContainerClass,
   btnClass,
-  click,
+  click = noop,
   tooltip,
   tooltipData,
   loading,
@@ -104,19 +92,11 @@ export const OutlinedPrimaryButton: FC<ButtonProps> = ({
   );
 };
 
-interface IconButtonProps {
-  btnContainerClass?: string;
-  tooltip?: boolean;
-  tooltipData?: string;
-  click: (event: MouseEvent<HTMLDivElement>) => void;
-  icon: ReactNode;
-}
-
 export const IconButton: FC<IconButtonProps> = ({
   btnContainerClass,
   tooltip,
   tooltipData,
-  click,
+  click = noop,
   icon,
 }) => {
   return (
@@ -132,20 +112,4 @@ export const IconButton: FC<IconButtonProps> = ({
       ) : null}
     </div>
   );
-};
-
-PrimaryButton.defaultProps = {
-  click: noop,
-};
-
-SecondaryButton.defaultProps = {
-  click: noop,
-};
-
-OutlinedPrimaryButton.defaultProps = {
-  click: noop,
-};
-
-IconButton.defaultProps = {
-  click: noop,
 };

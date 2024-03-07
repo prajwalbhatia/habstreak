@@ -1,47 +1,35 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 import moment from "moment";
 
 import { navigationList, navigationIcons } from "./navigationList";
-
-// CSS
-import "Styles/Components/navigation.scss";
-import "index.scss";
 
 import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
 
 import { useGetUserQuery } from "../../Redux/Slices/accountSlice";
 
-import { useLogoutMutation } from "../../Redux/Slices/accountSlice";
-import { dialogForPlanUpgrade, sendEventToMobile } from "Utilities";
-import store from "../../Redux/Store/store";
-import { clearResults } from "../../Redux/Slices/clearPersistSlice";
+import { dialogForPlanUpgrade } from "Utilities";
+
+import useLogout from "Hooks/useLogout";
+import useGetUserData from "Hooks/useGetUserData";
+
+import "Styles/Components/navigation.scss";
+import "index.scss";
 
 declare var window: any;
 
 function Navigation() {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
-
-  const [getData, setGetData] = useState(false);
-
-  const [logout, { error: logoutError, isLoading: logoutLoading }] =
-    useLogoutMutation();
 
   const [navigation, setNavigation] = useState([...navigationList]);
-  const [user] = useState(() => {
-    const localData = localStorage.getItem("profile");
-    if (localData) {
-      return JSON.parse(localData);
-    } else {
-      return "";
-    }
-  });
-  console.log("🚀 ~ const[user]=useState ~ user:", user);
+  const { user } = useGetUserData();
+
+  const { logUserOut, logoutError, logoutLoading } = useLogout(
+    user?.refreshToken
+  );
 
   const { data: getUserData, isLoading: userLoading } = useGetUserQuery(
     { email: user?.result?.email },
@@ -49,10 +37,6 @@ function Navigation() {
   );
 
   const authData = useSelector((state: any) => state.authDataStore);
-
-  // useEffect(() => {
-  //   getUserData(authData.result.email);
-  // }, [authData]);
 
   useEffect(() => {
     if (localStorage.getItem("navigationList")) {
@@ -68,7 +52,7 @@ function Navigation() {
     const daysLeft = moment(endDate).diff(moment(currentDate), "days");
 
     if (endDate && moment(currentDate).isAfter(moment(endDate))) {
-      logoutFun(navigate, user?.refreshToken);
+      handleLogout();
     }
 
     if (daysLeft === 1 && localStorage.getItem("planUpgradeModal") !== "1") {
@@ -77,21 +61,10 @@ function Navigation() {
     }
   }, [getUserData]);
 
-  const logoutFun = async (navigate: any, refreshToken: string) => {
-    const logoutData: any = await logout({ refreshToken });
-
-    if (logoutData?.data?.message === "You logged out successfully") {
-      localStorage.clear();
-      store.dispatch(clearResults());
-
-      if (window.ReactNativeWebView) {
-        navigate("/");
-      } else {
-        navigate("/");
-      }
-
-      if (window.ReactNativeWebView) sendEventToMobile("loggedOut");
-    }
+  const handleLogout = async () => {
+    try {
+      await logUserOut();
+    } catch (error) {}
   };
 
   const linkClick = (list: any) => {
@@ -165,7 +138,6 @@ function Navigation() {
           }}
         >
           {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}
-          {/* <span>{user?.result?.name[0]}</span> */}
         </div>
 
         <div className="personal-detail-container display-none">
@@ -214,7 +186,7 @@ function Navigation() {
 
         <div
           className="logout-btn-container display-none"
-          onClick={() => logoutFun(navigate, user?.refreshToken)}
+          onClick={() => handleLogout()}
         >
           <i className="demo-icon icon-logout" />
           <h5 className="">Logout</h5>

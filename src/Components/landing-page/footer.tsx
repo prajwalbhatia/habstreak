@@ -4,11 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 function Footer() {
   const navigate = useNavigate();
-
-  //STATES
   const [, setSelectedNav] = useState("home");
 
-  //FUNCTIONS
   const handleLinkClick = (e: any) => {
     if (!e.target.getAttribute("data-value")) setSelectedNav("home");
     else if (e.target.getAttribute("data-value") === "aboutUs") {

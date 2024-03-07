@@ -1,18 +1,17 @@
 import React from "react";
 
-//COMPONENTS
 import Header from "Components/header/header";
 import Navigation from "Components/navigation/navigation";
+import { FrameInterface } from "Components/Interfaces/interfaces";
 
-//CSS
 import "Styles/Components/frame.scss";
 
-function Frame(props: any) {
+const Frame: React.FC<FrameInterface> = (props: any) => {
   const {
-    containerClass,
-    withHeader,
-    headerTitle,
-    withSearchBox,
+    containerClass = "",
+    withHeader = true,
+    headerTitle = "",
+    withSearchBox = true,
     children,
     withInternalNavigation,
     withNavigation = true,
@@ -38,13 +37,6 @@ function Frame(props: any) {
       </div>
     </>
   );
-}
-
-Frame.defaultProps = {
-  containerClass: "",
-  withHeader: true,
-  headerTitle: "FRAME",
-  withSearchBox: true,
 };
 
 export default React.memo(Frame);

@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
+import { Skeleton } from "@mui/material";
 import moment from "moment";
 import ClipLoader from "react-spinners/ClipLoader";
-
-import "Styles/Components/header.scss";
 
 import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
 
@@ -13,62 +11,22 @@ import Search from "Components/search/search";
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 import { IconButton } from "Components/buttons/buttons";
 
-import {
-  dialogForCreateAndUpdateStreak,
-  dialogForCreateAndUpdateReward,
-  dialogForUpgrade,
-  dialogForMessage,
-  activityTitle,
-  sendEventToMobile,
-  isSame,
-} from "Utilities";
+import { activityTitle } from "Utilities";
 
-import { plansFeatures } from "Constants/index";
-
-import { useLogoutMutation } from "../../Redux/Slices/accountSlice";
-import {
-  useGetStreaksQuery,
-  useCreateStreakMutation,
-} from "../../Redux/Slices/streakSlice";
-
-import {
-  useCreateRewardMutation,
-  useGetRewardsQuery,
-} from "../../Redux/Slices/rewardSlice";
 import { useGetRecentActivitiesQuery } from "../../Redux/Slices/recentActivitiesSlice";
 import { storeSearchText } from "../../Redux/Slices/searchTextSlice";
-import { noop } from "lodash";
-import { useCreateStreakDetailMutation } from "../../Redux/Slices/streakDetailSlices";
-import store from "../../Redux/Store/store";
-import { clearResults } from "../../Redux/Slices/clearPersistSlice";
-import useGetPlanType from "Hooks/useGetPlanType";
-import { Skeleton } from "@mui/material";
+
+import "Styles/Components/header.scss";
+import {
+  ActivityInterface,
+  HeaderProps,
+} from "Components/Interfaces/interfaces";
+import useLogout from "Hooks/useLogout";
+import useGetUserData from "Hooks/useGetUserData";
+import useAddStreak from "Hooks/useAddStreak";
+import useAddReward from "Hooks/useAddReward";
 
 declare var window: any;
-
-interface ActivityInterface {
-  _id: string;
-  userId: string;
-  type: string;
-  title: string;
-  date: string;
-  __v: number;
-}
-
-// interface logoutDataInterface {
-//   data : {
-//     message : string
-//   }
-// }
-
-interface HeaderProps {
-  headerText: string;
-  withSearchBox: boolean;
-  withInternalNavigation: boolean;
-  internalNavigation: boolean;
-  withDate: boolean;
-  updateData: () => {};
-}
 
 const Header: React.FC<HeaderProps> = ({
   headerText,
@@ -76,61 +34,30 @@ const Header: React.FC<HeaderProps> = ({
   withInternalNavigation,
   internalNavigation,
   withDate,
-  updateData = noop,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [
-    logout,
-    // , { error: logoutError }
-  ] = useLogoutMutation();
-
-  const planType = useGetPlanType();
-
   const {
-    data: streaks,
-    isLoading: streakListLoading,
-    refetch,
-  } = useGetStreaksQuery({});
-
-  const { data: rewards, isLoading: rewardListLoading } = useGetRewardsQuery(
-    {}
-  );
+    addStreak,
+    createStreakLoading: streakAddLoading,
+    streaks,
+    getStreaksLoading: streakListLoading,
+    getStreaksFetching: streakListFetching,
+  } = useAddStreak();
 
   const { data: activities, isLoading: recentActivitiesListLoading } =
     useGetRecentActivitiesQuery({});
 
-  const [
-    createStreak,
-    // , { error: createStreakError }
-    { isSuccess: createStreakSuccess },
-  ] = useCreateStreakMutation();
-
-  const [
-    createStreakDetail,
-    // , { error: createStreakError }
-    { isSuccess: createStreakDetsilSuccess },
-  ] = useCreateStreakDetailMutation();
-
-  const [
-    createReward,
-    // , { error: createStreakError }
-    { isSuccess: createRewardSuccess },
-  ] = useCreateRewardMutation();
+  const { addReward, rewards, rewardListLoading } = useAddReward();
 
   const [showListing, setShowListing] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [user] = useState(() => {
-    const localData = localStorage.getItem("profile");
-    if (localData) {
-      return JSON.parse(localData);
-    } else {
-      return "";
-    }
-  });
-  const [streakCount, setStreakCount] = useState<number>(0);
-  const [rewardCount, setRewardCount] = useState<number>(0);
+  const { user } = useGetUserData();
+
+  const { logUserOut, logoutError, logoutLoading } = useLogout(
+    user?.refreshToken
+  );
 
   const notification = () => {
     setShowNotification(!showNotification);
@@ -142,35 +69,31 @@ const Header: React.FC<HeaderProps> = ({
     });
   };
 
-  const logoutFun = async (navigate: any, refreshToken: string) => {
-    const logoutData: any = await logout({ refreshToken });
+  const handleLogout = async () => {
+    try {
+      await logUserOut();
+    } catch (error) {}
+  };
 
-    if (logoutData?.data?.message === "You logged out successfully") {
-      localStorage.clear();
-      store.dispatch(clearResults());
-
-      if (window.ReactNativeWebView) {
-        navigate("/");
-      } else {
-        navigate("/");
-      }
-
-      if (window.ReactNativeWebView) sendEventToMobile("loggedOut");
+  const handlePrimaryButtonClick = () => {
+    if (headerText === "Rewards") {
+      addReward();
+    } else {
+      addStreak();
     }
   };
 
-  useEffect(() => {
-    if (createStreakSuccess) updateData("streak");
-    else if (createRewardSuccess) updateData("reward");
-  }, [createStreakSuccess, createRewardSuccess]);
-
-  useEffect(() => {
-    if (streaks) setStreakCount(streaks?.length || 0);
-  }, [streaks]);
-
-  useEffect(() => {
-    if (rewards) setRewardCount(rewards?.length || 0);
-  }, [rewards]);
+  const getActivities = useCallback(() => {
+    return activities.map((activity: ActivityInterface, index: number) => {
+      if (index < 3) {
+        return (
+          <div className="d-flex" key={index}>
+            <li>{activityTitle(activity.type, activity.title, "dashboard")}</li>
+          </div>
+        );
+      }
+    });
+  }, [activities]);
 
   return (
     <header className="header">
@@ -221,10 +144,7 @@ const Header: React.FC<HeaderProps> = ({
                   <i className="demo-icon icon-notifications c-pointer" />
                   Notification
                 </li>
-                <li
-                  onClick={() => logoutFun(navigate, user?.refreshToken)}
-                  className="c-pointer"
-                >
+                <li onClick={() => handleLogout()} className="c-pointer">
                   <i className="demo-icon icon-logout " />
                   Logout
                 </li>
@@ -286,25 +206,7 @@ const Header: React.FC<HeaderProps> = ({
               {recentActivitiesListLoading ? (
                 <ClipLoader size={20} />
               ) : (
-                <ol className="flex-auto">
-                  {activities.map(
-                    (activity: ActivityInterface, index: number) => {
-                      if (index < 3) {
-                        return (
-                          <div className="d-flex" key={index}>
-                            <li>
-                              {activityTitle(
-                                activity.type,
-                                activity.title,
-                                "dashboard"
-                              )}
-                            </li>
-                          </div>
-                        );
-                      }
-                    }
-                  )}
-                </ol>
+                <ol className="flex-auto">{getActivities()}</ol>
               )}
               <div className="d-flex center-items mb-10">
                 <span
@@ -320,61 +222,10 @@ const Header: React.FC<HeaderProps> = ({
 
         <OutlinedPrimaryButton
           name={headerText === "Rewards" ? "Add New Reward" : "Add New Streak"}
-          click={() => {
-            const filterStreak = streaks.filter(
-              (streak: any) => streak.tag !== "unfinished"
-            );
-            if (headerText === "Rewards") {
-              if (streaks.length === 0) dialogForMessage(navigate);
-              else {
-                if (rewardCount < plansFeatures[planType].rewards)
-                  dialogForCreateAndUpdateReward(
-                    "create",
-                    {},
-                    "",
-                    filterStreak,
-                    (type: string, data: object) => {
-                      if (type === "create") {
-                        createReward(data);
-                      }
-                      return;
-                    }
-                  );
-                else dialogForUpgrade(navigate);
-              }
-            } else {
-              if (streakCount < plansFeatures[planType].streaks)
-                dialogForCreateAndUpdateStreak(
-                  "create",
-                  {},
-                  "",
-                  async (type: string, data: object) => {
-                    if (type === "create") {
-                      try {
-                        const streak: any = await createStreak(data);
-                        if (isSame(streak?.data?.dateFrom, Date.now())) {
-                          const streadDetail = {
-                            date: streak?.data?.dateFrom,
-                            streakId: streak?.data._id,
-                            rewards: [],
-                          };
-
-                          try {
-                            await createStreakDetail(streadDetail);
-                          } catch (error) {}
-                        }
-                      } catch (error) {}
-                      updateData();
-                    }
-                    return;
-                  }
-                );
-              else dialogForUpgrade(navigate);
-            }
-          }}
+          click={handlePrimaryButtonClick}
           btnContainerClass=""
           btnClass="h-40"
-          loading={streakListLoading || rewardListLoading}
+          loading={streakAddLoading || rewardListLoading}
         />
       </div>
     </header>

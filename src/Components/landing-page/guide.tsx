@@ -6,10 +6,8 @@ import screenfull from "screenfull";
 import { urls } from "Constants/index";
 
 function Guide() {
-  //REF
   const playerContainerRef = useRef<any>(null);
 
-  //STATES
   const [playIcon, setPlayIcon] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);

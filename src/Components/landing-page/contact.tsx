@@ -2,37 +2,24 @@ import React, { useState } from "react";
 
 import { ReactComponent as Logo } from "Assests/Images/Logo-Full.svg";
 
-//COMPONENTS
 import {
   TextInputElement,
   InputElement,
 } from "Components/form-elements/form-elements";
 import { PrimaryButton } from "Components/buttons/buttons";
+import { errMsgInterface } from "Components/Interfaces/interfaces";
 
-//UTILITIES
 import { openInNewTab } from "Utilities/index";
-
-
-//Redux
-// import { useDispatch } from "react-redux";
-
-//Redux
 import { useSendSupportMessageMutation } from "../../Redux/Slices/sendSupportMessageSlice";
 
-interface errMsgInterface {
-  email? : string
-}
-
 function Contact() {
-  const [sendSupportMessage, { error: sendSupportMessageErr , isLoading }] =
-    useSendSupportMessageMutation();
+  const [sendSupportMessage, { isLoading }] = useSendSupportMessageMutation();
 
-  //STATES
   const [formData, setFormData] = useState({
     email: "",
     message: "",
   });
-  const [errMsg, setErrMsg] = useState<errMsgInterface>({ });
+  const [errMsg, setErrMsg] = useState<errMsgInterface>({});
   const [successMsg, setSuccessMsg] = useState({
     email: "",
   });
@@ -42,7 +29,6 @@ function Contact() {
   };
 
   const validation = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //EMAIL VALIDATION
     if (e.target.name === "email") {
       if (!formData["email"]) {
         setErrMsg({ ...errMsg, [e.target.name]: "Email can't be empty" });
@@ -71,11 +57,10 @@ function Contact() {
   };
 
   const sendMessage = () => {
-
     if (
       Object.keys(formData).length === 2 &&
       formData.email.length > 0 &&
-      formData.message.length > 0 
+      formData.message.length > 0
       // && Object.keys(errMsg).length === 0
     ) {
       sendSupportMessage(formData);

@@ -3,12 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as Intro } from "Assests/Images/Intro.svg";
 import { ReactComponent as Prime } from "Assests/Images/Prime.svg";
 
-//UTILITIES
 import { jumpToAccount } from "Utilities/index";
 
 function Pricing() {
   const navigate = useNavigate();
-
   return (
     <section
       id="pricing"
