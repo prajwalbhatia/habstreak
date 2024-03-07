@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
-import { PrimaryButton } from "Components/buttons/buttons";
-import { useNavigate } from "react-router-dom";
-import { goToHome, jumpToAccount } from "Utilities/index";
-import "Styles/Components/landingHeader.scss";
+import { useState, useEffect } from "react";
 
-interface LandingHeaderProps {
-  sectionListing?: boolean;
-  navListing?: boolean;
-}
+import { useNavigate } from "react-router-dom";
+import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
+
+import { goToHome, jumpToAccount } from "Utilities/index";
+
+import { PrimaryButton } from "Components/buttons/buttons";
+import { LandingHeaderProps } from "Components/Interfaces/interfaces";
+
+import "Styles/Components/landingHeader.scss";
 
 function LandingHeader({
   navListing = false,
@@ -30,7 +30,7 @@ function LandingHeader({
     if (scroll && scroll < 400) setSelectedNav("home");
   };
 
-  const handleLinkClick = (e : any) => {
+  const handleLinkClick = (e: any) => {
     if (!e.target.getAttribute("data-value")) setSelectedNav("home");
     else if (e.target.getAttribute("data-value") === "aboutUs") {
       navigate("/about-us");
@@ -39,13 +39,15 @@ function LandingHeader({
     } else if (e.target.getAttribute("data-value") === "getStarted") {
       jumpToAccount("signup", navigate);
     } else {
-      const targetElement = document.getElementById(e.target.getAttribute("data-value"));
+      const targetElement = document.getElementById(
+        e.target.getAttribute("data-value")
+      );
       if (targetElement !== null) {
         targetElement.scrollIntoView({ behavior: "smooth" });
       } else {
         console.error("Element not found!");
       }
-      
+
       setSelectedNav(e.target.getAttribute("data-value"));
     }
 
@@ -55,12 +57,10 @@ function LandingHeader({
   return (
     <>
       <header className="landing-page-header d-flex padding-global">
-        {/* LOGO */}
         <div onClick={() => goToHome(navigate)} className="logo-container">
           <Logo />
         </div>
 
-        {/* Navigation */}
         {navListing && (
           <div id="home" className="main-navigation">
             <nav className="landing-navigation">
@@ -100,7 +100,6 @@ function LandingHeader({
           </div>
         )}
 
-        {/* BUTTONS CONTAINER */}
         <div className="buttons-container">
           <PrimaryButton
             name={"Login"}

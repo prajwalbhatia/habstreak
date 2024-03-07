@@ -1,50 +1,35 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect } from "react";
+import { Skeleton } from "@mui/material";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-import "Styles/Components/table.scss";
 import cloneDeep from "lodash/cloneDeep";
-import { theme, plansFeatures } from "Constants/index";
+import { theme } from "Constants/index";
+
+import { dialogForUpgrade } from "Utilities";
 
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 
-import { useGetStreaksQuery } from "../../Redux/Slices/streakSlice";
-import { useGetRewardsQuery } from "../../Redux/Slices/rewardSlice";
 import useGetPlanType from "Hooks/useGetPlanType";
+import useAddStreak from "Hooks/useAddStreak";
+import useAddReward from "Hooks/useAddReward";
 
-import {
-  dialogForUpgrade,
-  planDetail,
-  dialogForCreateAndUpdateStreak,
-  dialogForCreateAndUpdateReward,
-} from "Utilities";
-import { Skeleton } from "@mui/material";
+import "Styles/Components/table.scss";
 
-const  Table : any = (props: any) => {
-  const { tableHead, tabData, tableData, action, currentTab, type , loading } = props;
+const Table: any = (props: any) => {
+  const { tableHead, tabData, tableData, action, currentTab, type, loading } =
+    props;
   const planType = useGetPlanType();
 
   const navigate = useNavigate();
-  //   const streaks = useSelector((state) => state.streak.streaks);
-  //   const rewards = useSelector((state) => state.reward.rewards);
-
   const {
-    data: streaks,
-    isLoading: streakListLoading,
-    isFetching: streakListIsFetching,
-    error: streakListNewErr,
-    refetch: streakListRefetch,
-  } = useGetStreaksQuery({});
+    addStreak,
+    createStreakLoading: streakAddLoading,
+    getStreaksLoading: streakListLoading,
+    getStreaksFetching: streakListIsFetching,
+  } = useAddStreak();
 
-  const {
-    data: rewards,
-    isLoading: rewardListLoading,
-    isFetching: rewardListIsFetching,
-    error: rewardListNewErr,
-    refetch: rewardListRefetch,
-  } = useGetRewardsQuery({});
-
+  const { addReward, rewards, rewardListLoading } = useAddReward();
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -244,7 +229,7 @@ const  Table : any = (props: any) => {
                 {loading ? (
                   <Skeleton
                     variant="rounded"
-                    sx={{ minWidth: 150, minHeight: 50 , margin : 1}}
+                    sx={{ minWidth: 150, minHeight: 50, margin: 1 }}
                   />
                 ) : (
                   <div
@@ -425,23 +410,10 @@ const  Table : any = (props: any) => {
         click={
           type === "Reward"
             ? () => {
-                const filterStreak = streaks.filter(
-                  (streak: any) => streak.tag !== "unfinished"
-                );
-                // if (rewards.length < plansFeatures[planType].rewards)
-                //   dialogForCreateAndUpdateReward(
-                //     "create",
-                //     {},
-                //     "",
-                //     filterStreak
-                //   );
-                // else dialogForUpgrade(navigate);
+                addReward();
               }
             : () => {
-                // if (streaks.length < plansFeatures[planType].streaks)
-                // //   dialogForCreateAndUpdateStreak();
-                // console.log(planType)
-                // else dialogForUpgrade(navigate);
+                addStreak();
               }
         }
         btnContainerClass="mt-30 small-screen-btn"
@@ -449,7 +421,7 @@ const  Table : any = (props: any) => {
       />
     </div>
   );
-}
+};
 
 Table.propTypes = {
   tableHead: PropTypes.arrayOf(

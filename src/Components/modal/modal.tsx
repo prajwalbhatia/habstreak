@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-//LIBRARIES
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import size from "lodash/size";
@@ -8,7 +7,6 @@ import size from "lodash/size";
 import Calendar from "react-calendar";
 import moment from "moment";
 
-//Components
 import {
   InputElement,
   TextInputElement,
@@ -20,7 +18,6 @@ import {
   PrimaryButton,
 } from "Components/buttons/buttons";
 
-//CSS
 import "react-calendar/dist/Calendar.css";
 import "Styles/Components/modal.scss";
 
@@ -81,7 +78,6 @@ function Modal(props: any) {
     }
     setShowCalendar(false);
   };
-  //FUNCTIONS
 
   const content = (dataArr: any[]) => {
     return dataArr.map((data, index) => {

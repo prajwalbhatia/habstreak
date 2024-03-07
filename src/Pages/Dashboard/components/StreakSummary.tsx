@@ -5,23 +5,8 @@ import { Skeleton } from "@mui/material";
 
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 
-import { icons, plansFeatures, theme } from "Constants/index";
-import {
-  dialogForUpgrade,
-  dialogForCreateAndUpdateStreak,
-  isSame,
-  dialogForError,
-  isSameOrBefore,
-  isSameOrAfter,
-  perPerDay,
-} from "Utilities";
-
-import {
-  useCreateStreakMutation,
-  useGetStreaksQuery,
-} from "../../../Redux/Slices/streakSlice";
-import { useCreateStreakDetailMutation } from "../../../Redux/Slices/streakDetailSlices";
-import useGetPlanType from "Hooks/useGetPlanType";
+import { icons, theme } from "Constants/index";
+import { isSame, isSameOrBefore, isSameOrAfter, perPerDay } from "Utilities";
 
 import {
   StreakInterface,
@@ -31,25 +16,20 @@ import {
   navigateToStreak,
   navigateToStreakList,
 } from "../helpers/dashboard.helpers";
+import useAddStreak from "Hooks/useAddStreak";
 
 const StreakSummary = () => {
   const navigate = useNavigate();
 
   const [taskCount, setTaskCount] = useState<number>(0);
-  const [streakCount, setStreakCount] = useState<number>(0);
-  const planType = useGetPlanType();
-
-  const [createStreak, { isLoading: createStreakLoading }] =
-    useCreateStreakMutation();
-
-  const [createStreakDetail] = useCreateStreakDetailMutation();
 
   const {
-    data: streakList,
-    isLoading: streakListLoading,
-    isFetching: streakListFetching,
-    refetch: streakRefetch,
-  } = useGetStreaksQuery({});
+    addStreak,
+    createStreakLoading: streakAddLoading,
+    streaks: streakList,
+    getStreaksLoading: streakListLoading,
+    getStreaksFetching: streakListFetching,
+  } = useAddStreak();
 
   useEffect(() => {
     if (streakList && streakList.length) {
@@ -74,8 +54,6 @@ const StreakSummary = () => {
           return null;
         }
       );
-
-      setStreakCount(streakList.length);
 
       setTaskCount(filterStreaks.length);
     }
@@ -157,42 +135,7 @@ const StreakSummary = () => {
   );
 
   const addNewStreak = () => {
-    if (streakCount < plansFeatures[planType].streaks)
-      dialogForCreateAndUpdateStreak(
-        "create",
-        {},
-        "",
-        async (type: string, data: object) => {
-          if (type === "create") {
-            try {
-              const streak: any = await createStreak(data);
-
-              if (streak?.error) {
-                dialogForError(streak?.error?.data?.error?.message || "");
-              } else {
-                if (isSame(streak?.data?.dateFrom, Date.now())) {
-                  const newStreak = {
-                    date: streak?.data?.dateFrom,
-                    streakId: streak?.data._id,
-                    rewards: [],
-                  };
-                  try {
-                    const streakDetail: any = await createStreakDetail(
-                      newStreak
-                    );
-                    if (streakDetail?.error) {
-                      dialogForError(
-                        streakDetail?.error?.data?.error?.message || ""
-                      );
-                    }
-                  } catch (error) {}
-                }
-              }
-            } catch (error) {}
-          }
-        }
-      );
-    else dialogForUpgrade(navigate);
+    addStreak();
   };
 
   return (
@@ -200,7 +143,7 @@ const StreakSummary = () => {
       <div className="flex-dir-col summary">
         <h2>Tasks for today</h2>
 
-        {createStreakLoading || streakListLoading || streakListFetching ? (
+        {streakAddLoading || streakListLoading || streakListFetching ? (
           <Skeleton variant="text" sx={{ minWidth: 150, minHeight: 40 }} />
         ) : (
           <h4>
@@ -220,9 +163,7 @@ const StreakSummary = () => {
           click={addNewStreak}
           btnContainerClass="add-btn"
           btnClass="h-40"
-          loading={
-            createStreakLoading || streakListLoading || streakListFetching
-          }
+          loading={streakAddLoading || streakListLoading || streakListFetching}
         />
       </div>
 
@@ -231,9 +172,9 @@ const StreakSummary = () => {
           taskCount === 0 ? "d-flex streaks center-items" : "d-flex streaks"
         }
       >
-        {createStreakLoading || streakListLoading || streakListFetching
+        {streakAddLoading || streakListLoading || streakListFetching
           ? Array(
-              createStreakLoading
+              streakAddLoading
                 ? Math.min(streakList?.length + 1 || 1, 3)
                 : streakList?.length || 1
             )

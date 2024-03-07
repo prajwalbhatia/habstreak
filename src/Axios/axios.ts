@@ -6,7 +6,6 @@ import axios from "axios";
 const BASE_URL = urls.dev;
 const axiosObject = axios.create({ baseURL: BASE_URL });
 
-// Adding X-Request-ID as a request header to track api request
 axiosObject.interceptors.request.use(
   async (req) => {
     if (localStorage.getItem("profile")) {

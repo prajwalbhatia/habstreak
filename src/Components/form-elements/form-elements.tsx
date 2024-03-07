@@ -1,46 +1,19 @@
-import React, { FC, HTMLProps, RefObject } from "react";
+import { FC } from "react";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import { Select, MenuItem } from "@material-ui/core";
-
-//CSS
-import "Styles/Components/form-elements.scss";
 import noop from "lodash/noop";
+import {
+  DropdownProps,
+  InputElementProps,
+  TextInputElementProps,
+} from "Components/Interfaces/interfaces";
 
-interface InputElementProps extends HTMLProps<HTMLInputElement> {
-  label?: string;
-  type: string;
-  uid: string;
-  placeholder?: string;
-  containerClass?: string;
-  icon?: React.ReactNode;
-  errMsg?: string;
-  successMsg?: string;
-  reference?: RefObject<HTMLInputElement>;
-}
-
-interface TextInputElementProps extends HTMLProps<HTMLTextAreaElement> {
-  label?: string;
-  type: string;
-  key: string;
-  uid: string;
-  placeholder?: string;
-  containerClass?: string;
-}
-
-interface DropdownProps {
-  labelName: string;
-  key: string;
-  options: any;
-  optionSelect: (value: {dateFrom : string , dateTo : string}) => void;
-  value: any;
-  placeholder?: string,
-  disabled?: boolean
-}
+import "Styles/Components/form-elements.scss";
 
 export const InputElement: FC<InputElementProps> = ({
   label,
-  type,
+  type = "text",
   uid,
   placeholder,
   containerClass,
@@ -64,7 +37,11 @@ export const InputElement: FC<InputElementProps> = ({
         </label>
       </div>
       <input
-        className={label?.length && label?.length > 0 ? "input-element mt-5" : "input-element"}
+        className={
+          label?.length && label?.length > 0
+            ? "input-element mt-5"
+            : "input-element"
+        }
         type={type}
         name={uid}
         id={uid}
@@ -115,8 +92,8 @@ export const TextInputElement: FC<TextInputElementProps> = ({
 export const Dropdown: FC<DropdownProps> = ({
   labelName,
   key,
-  options,
-  optionSelect,
+  options = [""],
+  optionSelect = noop,
   value,
   ...rest
 }) => {
@@ -128,7 +105,7 @@ export const Dropdown: FC<DropdownProps> = ({
         </InputLabel>
         <Select
           label={labelName}
-          onChange={(e : any) => {
+          onChange={(e: any) => {
             optionSelect(e.target.value);
           }}
           displayEmpty={true}
@@ -138,7 +115,7 @@ export const Dropdown: FC<DropdownProps> = ({
           {...rest}
         >
           <MenuItem aria-label="None" value="" />
-          {options.map((item : any, key : any ) => {
+          {options.map((item: any, key: any) => {
             return (
               <MenuItem key={key} value={item}>
                 {item?.title}
@@ -149,13 +126,4 @@ export const Dropdown: FC<DropdownProps> = ({
       </FormControl>
     </div>
   );
-};
-
-InputElement.defaultProps = {
-  type: "text",
-};
-
-Dropdown.defaultProps = {
-  options: [''],
-  optionSelect: noop,
 };
