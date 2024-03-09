@@ -1,8 +1,9 @@
 import { NavigateFunction } from "react-router-dom";
 import Modal from "Components/modal";
-import { size } from "lodash";
+import size from "lodash/size";
 import moment from "moment";
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 declare var window: any;
 
 export const jumpToAccount = (jumpTo: string, navigate: NavigateFunction) => {
@@ -14,23 +15,41 @@ export const goToHome = (navigate: NavigateFunction) => {
 };
 
 export const dialogForError = (message: any) => {
-  const contentData = [
-    {
-      eleType: "text",
-      text: message,
-    },
-  ];
-  Modal.show({
-    title: "Error",
-    type: "delete",
-    icon: "",
-    primaryButtonText: "OKAY",
-    primaryButtonColor: "#d7443e",
-    content: [...contentData],
-    btnClickHandler: (data: any) => {
-      Modal.hide();
-    },
-  });
+  console.log('🚀 ~ dialogForError ~ message:', message)
+  // const contentData = [
+  //   {
+  //     eleType: "text",
+  //     text: message,
+  //   },
+  // ];
+  // Modal.show({
+  //   title: "Error",
+  //   type: "delete",
+  //   icon: "",
+  //   primaryButtonText: "OKAY",
+  //   primaryButtonColor: "#d7443e",
+  //   content: [...contentData],
+  //   btnClickHandler: (data: any) => {
+  //     Modal.hide();
+  //   },
+  // });
+
+  return (
+    <Snackbar
+      open={true}
+      autoHideDuration={6000}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+    >
+      <Alert
+        // onClose={handleClose}
+        severity="error"
+        variant="filled"
+        sx={{ width: "100%" }}
+      >
+        {message}
+      </Alert>
+    </Snackbar>
+  );
 };
 
 /**
@@ -314,7 +333,7 @@ export const dialogForCreateAndUpdateReward = (
             btnClick("create", rewardObj);
           } else {
             // store.dispatch(updateRewardData(rewardObj, rewardId));
-            btnClick("update", {rewardObj : rewardObj , rewardId});
+            btnClick("update", { rewardObj: rewardObj, rewardId });
           }
           Modal.hide();
         }
@@ -386,7 +405,11 @@ export const dialogForUpgrade = (navigate: any) => {
  * @param {Object} data - Object of data (either streak or reward)
  * @param {String} type  - type of dialog (reward or streak)
  */
-export const dialogBeforeDeleting = (data: any, type: any , btnClick : ( type : string , id : string) => {}) => {
+export const dialogBeforeDeleting = (
+  data: any,
+  type: any,
+  btnClick: (type: string, id: string) => {}
+) => {
   Modal.show({
     type: "delete",
     title: type === "streak" ? "Delete Streak" : "Delete Reward",
@@ -423,13 +446,11 @@ export const dialogBeforeDeleting = (data: any, type: any , btnClick : ( type : 
           btnClick("delete", data._id);
 
           // store.dispatch(deleteStreakAndRewardData(data._id))
-
         }
       } else {
         if (modalData.type === "primary") {
           // store.dispatch(deleteRewardData(data._id));
           btnClick("delete", data._id);
-
         }
       }
       Modal.hide();
@@ -660,9 +681,9 @@ export const sendEventToMobile = (eventName: any) => {
   return null;
 };
 
-export const getLatestRecentActivities  = (dispatch : any) => {
+export const getLatestRecentActivities = (dispatch: any) => {
   dispatch({
-    type: 'recentActivities/invalidateTags',
-    payload: ['GetActivities'],
+    type: "recentActivities/invalidateTags",
+    payload: ["GetActivities"],
   });
-}
+};

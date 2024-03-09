@@ -46,6 +46,8 @@ import {
 import { storeStreakListType } from "../../Redux/Slices/streakListTypeSlice";
 import { storeSearchText } from "../../Redux/Slices/searchTextSlice";
 import useGetPlanType from "Hooks/useGetPlanType";
+import useSnackBar from "Hooks/useSnackBar";
+import useAddStreak from "Hooks/useAddStreak";
 
 import "Styles/Pages/streakList.scss";
 import "index.scss";
@@ -54,6 +56,17 @@ function StreakList() {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  const { SnackbarComponent, showSnackBar } = useSnackBar();
+
+  const {
+    addStreak,
+    cloneStreak,
+    createStreakLoading: streakAddLoading,
+    streaks: streakList,
+    getStreaksLoading: streakListLoading,
+    getStreaksFetching: streakListFetching,
+    SnackbarComponent: AddStreakSnackBarComponent,
+  } = useAddStreak();
 
   const planType = useGetPlanType();
 
@@ -108,13 +121,14 @@ function StreakList() {
       const filterStreaks = streaks.filter((streak: StreakListInterface) =>
         streak.title.toLowerCase().includes(searchText.toLowerCase())
       );
+      console.log("🚀 ~ useEffect ~ filterStreaks:", filterStreaks);
 
       setStreaks(filterStreaks);
 
       setTabData([
         {
           title: "Searched items",
-          count: 0,
+          count: filterStreaks.length,
           active: true,
         },
       ]);
@@ -127,7 +141,7 @@ function StreakList() {
     } else {
       let limitedData =
         streaksData &&
-        [...streaksData].splice(0, plansFeatures["free"].streaks);
+        [...streaksData]?.splice(0, plansFeatures["free"].streaks);
       setStreaks([...limitedData]);
     }
   }, [planType, streaksData]);
@@ -194,15 +208,12 @@ function StreakList() {
       }
 
       updateTableData(false, streaks, tabData);
-    } else {
-      updateTableData(true, [], []);
     }
   }, [streaks]);
 
   useEffect(() => {
-    if (searchText === "") updateTableData(false, [], []);
-    else updateTableData(true, [], []);
-  }, [searchText]);
+    if (searchText?.length) updateTableData(true, streaks, tabData);
+  }, [searchText, tabData]);
 
   const modifyStreaks = (streaks: StreakListInterface[]) => {
     const streakData = cloneDeep(streaks);
@@ -245,7 +256,7 @@ function StreakList() {
   const updateTableData = (
     searchData = false,
     streaksArr = streaks,
-    tabData: StreakListInterface[]
+    tabData: any
   ) => {
     let selectedData = [];
     if (searchData) {
@@ -269,21 +280,39 @@ function StreakList() {
   const deleteStreakVal = (streak: StreakListInterface) => {
     dialogBeforeDeleting(streak, "streak", async (type, id) => {
       if (type === "delete") {
-        const deleteStreakResponse: any = await deleteStreak(id);
-        if (deleteStreakResponse?.error) {
-          dialogForError(
-            deleteStreakResponse?.error?.data?.error?.message || ""
-          );
-        }
+        try {
+          const deleteStreakResponse: any = await deleteStreak(id);
+
+          if (
+            deleteStreakResponse?.data?.message ===
+            "Streak deleted successfully"
+          ) {
+            showSnackBar("success", deleteStreakResponse?.data?.message);
+          } else if (deleteStreakResponse?.error) {
+            dialogForError(
+              deleteStreakResponse?.error?.data?.error?.message ||
+                "Error deleting streak"
+            );
+          }
+        } catch (error) {}
       } else if (type === "specialDelete") {
-        const deleteStreakAndRewardResponse: any = await deleteStreakAndReward(
-          id
-        );
-        if (deleteStreakAndRewardResponse?.error) {
-          dialogForError(
-            deleteStreakAndRewardResponse?.error?.data?.error?.message || ""
-          );
-        }
+        try {
+          const deleteStreakAndRewardResponse: any =
+            await deleteStreakAndReward(id);
+          if (
+            deleteStreakAndRewardResponse?.data?.message ===
+            "Streak deleted successfully"
+          ) {
+            showSnackBar(
+              "success",
+              deleteStreakAndRewardResponse?.data?.message
+            );
+          } else if (deleteStreakAndRewardResponse?.error) {
+            dialogForError(
+              deleteStreakAndRewardResponse?.error?.data?.error?.message || ""
+            );
+          }
+        } catch (error) {}
       }
       refetch && refetch();
     });
@@ -299,24 +328,27 @@ function StreakList() {
       streak,
       streak._id,
       async (type: string, data: object) => {
-        const updatedStreak: any = await updateStreak({
-          updatedVal: data,
-          streakId: streak._id,
-        });
+        try {
+          const updatedStreak: any = await updateStreak({
+            updatedVal: data,
+            streakId: streak._id,
+          });
 
-        if (updatedStreak?.error) {
-          dialogForError(updatedStreak?.error?.data?.error?.message || "");
-        } else {
-          refetch && refetch();
-        }
+          if (updatedStreak?.error) {
+            showSnackBar(
+              "error",
+              updatedStreak?.error?.data?.error?.message || ""
+            );
+          } else {
+            showSnackBar("success", "Streak updated successfully");
+          }
+        } catch (error) {}
       }
     );
   };
 
-  const cloneStreak = (streak: StreakListInterface) => {
-    dialogForCreateAndUpdateStreak("clone", streak, streak._id, () => {
-      refetch && refetch();
-    });
+  const cloneStreakFun = (streak: StreakListInterface) => {
+    cloneStreak(streak, streak._id);
   };
 
   const statusFun = (currentTab: string) => {
@@ -376,7 +408,7 @@ function StreakList() {
     } else if (actionObj.actionType === "editRow") {
       updateStreakData(actionObj.data);
     } else if (actionObj.actionType === "cloneRow") {
-      cloneStreak(actionObj.data);
+      cloneStreakFun(actionObj.data);
     } else if (actionObj.actionType === "navigate") {
       if (currentTab !== "Unfinished") {
         navigate(`/streak/${actionObj.data._id}`, {
@@ -418,6 +450,8 @@ function StreakList() {
           />
         </div>
       </ErrorBoundary>
+      {SnackbarComponent}
+      {AddStreakSnackBarComponent}
     </Frame>
   );
 }

@@ -6,8 +6,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 import ProtectedRoute from "ProtectedRoutes";
 
-import "Assests/Images/fontello/css/habstreak.css";
+import "Assets/Images/fontello/css/habstreak.css";
 import "./App.css";
+import SuspenseFallback from "Components/suspenseFallback/suspenseFallback";
 
 //PAGED
 const DashboardPage = lazy(() => import("Pages/Dashboard/Dashboard"));
@@ -33,7 +34,7 @@ const AboutUs = lazy(() => import("Pages/AboutUs/about"));
 
 const pageElement = (Component: FunctionComponent) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<SuspenseFallback />}>
       <Component />
     </Suspense>
   );

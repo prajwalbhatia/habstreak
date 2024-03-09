@@ -29,6 +29,7 @@ const StreakSummary = () => {
     streaks: streakList,
     getStreaksLoading: streakListLoading,
     getStreaksFetching: streakListFetching,
+    SnackbarComponent,
   } = useAddStreak();
 
   useEffect(() => {
@@ -188,6 +189,7 @@ const StreakSummary = () => {
               ))
           : streakCardJsx(streakList || [])}
       </div>
+      {SnackbarComponent}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
+import { ReactComponent as Logo } from "Assets/Images/Logo.svg";
 
 import { goToHome, jumpToAccount } from "Utilities/index";
 

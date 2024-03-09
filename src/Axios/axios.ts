@@ -18,13 +18,12 @@ axiosObject.interceptors.request.use(
         let currentDate = new Date();
         const decodeToken = jwtDecode(user.token);
         if (decodeToken.exp && decodeToken.exp * 1000 < currentDate.getTime()) {
-          // const data  = await refreshToken({ refreshToken: user.refreshToken });
-          const data = await axios.post("/user/refreshToken", {
+          const data = await axios.post(BASE_URL + "user/refreshToken", {
             refreshToken: user.refreshToken,
           });
           localStorage.setItem("profile", JSON.stringify({ data }));
-          // storeRefreshToken(data);
-          req.headers.Authorization = data?.data && data?.data?.token && `Bearer ${data?.data?.token}`;
+          req.headers.Authorization =
+            data?.data && data?.data?.token && `Bearer ${data?.data?.token}`;
         } else {
           req.headers.Authorization = `Bearer ${
             JSON.parse(localStorage.getItem("profile") || "").token
@@ -38,13 +37,5 @@ axiosObject.interceptors.request.use(
     console.log("INTERSEPTOR ERROR", error);
   }
 );
-
-// axiosObject.interceptors.response.use(
-//   (response) => {
-
-//   },
-//   (error) => {
-
-// );
 
 export default axiosObject;

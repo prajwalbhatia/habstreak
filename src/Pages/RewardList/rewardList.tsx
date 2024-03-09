@@ -11,6 +11,7 @@ import {
   useDeleteRewardMutation,
 } from "../../Redux/Slices/rewardSlice";
 import useGetPlanType from "Hooks/useGetPlanType";
+import useSnackBar from "Hooks/useSnackBar";
 
 import Fallback from "Utilities/fallback/fallback";
 import {
@@ -35,6 +36,7 @@ import { rewardListTableHeadings, plansFeatures } from "Constants/index";
 
 import "Styles/Pages/rewardsList.scss";
 import "index.scss";
+import { useSelector } from "react-redux";
 
 function RewardList() {
   const location = useLocation();
@@ -49,14 +51,12 @@ function RewardList() {
   const [rewardsEarned, setRewardsEarned] = useState<any>([]);
   const [rewardsToBuy, setRewardsToBuy] = useState<any>([]);
   const planType = useGetPlanType();
+  const { SnackbarComponent, showSnackBar } = useSnackBar();
 
-  const { data: streaks, refetch: streakListRefetch } = useGetStreaksQuery({});
+  const { data: streaks } = useGetStreaksQuery({});
 
-  const {
-    data: rewardsData,
-    isFetching: rewardListIsFetching,
-    refetch: rewardListRefetch,
-  } = useGetRewardsQuery({});
+  const { data: rewardsData, isFetching: rewardListIsFetching } =
+    useGetRewardsQuery({});
 
   const [updateReward, { isLoading: updateRewardLoading }] =
     useUpdateRewardMutation();
@@ -64,7 +64,7 @@ function RewardList() {
   const [deleteReward, { isLoading: deleteRewardLoading }] =
     useDeleteRewardMutation();
 
-  const searchText = "";
+  const searchText = useSelector((state: any) => state.searchText);
 
   const tabDataFun = () => {
     return [...tabDataClone].map((tab) => {
@@ -116,7 +116,7 @@ function RewardList() {
       setTabData([
         {
           title: "Searched items",
-          count: 0,
+          count: filterRewards?.length,
           active: true,
         },
       ]);
@@ -154,15 +154,17 @@ function RewardList() {
       }
 
       updateTableData(false, rewards, tabDataVal);
-    } else {
-      updateTableData(true, rewards);
     }
   }, [rewards]);
 
+  // useEffect(() => {
+  //   if (searchText === "") updateTableData(false);
+  //   else updateTableData(true);
+  // }, [tabData]);
+
   useEffect(() => {
-    if (searchText === "") updateTableData(false);
-    else updateTableData(true);
-  }, [tabData]);
+    if (searchText?.length) updateTableData(true, rewards, tabData);
+  }, [searchText, tabData]);
 
   const streakState = (streak: any) => {
     const currentDate = moment().format();
@@ -272,8 +274,12 @@ function RewardList() {
           dialogForError(
             deleteRewardResponse?.error?.data?.error?.message || ""
           );
-        } else {
-          rewardListRefetch && rewardListRefetch();
+          showSnackBar(
+            "error",
+            deleteRewardResponse?.error?.data?.error?.message || ""
+          );
+        } else if (deleteRewardResponse?.data?.message) {
+          showSnackBar("success", deleteRewardResponse?.data?.message || "");
         }
       } catch (error) {
         //
@@ -314,9 +320,12 @@ function RewardList() {
             try {
               const updateRewardData: any = await updateReward(data);
               if (updateRewardData?.error) {
-                dialogForError(
+                showSnackBar(
+                  "error",
                   updateRewardData?.error?.data?.error?.message || ""
                 );
+              } else {
+                showSnackBar("success", "Reward update success");
               }
             } catch (error) {
               //
@@ -335,12 +344,6 @@ function RewardList() {
       withSearchBox={true}
       headerTitle="Rewards"
       containerClass="rewards"
-      updateData={() => {
-        if (streakListRefetch && rewardListRefetch) {
-          streakListRefetch();
-          rewardListRefetch();
-        }
-      }}
     >
       <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
         <div className="rewards-area">
@@ -356,6 +359,7 @@ function RewardList() {
           />
         </div>
       </ErrorBoundary>
+      {SnackbarComponent}
     </Frame>
   );
 }

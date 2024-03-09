@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Skeleton } from "@mui/material";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -17,19 +16,12 @@ import useAddReward from "Hooks/useAddReward";
 import "Styles/Components/table.scss";
 
 const Table: any = (props: any) => {
+  const navigate = useNavigate();
   const { tableHead, tabData, tableData, action, currentTab, type, loading } =
     props;
   const planType = useGetPlanType();
-
-  const navigate = useNavigate();
-  const {
-    addStreak,
-    createStreakLoading: streakAddLoading,
-    getStreaksLoading: streakListLoading,
-    getStreaksFetching: streakListIsFetching,
-  } = useAddStreak();
-
-  const { addReward, rewards, rewardListLoading } = useAddReward();
+  const { addStreak, SnackbarComponent } = useAddStreak();
+  const { addReward , SnackbarComponent : SnackBarComponentReward  } = useAddReward();
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -78,6 +70,8 @@ const Table: any = (props: any) => {
             </div>
           );
         })}
+        {SnackbarComponent}
+        {SnackBarComponentReward}
       </div>
     );
   };
@@ -219,29 +213,31 @@ const Table: any = (props: any) => {
     let val = 0;
     return (
       <>
-        {data.length > 0 ? (
+        {loading ? (
+          Array(data.length || 1)
+            .fill(0)
+            .map((val: any, index: any) => (
+              <Skeleton
+                variant="rounded"
+                sx={{ minWidth: 150, minHeight: 50, margin: 1 }}
+              />
+            ))
+        ) : data.length > 0 ? (
           data.map((dataInner: any, index: any) => {
             dataInner.theme = theme[val];
             val += 1;
             if (val === 10) val = 0;
             return (
               <>
-                {loading ? (
-                  <Skeleton
-                    variant="rounded"
-                    sx={{ minWidth: 150, minHeight: 50, margin: 1 }}
-                  />
-                ) : (
-                  <div
-                    onClick={() => navigateTo(dataInner)}
-                    key={index}
-                    className="d-flex table-row"
-                  >
-                    {head.map((headingData: any, index: any) => {
-                      return dataRow(headingData, dataInner, index);
-                    })}
-                  </div>
-                )}
+                <div
+                  onClick={() => navigateTo(dataInner)}
+                  key={index}
+                  className="d-flex table-row"
+                >
+                  {head.map((headingData: any, index: any) => {
+                    return dataRow(headingData, dataInner, index);
+                  })}
+                </div>
               </>
             );
           })

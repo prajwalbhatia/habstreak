@@ -5,13 +5,13 @@ import { Skeleton } from "@mui/material";
 import moment from "moment";
 import ClipLoader from "react-spinners/ClipLoader";
 
-import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
+import { ReactComponent as Logo } from "Assets/Images/Logo.svg";
 
 import Search from "Components/search/search";
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 import { IconButton } from "Components/buttons/buttons";
 
-import { activityTitle } from "Utilities";
+import { activityTitle, dialogForError } from "Utilities";
 
 import { useGetRecentActivitiesQuery } from "../../Redux/Slices/recentActivitiesSlice";
 import { storeSearchText } from "../../Redux/Slices/searchTextSlice";
@@ -44,12 +44,14 @@ const Header: React.FC<HeaderProps> = ({
     streaks,
     getStreaksLoading: streakListLoading,
     getStreaksFetching: streakListFetching,
+    SnackbarComponent
   } = useAddStreak();
+
 
   const { data: activities, isLoading: recentActivitiesListLoading } =
     useGetRecentActivitiesQuery({});
 
-  const { addReward, rewards, rewardListLoading } = useAddReward();
+  const { addReward, rewards, rewardListLoading , SnackbarComponent : SnackBarComponentReward } = useAddReward();
 
   const [showListing, setShowListing] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
@@ -228,6 +230,8 @@ const Header: React.FC<HeaderProps> = ({
           loading={streakAddLoading || rewardListLoading}
         />
       </div>
+      {SnackbarComponent}
+      {SnackBarComponentReward}
     </header>
   );
 };

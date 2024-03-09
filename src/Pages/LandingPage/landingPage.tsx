@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { jumpToAccount, dialogForError } from "Utilities/index";
 
 //IMAGES
-import { ReactComponent as Hero } from "Assests/Images/hero.svg";
+import { ReactComponent as Hero } from "Assets/Images/hero.svg";
 
 
 const Guide = lazy(() => import("Components/landing-page/guide"));

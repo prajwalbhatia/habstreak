@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+import size from "lodash/size";
 import moment from "moment";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -14,18 +14,18 @@ import {
 
 import { usePaymentRequestMutation } from "../../Redux/Slices/paymentSlice";
 import useGetPlanType from "Hooks/useGetPlanType";
-
-import "Styles/Pages/profile.scss";
-import "index.scss";
+import useSnackBar from "Hooks/useSnackBar";
 
 import { ErrorBoundary } from "react-error-boundary";
 import Fallback from "Utilities/fallback/fallback";
 
-import { dialogForError, errorHandler, planDetail } from "Utilities";
+import { dialogForError, errorHandler } from "Utilities";
 
-import size from "lodash/size";
 import { urls } from "Constants/index";
 import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
+
+import "Styles/Pages/profile.scss";
+import "index.scss";
 
 declare var window: any;
 
@@ -50,6 +50,7 @@ function Profile(props: any) {
   const [paymentData, setPaymentData] = useState<any>({});
 
   const planType = useGetPlanType();
+  const { SnackbarComponent, showSnackBar } = useSnackBar();
 
   const [updateUser, { isLoading: updateUserLoading }] =
     useUpdateUserMutation();
@@ -106,7 +107,7 @@ function Profile(props: any) {
           });
 
           if (updated?.error) {
-            dialogForError(updated?.error?.data?.error?.message || "");
+            showSnackBar("error", updated?.error?.data?.error?.message || "");
           }
 
           localStorage.removeItem("planUpgradeModal");
@@ -144,7 +145,10 @@ function Profile(props: any) {
     try {
       const paymentData: any = await paymentRequest({});
       if (paymentData?.error) {
-        dialogForError(paymentData?.error?.data?.error?.message || "Error");
+        showSnackBar(
+          "error",
+          paymentData?.error?.data?.error?.message || "Error"
+        );
       }
       setPaymentData(paymentData?.data);
     } catch (error) {}
@@ -348,6 +352,7 @@ function Profile(props: any) {
           </>
         )}
       </ErrorBoundary>
+      {SnackbarComponent}
     </Frame>
   );
 }

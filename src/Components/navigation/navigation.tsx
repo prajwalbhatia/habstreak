@@ -6,7 +6,7 @@ import moment from "moment";
 
 import { navigationList, navigationIcons } from "./navigationList";
 
-import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
+import { ReactComponent as Logo } from "Assets/Images/Logo.svg";
 
 import { useGetUserQuery } from "../../Redux/Slices/accountSlice";
 
