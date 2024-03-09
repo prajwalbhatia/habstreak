@@ -2,8 +2,6 @@ import { NavigateFunction } from "react-router-dom";
 import Modal from "Components/modal";
 import size from "lodash/size";
 import moment from "moment";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 declare var window: any;
 
 export const jumpToAccount = (jumpTo: string, navigate: NavigateFunction) => {
@@ -12,44 +10,6 @@ export const jumpToAccount = (jumpTo: string, navigate: NavigateFunction) => {
 
 export const goToHome = (navigate: NavigateFunction) => {
   navigate("/");
-};
-
-export const dialogForError = (message: any) => {
-  console.log('🚀 ~ dialogForError ~ message:', message)
-  // const contentData = [
-  //   {
-  //     eleType: "text",
-  //     text: message,
-  //   },
-  // ];
-  // Modal.show({
-  //   title: "Error",
-  //   type: "delete",
-  //   icon: "",
-  //   primaryButtonText: "OKAY",
-  //   primaryButtonColor: "#d7443e",
-  //   content: [...contentData],
-  //   btnClickHandler: (data: any) => {
-  //     Modal.hide();
-  //   },
-  // });
-
-  return (
-    <Snackbar
-      open={true}
-      autoHideDuration={6000}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-    >
-      <Alert
-        // onClose={handleClose}
-        severity="error"
-        variant="filled"
-        sx={{ width: "100%" }}
-      >
-        {message}
-      </Alert>
-    </Snackbar>
-  );
 };
 
 /**

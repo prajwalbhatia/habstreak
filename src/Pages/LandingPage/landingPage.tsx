@@ -3,28 +3,17 @@ import React, { lazy, useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Suspense } from "react";
 
-//Component
 import { PrimaryButton } from "Components/buttons/buttons";
 import LandingHeader from "Components/landingHeader/landingHeader";
 
-//CSS
 import "index.scss";
 import "Styles/Pages/landingPage.scss";
 
 import { useNavigate } from "react-router-dom";
 
-//Redux
-import { useDispatch, useSelector } from "react-redux";
+import { jumpToAccount } from "Utilities/index";
 
-//Actions
-// import { emptyError } from "redux/actions/support";
-
-//UTILITIES
-import { jumpToAccount, dialogForError } from "Utilities/index";
-
-//IMAGES
 import { ReactComponent as Hero } from "Assets/Images/hero.svg";
-
 
 const Guide = lazy(() => import("Components/landing-page/guide"));
 const Pricing = lazy(() => import("Components/landing-page/pricing"));
@@ -34,25 +23,12 @@ const Footer = lazy(() => import("Components/landing-page/footer"));
 function LandingPage() {
   const navigate = useNavigate();
 
-
-  //   const dispatch = useDispatch();
-
-  //   let error = useSelector((state) => state.user.error);
-
-  //STATES
-  //   useEffect(() => {
-  //     if (error.length > 0) {
-  //       dialogForError(error);
-  //       //   dispatch(emptyError());
-  //     }
-  //   }, [dispatch, error]);
-
   useEffect(() => {
     //If we have a user in local storage
     //and it is not verified then we have to clear
     //local storage
     let val = localStorage.getItem("profile") || "";
-    const user = val ? JSON.parse(val) : '';
+    const user = val ? JSON.parse(val) : "";
 
     if (user) {
       const isVerified = user?.result?.verified;
@@ -76,11 +52,12 @@ function LandingPage() {
             className="hero-section padding-global d-flex justify-space-between"
           >
             <div className="hero-container">
-              <h1 className="h1-50">Get things done and reward yourself</h1>
+              <h1 className="h1-50">
+                Do more, feel better, celebrate with your reward!
+              </h1>
               <p className="p-18">
-                Are you tired of starting the things and dropping in between???
-                Not anymore, try habstreak, record your task and reward yourself
-                on reaching milestones
+                Level Up Your Productivity! Habstreak helps you turn "Starts"
+                into "Finishes" with task tracking, milestones, and rewards.
               </p>
               <div className="buttons d-flex">
                 <PrimaryButton
@@ -119,36 +96,26 @@ function LandingPage() {
             <div className="left-section">
               <div className="top-row">
                 <div className="feature-card">
-                  <h1>Streak</h1>
-                  <p>
-                    Create a streak of your task and keep ourself aware of your
-                    progress
-                  </p>
+                  <h1>Build Streaks</h1>
+                  <p>Stay motivated by tracking your daily task completion.</p>
                 </div>
 
                 <div className="feature-card">
-                  <h1>Rewards</h1>
+                  <h1>Daily Wins</h1>
                   <p>
-                    Reward yourself on reaching certain milestones on every
-                    streak
+                    Small steps add up to big achievements and wins motivates.
                   </p>
                 </div>
               </div>
               <div className="bottom-row">
                 <div className="feature-card">
-                  <h1>Progress</h1>
-                  <p>
-                    Everyday progress is necessary to keep you going and
-                    accomplish more.
-                  </p>
+                  <h1>Track Progress</h1>
+                  <p>Visualize your journey and celebrate milestones.</p>
                 </div>
 
                 <div className="feature-card">
-                  <h1>Details</h1>
-                  <p>
-                    Keep record of all task you are completing on a particular
-                    day and on particular streak
-                  </p>
+                  <h1>Unlock Rewards</h1>
+                  <p>Earn incentives for reaching your goals.</p>
                 </div>
               </div>
             </div>
@@ -158,9 +125,8 @@ function LandingPage() {
                 Reward yourself and make the road of success exciting
               </h1>
               <p className="p-18">
-                Most good things take time and alot of effort, so why only wait
-                for the end result?? Reward youself on small success and make
-                your journey more exciting
+                Don't wait for the finish line! Reward yourself along the way
+                and enjoy the excitement of achieving milestones.
               </p>
 
               <div className="buttons d-flex mt-50">

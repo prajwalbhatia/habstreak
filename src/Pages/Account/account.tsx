@@ -25,10 +25,11 @@ import { ReactComponent as Logo } from "Assets/Images/Logo.svg";
 import { ReactComponent as Signup } from "Assets/Images/Signup.svg";
 import { ReactComponent as Login } from "Assets/Images/Login.svg";
 
-import { dialogForError, goToHome, sendEventToMobile } from "Utilities/index";
+import { goToHome, sendEventToMobile } from "Utilities/index";
 import { size } from "lodash";
 import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
 import { useDispatch } from "react-redux";
+import useSnackBar from "Hooks/useSnackBar";
 
 declare var window: any;
 
@@ -77,6 +78,9 @@ function Account(props: any) {
       isLoading: checkUserExistFromGoogleLoading,
     },
   ] = useCheckUserExistFromGoogleMutation();
+
+  const { SnackbarComponent, showSnackBar } = useSnackBar();
+
 
   const otp2ref = useRef<HTMLInputElement | null>(null);
   const otp3ref = useRef<HTMLInputElement | null>(null);
@@ -132,7 +136,7 @@ function Account(props: any) {
     const errText = err?.data?.error?.message;
 
     if (errText) {
-      dialogForError(errText);
+      showSnackBar("error" , errText)
       setFormData(initialState);
       setErrMsg({});
       setSuccessMsg({});
@@ -199,7 +203,7 @@ function Account(props: any) {
     });
 
     if (userData.data === true && !userDataFromGoogle.data) {
-      dialogForError("User already exist with same email");
+      showSnackBar("error" , "User already exist with same email")
       setLoadingFile(false);
       return;
     }
@@ -270,7 +274,7 @@ function Account(props: any) {
     if (stage === "signin") {
       const userData: any = await checkUserExist({ email: formData?.email });
       if (userData === true) {
-        dialogForError("User already exist");
+        showSnackBar("error" , "User already exist")
       } else {
         const signupData: any = await signup(formData);
         const authData = signupData?.data;
@@ -681,7 +685,7 @@ function Account(props: any) {
                         onClick={() => sendEventToMobile("google-login")}
                         className="icon-container"
                       >
-                        <i className="demo-icon  icon-google" />
+                        <i className="demo-icon icon-google" />
                       </div>
 
                       {!window.ReactNativeWebView && clientId && (
@@ -700,6 +704,7 @@ function Account(props: any) {
 
                 <p className="t-and-c">
                   By creating an account means you're okay with
+                  {' '}
                   <span
                     onClick={() => {
                       navigate("/terms-and-condition");
@@ -718,6 +723,7 @@ function Account(props: any) {
                 </p>
               </form>
             </div>
+            {SnackbarComponent}
           </div>
         )
       }

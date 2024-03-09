@@ -29,7 +29,6 @@ export const reducers = {
 const appReducer = combineReducers({ ...reducers });
 
 const rootReducer = (state: any, action: any) => {
-  console.log('🚀 ~ rootReducer ~ action:', action)
   if (action.type === "clear/clearResults") {
     // this applies to all keys defined in persistConfig(s)
     storage.removeItem("persist:root");

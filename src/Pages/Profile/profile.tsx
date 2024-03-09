@@ -19,7 +19,7 @@ import useSnackBar from "Hooks/useSnackBar";
 import { ErrorBoundary } from "react-error-boundary";
 import Fallback from "Utilities/fallback/fallback";
 
-import { dialogForError, errorHandler } from "Utilities";
+import { errorHandler } from "Utilities";
 
 import { urls } from "Constants/index";
 import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
@@ -75,10 +75,8 @@ function Profile(props: any) {
         currency: paymentData.currency,
         name: "Habstreak",
         description: "",
-        image:
-          process.env.REACT_APP_ENV === "development"
-            ? `${urls.dev}logo.svg`
-            : `${urls.prod}logo.svg`,
+        // @ts-ignore
+        image: `${urls[process.env.REACT_APP_API_MODE]}logo.svg`,
         order_id: paymentData.id,
         handler: async function (response: any) {
           let startTime = "";

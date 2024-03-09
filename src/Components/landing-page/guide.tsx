@@ -23,8 +23,7 @@ function Guide() {
         <div className="left-section">
           <h1 className="h1-40">Enjoying the process is important</h1>
           <p className="p-18">
-            Take baby steps daily to complete the impossible looking tasks and
-            make impossible task says I M POSSIBLE.
+          Break down big goals into small steps. Watch the "impossible" become "I'm possible" with daily action.
           </p>
         </div>
 
@@ -32,11 +31,8 @@ function Guide() {
           <div className="player-container">
             <div ref={playerContainerRef} style={{ position: "relative" }}>
               <ReactPlayer
-                url={
-                  process.env.REACT_APP_ENV === "development"
-                    ? `${urls.dev}habstreak_guide.mp4`
-                    : `${urls.prod}habstreak_guide.mp4`
-                }
+              // @ts-ignore
+                url={`${urls[process.env.REACT_APP_API_MODE]}habstreak_guide.mp4`}
                 width="100%"
                 height="100%"
                 playing={playIcon}
