@@ -37,7 +37,6 @@ const StreakAnalysis = () => {
     data: streakList,
     isLoading: streakListLoading,
     isFetching: streakListFetching,
-    refetch: streakRefetch,
   } = useGetStreaksQuery({});
 
   const { data: rewardList, isLoading: rewardListLoading } = useGetRewardsQuery(

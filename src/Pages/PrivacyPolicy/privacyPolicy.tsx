@@ -8,7 +8,7 @@ import 'Styles/Pages/policies.scss';
 
 
 //IMAGES
-import { ReactComponent as Logo } from 'Assests/Images/Logo.svg';
+import { ReactComponent as Logo } from 'Assets/Images/Logo.svg';
 import { goToHome } from 'Utilities';
 
 

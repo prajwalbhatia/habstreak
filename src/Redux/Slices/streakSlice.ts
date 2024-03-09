@@ -51,7 +51,6 @@ export const StreakSlice = createApi({
       query: (id) => ({
         url: `${streakURL}/${id}`,
         method: "DELETE",
-        // body: body?.data,
       }),
       onQueryStarted(arg, api) {
         api.queryFulfilled.then(() => {
@@ -64,7 +63,7 @@ export const StreakSlice = createApi({
     }),
     deleteStreakAndReward: builder.mutation({
       query: (id) => ({
-        url: `${streakURL}/${id}/deleteAndUpdate`,
+        url: `${streakURL}/${id}/deleteStreakAndReward`,
         method: "DELETE",
       }),
       onQueryStarted(arg, api) {

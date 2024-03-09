@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://habstreak.com" target="_blank">
-        <img src="./src/Assests/Images/Logo-Icon.svg" alt="habstreak-logo" width="225"/>
+        <img src="./src/Assets/Images/Logo-Icon.svg" alt="habstreak-logo" width="225"/>
     </a>
     
 </p>

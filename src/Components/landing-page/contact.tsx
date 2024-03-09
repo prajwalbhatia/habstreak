@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { ReactComponent as Logo } from "Assests/Images/Logo-Full.svg";
+import { ReactComponent as Logo } from "Assets/Images/Logo-Full.svg";
 
 import {
   TextInputElement,

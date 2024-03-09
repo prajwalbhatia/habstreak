@@ -13,14 +13,19 @@ import {
   useGetStreaksQuery,
 } from "../Redux/Slices/streakSlice";
 import { useCreateStreakDetailMutation } from "../Redux/Slices/streakDetailSlices";
+import useSnackBar from "./useSnackBar";
 
 const useAddStreak = () => {
   const [streakCount, setStreakCount] = useState<number>(0);
   const planType = useGetPlanType();
   const navigate = useNavigate();
 
-  const [createStreak, { isSuccess, isLoading: createStreakLoading, isError }] =
-    useCreateStreakMutation();
+  const { SnackbarComponent, showSnackBar } = useSnackBar();
+
+  const [
+    createStreak,
+    { isSuccess: streakCreated, isLoading: createStreakLoading, isError },
+  ] = useCreateStreakMutation();
 
   const {
     data: streaks,
@@ -33,6 +38,12 @@ const useAddStreak = () => {
   useEffect(() => {
     if (streaks) setStreakCount(streaks?.length || 0);
   }, [streaks]);
+
+  useEffect(() => {
+    if (streakCreated) {
+      showSnackBar("success", "Streak created successfully");
+    }
+  }, [streakCreated]);
 
   const handleAddStreak = () => {
     if (streakCount < plansFeatures[planType].streaks)
@@ -62,12 +73,42 @@ const useAddStreak = () => {
     else dialogForUpgrade(navigate);
   };
 
+  const handleCloneStreak = (streak : any, streakId : string) => {
+    if (streakCount < plansFeatures[planType].streaks)
+      dialogForCreateAndUpdateStreak(
+        "clone",
+        streak,
+        streakId,
+        async (type: string, data: object) => {
+          if (type === "create") {
+            try {
+              const streak: any = await createStreak(data);
+              if (isSame(streak?.data?.dateFrom, Date.now())) {
+                const streakDetail = {
+                  date: streak?.data?.dateFrom,
+                  streakId: streak?.data._id,
+                  rewards: [],
+                };
+                try {
+                  await createStreakDetail(streakDetail);
+                } catch (error) {}
+              }
+            } catch (error) {}
+          }
+          return;
+        }
+      );
+    else dialogForUpgrade(navigate);
+  };
+
   return {
     addStreak: () => handleAddStreak(),
+    cloneStreak : (streak : any , streakId : string) => handleCloneStreak(streak , streakId),
     createStreakLoading,
     streaks,
     getStreaksLoading,
     getStreaksFetching,
+    SnackbarComponent
   };
 };
 

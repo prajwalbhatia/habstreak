@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import { ReactComponent as Intro } from "Assests/Images/Intro.svg";
-import { ReactComponent as Prime } from "Assests/Images/Prime.svg";
+import { ReactComponent as Intro } from "Assets/Images/Intro.svg";
+import { ReactComponent as Prime } from "Assets/Images/Prime.svg";
 
 import { jumpToAccount } from "Utilities/index";
 

@@ -21,9 +21,9 @@ import {
 import "Styles/Pages/account.scss";
 import "index.scss";
 
-import { ReactComponent as Logo } from "Assests/Images/Logo.svg";
-import { ReactComponent as Signup } from "Assests/Images/Signup.svg";
-import { ReactComponent as Login } from "Assests/Images/Login.svg";
+import { ReactComponent as Logo } from "Assets/Images/Logo.svg";
+import { ReactComponent as Signup } from "Assets/Images/Signup.svg";
+import { ReactComponent as Login } from "Assets/Images/Login.svg";
 
 import { dialogForError, goToHome, sendEventToMobile } from "Utilities/index";
 import { size } from "lodash";
@@ -92,20 +92,16 @@ function Account(props: any) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [stage, setStage] = useState("login");
-  console.log("🚀 ~ Account ~ stage:", stage);
   const [formData, setFormData] = useState<any>(initialState);
-  console.log("🚀 ~ Account ~ formData:", formData);
   const [errMsg, setErrMsg] = useState<errSuccMsgInterface>({});
   const [successMsg, setSuccessMsg] = useState<errSuccMsgInterface>({});
   const [isValid, setIsValid] = useState(false);
-  console.log("🚀 ~ Account ~ isValid:", isValid);
   const [loadingFile, setLoadingFile] = useState(false);
 
   const [resendButton, setResendButton] = useState(false);
 
   const [countDown, setCountDown] = useState(60);
   const [authData, setAuthData] = useState<any>({});
-  console.log("🚀 ~ Account ~ authData:", authData);
 
   useEffect(() => {
     if (authData?.result) {
@@ -194,12 +190,9 @@ function Account(props: any) {
     }
   }, [errMsg, formData, stage]);
 
-  //USE EFFECTS
-
-  //FUNCTIONS
   const googleSuccess = async (res: any) => {
     setLoadingFile(true);
-    const result = res?.profileObj;
+    let result = res?.profileObj;
     const userData: any = await checkUserExist({ email: result?.email });
     const userDataFromGoogle: any = await checkUserExistFromGoogle({
       email: result?.email,
@@ -214,24 +207,21 @@ function Account(props: any) {
     const token = res?.tokenId;
 
     try {
-      const goolgeLogin: any = await auth({
+      const googleLogin: any = await auth({
         email: result?.email,
         name: result?.name,
       });
 
-      if (goolgeLogin?.data?.verified) {
-        result.verified = goolgeLogin.data.verified;
-        result.planType = goolgeLogin.data.planType;
+      if (googleLogin?.data?.verified) {
+        const googleData = googleLogin?.data;
+        result = { ...result, ...googleData };
+
         localStorage.setItem("profile", JSON.stringify({ result, token }));
-
-        console.log("result123", { result: { result, token } });
-
         dispatch(storeAuthData({ ...result, token }));
 
-        // setAuthData({result  : { result, token }});
         if (window.ReactNativeWebView) sendEventToMobile("loggedIn");
 
-        if (goolgeLogin?.data?.verified) {
+        if (googleLogin?.data?.verified) {
           navigate("/dashboard");
         }
       }
@@ -277,7 +267,6 @@ function Account(props: any) {
     //Signining the user
     //and will send the user to verify email screen
     //SIGNUP
-    // debugger; // eslint-disable-line no-debugger
     if (stage === "signin") {
       const userData: any = await checkUserExist({ email: formData?.email });
       if (userData === true) {
@@ -295,7 +284,6 @@ function Account(props: any) {
     //Logging the user if and only if user is verified
     //if not verified then will send to verify screen
     else if (stage === "login") {
-      // dispatch(signin(formData, history))
       const signinData: any = await signin(formData);
       const authData = signinData?.data;
       if (size(authData) > 0) {
@@ -359,7 +347,6 @@ function Account(props: any) {
   };
 
   const validation = (e: any) => {
-    //FULL NAME
     if (e.target.name === "fullName") {
       if (!formData[e.target.name]) {
         setErrMsg({ ...errMsg, [e.target.name]: "Name can't be empty" });
@@ -375,7 +362,6 @@ function Account(props: any) {
       }
     }
 
-    //EMAIL VALIDATION
     if (e.target.name === "email") {
       if (!formData[e.target.name]) {
         setErrMsg({ ...errMsg, [e.target.name]: "Email can't be empty" });
@@ -401,7 +387,6 @@ function Account(props: any) {
       }
     }
 
-    //PASSWORD VALIDATION
     if (e.target.name === "password") {
       const regex = /(?=.*[A-Z])/;
       if (!formData[e.target.name]) {
@@ -700,7 +685,6 @@ function Account(props: any) {
                       </div>
 
                       {!window.ReactNativeWebView && clientId && (
-                        // {clientId ? (
                         <GoogleLogin
                           clientId={clientId}
                           buttonText=""
@@ -709,7 +693,6 @@ function Account(props: any) {
                           cookiePolicy={"single_host_origin"}
                           className="google-btn"
                         />
-                        // ) : null}
                       )}
                     </div>
                   </>

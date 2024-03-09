@@ -14,11 +14,19 @@ import {
 } from "../Redux/Slices/rewardSlice";
 import { plansFeatures } from "Constants";
 import useGetPlanType from "./useGetPlanType";
+import useSnackBar from "./useSnackBar";
 
 const useAddReward = () => {
   const navigate = useNavigate();
   const planType = useGetPlanType();
+  const { SnackbarComponent, showSnackBar } = useSnackBar();
+
   const [rewardCount, setRewardCount] = useState<number>(0);
+
+  const [
+    createReward,
+    { isSuccess: createRewardSuccess, isLoading: createRewardLoading },
+  ] = useCreateRewardMutation();
 
   const {
     data: rewards,
@@ -27,17 +35,14 @@ const useAddReward = () => {
     refetch,
   } = useGetRewardsQuery({});
 
-  const [
-    createReward,
-    { isSuccess: createRewardSuccess, isLoading: createRewardLoading },
-  ] = useCreateRewardMutation();
-
   useEffect(() => {
     if (rewards) setRewardCount(rewards?.length || 0);
   }, [rewards]);
 
   useEffect(() => {
-    refetch && refetch();
+    if (createRewardSuccess) {
+      showSnackBar("success", "Reward created successfully");
+    }
   }, [createRewardSuccess]);
 
   const {
@@ -75,6 +80,7 @@ const useAddReward = () => {
     rewardListLoading,
     rewardListFetching,
     createRewardLoading,
+    SnackbarComponent
   };
 };
 

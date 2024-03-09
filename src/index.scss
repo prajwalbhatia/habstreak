@@ -2,25 +2,25 @@
 @font-face {
   font-family: "RobotoRegular";
   src: local("RobotoRegular"),
-    url("./Assests/Fonts/Roboto-Regular.ttf") format("truetype");
+    url("./Assets/Fonts/Roboto-Regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "RobotoMedium";
   src: local("RobotoMedium"),
-    url("./Assests/Fonts/Roboto-Medium.ttf") format("truetype");
+    url("./Assets/Fonts/Roboto-Medium.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "RobotoBold";
   src: local("RobotoBold"),
-    url("./Assests/Fonts/Roboto-Bold.ttf") format("truetype");
+    url("./Assets/Fonts/Roboto-Bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "JosefinSansRegular";
   src: local("JosefinSansRegular"),
-    url("./Assests/Fonts/JosefinSans-Regular.ttf") format("truetype");
+    url("./Assets/Fonts/JosefinSans-Regular.ttf") format("truetype");
 }
 
 //CORE
@@ -263,11 +263,11 @@ a:active {
 }
 
 .size-14 {
-  font-size: 1.4rem;
+  font-size: 1.4rem !important;
 }
 
 .size-36 {
-  font-size: 3.6rem;
+  font-size: 3.6rem !important;
 }
 
 .size-16-8f {
@@ -324,7 +324,7 @@ a:active {
 }
 
 .font-18 {
-  font-size: 1.8rem;
+  font-size: 1.8rem !important;
 }
 
 .font-rob-bold {
@@ -443,6 +443,11 @@ a:active {
 .color-red {
   color: var(--dangerColor) !important
 }
+
+.color-white {
+  color: #fff !important
+}
+
 
 .rob-reg-14-black {
   color: var(--globaBlack)
