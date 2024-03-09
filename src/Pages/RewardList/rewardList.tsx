@@ -25,8 +25,7 @@ import {
   isAfter,
   isSame,
   activeTab,
-  rewardTabData,
-  dialogForError,
+  rewardTabData
 } from "Utilities";
 
 import Frame from "Components/frame/frame";
@@ -271,9 +270,6 @@ function RewardList() {
       try {
         const deleteRewardResponse: any = await deleteReward(id);
         if (deleteRewardResponse?.error) {
-          dialogForError(
-            deleteRewardResponse?.error?.data?.error?.message || ""
-          );
           showSnackBar(
             "error",
             deleteRewardResponse?.error?.data?.error?.message || ""

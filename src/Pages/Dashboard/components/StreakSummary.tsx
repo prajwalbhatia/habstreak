@@ -13,6 +13,7 @@ import {
   StreakListInterface,
 } from "../constants/dashboard.interfaces";
 import {
+  activeStreaks,
   navigateToStreak,
   navigateToStreakList,
 } from "../helpers/dashboard.helpers";
@@ -63,17 +64,9 @@ const StreakSummary = () => {
   const streakCardJsx = useCallback(
     (streakList: StreakListInterface[]) => {
       const currentDate = moment().format();
-      //Streaks that are article currently or will become active in future (i.e upcoming)
+      //Streaks that are active currently or will become active in future (i.e upcoming)
       //Finished and unfinished streak will be excluded
-      const running = streakList.filter((streak: StreakListInterface) => {
-        if (
-          (isSameOrBefore(streak.dateFrom, currentDate) ||
-            isSameOrAfter(streak.dateTo, currentDate)) &&
-          !streak.tag
-        ) {
-          return streak;
-        } else return null;
-      });
+      const running = activeStreaks(streakList);
 
       if (running.length > 0) {
         const filterStreaks = running.filter(
@@ -176,8 +169,8 @@ const StreakSummary = () => {
         {streakAddLoading || streakListLoading || streakListFetching
           ? Array(
               streakAddLoading
-                ? Math.min(streakList?.length + 1 || 1, 3)
-                : streakList?.length || 1
+                ? Math.min(activeStreaks(streakList)?.length + 1 || 1, 3)
+                : activeStreaks(streakList)?.length || 1
             )
               .fill(1)
               .map((_, index) => (

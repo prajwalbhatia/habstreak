@@ -41,7 +41,7 @@ const useAddStreak = () => {
 
   useEffect(() => {
     if (streakCreated) {
-      showSnackBar("success", "Streak created successfully");
+      showSnackBar("success", "Streak create success");
     }
   }, [streakCreated]);
 

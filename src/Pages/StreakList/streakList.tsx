@@ -17,7 +17,6 @@ import {
   isAfter,
   streakTabData,
   activeTab,
-  dialogForError,
 } from "Utilities";
 import Fallback from "Utilities/fallback/fallback";
 
@@ -121,8 +120,6 @@ function StreakList() {
       const filterStreaks = streaks.filter((streak: StreakListInterface) =>
         streak.title.toLowerCase().includes(searchText.toLowerCase())
       );
-      console.log("🚀 ~ useEffect ~ filterStreaks:", filterStreaks);
-
       setStreaks(filterStreaks);
 
       setTabData([
@@ -141,8 +138,8 @@ function StreakList() {
     } else {
       let limitedData =
         streaksData &&
-        [...streaksData]?.splice(0, plansFeatures["free"].streaks);
-      setStreaks([...limitedData]);
+        [...streaksData]?.splice(0, plansFeatures["free"].streaks) || [];
+      setStreaks(limitedData || []);
     }
   }, [planType, streaksData]);
 
@@ -289,7 +286,8 @@ function StreakList() {
           ) {
             showSnackBar("success", deleteStreakResponse?.data?.message);
           } else if (deleteStreakResponse?.error) {
-            dialogForError(
+            showSnackBar(
+              "error",
               deleteStreakResponse?.error?.data?.error?.message ||
                 "Error deleting streak"
             );
@@ -308,7 +306,8 @@ function StreakList() {
               deleteStreakAndRewardResponse?.data?.message
             );
           } else if (deleteStreakAndRewardResponse?.error) {
-            dialogForError(
+            showSnackBar(
+              "error",
               deleteStreakAndRewardResponse?.error?.data?.error?.message || ""
             );
           }

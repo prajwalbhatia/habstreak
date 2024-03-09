@@ -3,6 +3,7 @@ import moment from "moment";
 
 import { perPerDay } from "Utilities";
 import { Skeleton } from "@mui/material";
+import TextTruncate from "Components/truncateText/truncateText";
 
 const StreakPerformanceDetail: React.FC<any> = ({
   streak,
@@ -49,7 +50,7 @@ const StreakPerformanceDetail: React.FC<any> = ({
           return {
             percentage: Number(perDayPercentage) * daysDiffOfReward,
             title: reward.title,
-            date: rewardDate.format("DD-MM-YYYY"),
+            date: rewardDate.format("ll"),
           };
         });
 
@@ -184,9 +185,8 @@ const StreakPerformanceDetail: React.FC<any> = ({
                         <span className="rob-med-10-primary">
                           {reward.date}
                         </span>
-                        <span className="rob-med-10-primary reward-title">
-                          {reward.title}
-                        </span>
+                          <TextTruncate className='rob-med-10-primary reward-title' text={reward.title} maxLength={8} />
+                   
                       </div>
                       <i className="demo-icon icon-reward" />
                     </div>

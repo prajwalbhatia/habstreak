@@ -23,6 +23,7 @@ const Activities : React.FC<{refetchVal : boolean}> = ({ refetchVal }) => {
     isFetching: recentActivitiesListFetching,
     refetch: activitiesRefetch,
   } = useGetRecentActivitiesQuery({});
+    console.log('🚀 ~ recentActivitiesList:', recentActivitiesList)
 
   useEffect(() => {
     if (refetchVal) {

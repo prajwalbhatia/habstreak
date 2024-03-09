@@ -11,7 +11,7 @@ import Search from "Components/search/search";
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 import { IconButton } from "Components/buttons/buttons";
 
-import { activityTitle, dialogForError } from "Utilities";
+import { activityTitle } from "Utilities";
 
 import { useGetRecentActivitiesQuery } from "../../Redux/Slices/recentActivitiesSlice";
 import { storeSearchText } from "../../Redux/Slices/searchTextSlice";
@@ -27,6 +27,9 @@ import useAddStreak from "Hooks/useAddStreak";
 import useAddReward from "Hooks/useAddReward";
 
 declare var window: any;
+
+const mode  = process.env.REACT_APP_API_MODE;
+console.log('🚀 ~ mode:', mode)
 
 const Header: React.FC<HeaderProps> = ({
   headerText,

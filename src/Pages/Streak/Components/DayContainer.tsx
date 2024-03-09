@@ -136,6 +136,7 @@ const DayContainer: React.FC<any> = ({ streakDetail, streak, loading }) => {
                         <div className="mt-20">
                           <SunEditor
                             autoFocus={false}
+                            hideToolbar={true}
                             placeholder={"Write details about today's task..."}
                             setDefaultStyle="font-family: 'Open Sans'; font-size: 14px;"
                             setContents={desc?.[detail?._id]}

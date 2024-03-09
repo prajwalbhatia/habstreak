@@ -3,7 +3,9 @@ import { jwtDecode } from "jwt-decode";
 
 import axios from "axios";
 
-const BASE_URL = urls.dev;
+const mode = process.env.REACT_APP_API_MODE;
+// @ts-ignore
+const BASE_URL = urls[mode];
 const axiosObject = axios.create({ baseURL: BASE_URL });
 
 axiosObject.interceptors.request.use(

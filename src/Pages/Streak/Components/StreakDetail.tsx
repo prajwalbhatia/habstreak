@@ -2,9 +2,10 @@ import moment from "moment";
 import { Skeleton } from "@mui/material";
 
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
-import { updateStreakFun } from "../helpers/StreakDetail.renderers";
 
 import { useUpdateStreakMutation } from "../../../Redux/Slices/streakSlice";
+import { dialogForCreateAndUpdateStreak } from "Utilities";
+import useSnackBar from "Hooks/useSnackBar";
 
 const StreakDetail: React.FC<{ streak: any; loading: boolean }> = ({
   streak,
@@ -12,6 +13,33 @@ const StreakDetail: React.FC<{ streak: any; loading: boolean }> = ({
 }) => {
   const [updateStreak, { isLoading: updateStreakLoading }] =
     useUpdateStreakMutation();
+
+  const { SnackbarComponent, showSnackBar } = useSnackBar();
+
+  const updateStreakFun = (streak: any, updateStreak: any) => {
+    if (streak?.tag !== "unfinished")
+      dialogForCreateAndUpdateStreak(
+        "update",
+        streak,
+        streak._id,
+        async (_, data: any) => {
+          try {
+          } catch (error) {}
+
+          const updatedStreak: any = await updateStreak({
+            updatedVal: { description: data?.description, title: data?.title },
+            streakId: streak._id,
+          });
+
+          if (updatedStreak?.error) {
+            showSnackBar(
+              "error",
+              updatedStreak?.error?.data?.error?.message || ""
+            );
+          } 
+        }
+      );
+  };
 
   return (
     <div className="d-flex flex-1 flex-dir-col">
@@ -105,6 +133,7 @@ const StreakDetail: React.FC<{ streak: any; loading: boolean }> = ({
           </div>
         </div>
       </div>
+      {SnackbarComponent}
     </div>
   );
 };

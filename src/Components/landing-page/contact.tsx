@@ -85,9 +85,8 @@ function Contact() {
         <div className="left-section">
           <Logo />
           <p className="mt-20">
-            When you will rewards yourself on small small milestones than you
-            will feel exciting and motivated to complete that task and you will
-            not break the streak.
+            Unlock excitement with every win! Rewarding yourself keeps your
+            motivation high and helps you maintain your winning streak.
           </p>
 
           <div className="socials mt-30">
