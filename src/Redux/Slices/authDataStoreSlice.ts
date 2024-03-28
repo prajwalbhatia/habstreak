@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const AuthDataStoreSlice = createSlice({
   name: 'authDataStore',
-  initialState: {},
+  initialState: null,
   reducers: {
     storeAuthData: (state, action) => {
       return action.payload;

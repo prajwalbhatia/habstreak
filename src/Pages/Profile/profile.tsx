@@ -26,25 +26,21 @@ import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
 
 import "Styles/Pages/profile.scss";
 import "index.scss";
+import useGetUserData from "Hooks/useGetUserData";
 
 declare var window: any;
 
 function Profile(props: any) {
-  const authData = useSelector((state: any) => state.authDataStore);
   const dispatch = useDispatch();
 
-  const [user] = useState(() => {
-    const localData = localStorage.getItem("profile");
-    if (localData) {
-      return JSON.parse(localData);
-    } else {
-      return "";
-    }
-  });
+  // const authData = useSelector((state: any) => state.authDataStore);
+  // console.log('🚀 ~ Profile ~ authData:', authData)
 
+  const { user } = useGetUserData();
+  console.log("🚀 ~ Profile ~ user:", user);
   const { data: userData, isLoading: userLoading } = useGetUserQuery(
-    { email: user?.result?.email },
-    { skip: !user?.result?.email }
+    { email: user?.email },
+    { skip: !user?.email }
   );
 
   const [paymentData, setPaymentData] = useState<any>({});
@@ -101,7 +97,7 @@ function Profile(props: any) {
               startTime,
               endTime,
             },
-            email: user?.result?.email,
+            email: user?.email,
           });
 
           if (updated?.error) {
@@ -174,13 +170,15 @@ function Profile(props: any) {
                   <div className="">
                     <div
                       className="picture-box d-flex center-items"
-                      style={{
-                        backgroundImage: `url(${user?.result?.imageUrl})`,
-                      }}
+                      // style={{
+                      //   backgroundImage: `url(${user?.imageUrl})`,
+                      // }}
                     >
-                      {!user?.result?.imageUrl && (
-                        <span>{user?.result?.name[0]}</span>
-                      )}
+                      {/* {!user?.imageUrl && (
+                        <span>{user?.name[0]}</span>
+                      )} */}
+
+                      {<span>{user?.name[0]}</span>}
                     </div>
                     {false && (
                       <span className="d-flex mt-20 rob-reg-14-grey">
@@ -210,9 +208,7 @@ function Profile(props: any) {
                 <div className="flex-auto flex-dir-col info-container mt-30">
                   <div className="mt-20">
                     <span className="rob-reg-12-grey mr-10">Name:</span>
-                    <span className="rob-reg-12-black">
-                      {user?.result?.name}
-                    </span>
+                    <span className="rob-reg-12-black">{user?.name}</span>
                   </div>
 
                   {false && (
@@ -225,9 +221,9 @@ function Profile(props: any) {
                   <div className="mt-20">
                     <span className="rob-reg-12-grey mr-10">Email:</span>
                     <span className="rob-reg-12-black mr-10">
-                      {user?.result?.email}
+                      {user?.email}
                     </span>
-                    {user?.result?.verified && (
+                    {user?.verified && (
                       <span className="rob-reg-12-primary">Verified</span>
                     )}
                   </div>

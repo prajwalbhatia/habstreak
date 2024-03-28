@@ -1,15 +1,9 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const useGetUserData = () => {
-  const [user] = useState(() => {
-    const localData = localStorage.getItem("profile");
-    if (localData) {
-      return JSON.parse(localData);
-    } else {
-      return "";
-    }
-  });
-  return { user };
+  const authData = useSelector((state: any) => state.authDataStore);
+
+  return { user :  authData};
 };
 
 export default useGetUserData;

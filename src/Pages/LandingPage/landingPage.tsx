@@ -56,8 +56,8 @@ function LandingPage() {
                 Do more, feel better, celebrate with your reward!
               </h1>
               <p className="p-18">
-                Level Up Your Productivity! Habstreak helps you turn "Starts"
-                into "Finishes" with task tracking, milestones, and rewards.
+                Level Up Your Productivity! Habstreak helps you turn <b>Starts</b>{' '}
+                into <b>Finishes</b>{' '} with task tracking, milestones, and rewards.
               </p>
               <div className="buttons d-flex">
                 <PrimaryButton

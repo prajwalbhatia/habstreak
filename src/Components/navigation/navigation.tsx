@@ -32,8 +32,8 @@ function Navigation() {
   );
 
   const { data: getUserData, isLoading: userLoading } = useGetUserQuery(
-    { email: user?.result?.email },
-    { skip: !user?.result?.email }
+    { email: user?.email },
+    { skip: !user?.email }
   );
 
   const authData = useSelector((state: any) => state.authDataStore);
@@ -128,24 +128,26 @@ function Navigation() {
 
         <div
           className="avatar-container c-pointer display-none d-flex center-items"
-          style={{
-            backgroundImage: `url(${user?.result?.imageUrl})`,
-          }}
+          // style={{
+          //   backgroundImage: `url(${user?.imageUrl})`,
+          // }}
           onClick={() => {
             navigate({
               pathname: "/profile",
             });
           }}
         >
-          {!user?.result?.imageUrl && <span>{user?.result?.name[0]}</span>}
+          {/* {!user?.imageUrl && <span>{user?.name[0]}</span>} */}
+          {<span>{user?.name[0]}</span>}
+
         </div>
 
         <div className="personal-detail-container display-none">
-          <h4 className="name">{user?.result?.name}</h4>
-          <h4 className="email">{user?.result?.email}</h4>
+          <h4 className="name">{user?.name}</h4>
+          <h4 className="email">{user?.email}</h4>
           <h4 className="prime">
-            {user?.result?.planType === "prime"
-              ? user?.result?.planType.toUpperCase()
+            {user?.planType === "prime"
+              ? user?.planType.toUpperCase()
               : ""}
           </h4>
         </div>
