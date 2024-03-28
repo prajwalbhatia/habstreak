@@ -33,11 +33,7 @@ declare var window: any;
 function Profile(props: any) {
   const dispatch = useDispatch();
 
-  // const authData = useSelector((state: any) => state.authDataStore);
-  // console.log('🚀 ~ Profile ~ authData:', authData)
-
   const { user } = useGetUserData();
-  console.log("🚀 ~ Profile ~ user:", user);
   const { data: userData, isLoading: userLoading } = useGetUserQuery(
     { email: user?.email },
     { skip: !user?.email }
@@ -254,27 +250,33 @@ function Profile(props: any) {
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
+                        <span className="rob-reg-14-black"></span>
+                        <span className="rob-reg-14-black">Free / <b>Prime</b> </span>
+                      </div>
+
+
+                      <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">No of streaks</span>
-                        <span className="rob-reg-14-black">2</span>
+                        <span className="rob-reg-14-black">2 / <b>100</b></span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">No of rewards</span>
-                        <span className="rob-reg-14-black">2</span>
+                        <span className="rob-reg-14-black">2 / <b>100</b></span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">
                           Dashboard Summary
                         </span>
-                        <span className="rob-reg-14-black">Yes</span>
+                        <span className="rob-reg-14-black">Yes / <b>Yes</b></span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex mb-20">
                         <span className="rob-reg-14-black">
                           Recent Activities
                         </span>
-                        <span className="rob-reg-14-black">No</span>
+                        <span className="rob-reg-14-black">No / <b>Yes</b></span>
                       </div>
                     </div>
                   </div>
@@ -302,18 +304,17 @@ function Profile(props: any) {
                           <span className="rob-reg-14-black">
                             .00 / PER MONTH
                           </span>
-                          {/* <span className='jos-primary size-36'>FREE</span> */}
                         </div>
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">No of streaks</span>
-                        <span className="rob-reg-14-black">Unimited</span>
+                        <span className="rob-reg-14-black">100</span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">No of rewards</span>
-                        <span className="rob-reg-14-black">Unlimited</span>
+                        <span className="rob-reg-14-black">100</span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
