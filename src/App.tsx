@@ -1,5 +1,5 @@
-import React, { lazy, FunctionComponent, Suspense } from "react";
-
+import React, { lazy, FunctionComponent, Suspense, useEffect } from "react";
+import useGetUserData from "Hooks/useGetUserData";
 //Third party libraries
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";

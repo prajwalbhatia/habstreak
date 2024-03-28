@@ -1,17 +1,21 @@
+import useGetUserData from "Hooks/useGetUserData";
 import React from "react";
-import { Route, Navigate } from "react-router-dom";
+import { Route, Navigate, Routes } from "react-router-dom";
 
 interface ProtectedRouteProps {
   element: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
-  const isAuthenticated = JSON.parse(localStorage.getItem("profile") || "");
+  // const isAuthenticated = JSON.parse(localStorage.getItem("profile") || "");
+
+  const user = useGetUserData();
+  const isAuthenticated = user || null;
 
   if (isAuthenticated) {
     return <>{element}</>;
   } else {
-    return <Route element={<Navigate to="/account" replace />} />;
+    return  <Routes><Route element={<Navigate to="/account" replace />} /></Routes> ;
   }
 };
 

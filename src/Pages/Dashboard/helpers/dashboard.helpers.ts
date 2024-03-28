@@ -29,7 +29,7 @@ export const navigateToStreak = (
 export const activeStreaks = (streakList: StreakListInterface[]) => {
   const currentDate = moment().format();
 
-  const activeStreaks = streakList.filter((streak: StreakListInterface) => {
+  const activeStreaks = streakList?.filter((streak: StreakListInterface) => {
     if (
       (isSameOrBefore(streak.dateFrom, currentDate) ||
         isSameOrAfter(streak.dateTo, currentDate)) &&

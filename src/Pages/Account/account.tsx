@@ -106,6 +106,7 @@ function Account(props: any) {
 
   const [countDown, setCountDown] = useState(60);
   const [authData, setAuthData] = useState<any>({});
+  console.log('🚀 ~ Account ~ authData:', authData)
 
   useEffect(() => {
     if (authData?.result) {
@@ -214,14 +215,14 @@ function Account(props: any) {
       const googleLogin: any = await auth({
         email: result?.email,
         name: result?.name,
+        token
       });
 
       if (googleLogin?.data?.verified) {
         const googleData = googleLogin?.data;
-        result = { ...result, ...googleData };
+        let resultFinal = { ...result, ...googleData };
 
-        localStorage.setItem("profile", JSON.stringify({ result, token }));
-        dispatch(storeAuthData({ ...result, token }));
+        dispatch(storeAuthData({ ...resultFinal }));
 
         if (window.ReactNativeWebView) sendEventToMobile("loggedIn");
 
@@ -281,7 +282,6 @@ function Account(props: any) {
 
         if (size(authData) > 0) {
           setAuthData({ ...authData });
-          localStorage.setItem("profile", JSON.stringify({ ...authData }));
         }
       }
     }
@@ -292,7 +292,6 @@ function Account(props: any) {
       const authData = signinData?.data;
       if (size(authData) > 0) {
         setAuthData({ ...authData });
-        localStorage.setItem("profile", JSON.stringify({ ...authData }));
       }
     }
     //Verifying the user
@@ -307,8 +306,6 @@ function Account(props: any) {
         const authVal = verify?.data;
 
         if (size(authVal) > 0) {
-          localStorage.setItem("profile", JSON.stringify({ ...authVal }));
-
           if (authVal?.result?.verified) {
             navigate("/dashboard");
           }

@@ -59,7 +59,7 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    margin-top: 10%;
+    margin-top: 10rem;
 
     .section-container {
       height: inherit;
@@ -71,7 +71,7 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      margin-top: 10%;
+      // margin-top: 5rem;
       padding-left: 15em;
 
       .top-row,
@@ -108,12 +108,12 @@
       flex: 1;
       max-width: 55.7rem;
       flex-direction: column;
-      margin-top: 10%;
+      justify-content: center;
     }
   }
 
   .guide-section {
-    padding-top: 10%;
+    padding-top: 10rem;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -136,7 +136,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 70rem;
+        height: 50rem;
 
         .play-icon {
           font-size: 400%;
@@ -153,7 +153,7 @@
 
   .pricing-section {
     height: auto !important;
-    margin-top: 10%;
+    margin-top: 10rem;
 
     .pack-container {
       display: flex;
@@ -405,9 +405,7 @@
     }
 
     .features-section {
-      // margin-top: 10%;
-      // padding-top: 10%;
-
+      margin-top: 5rem;
       .section-container {
         flex-direction: column;
 
@@ -420,18 +418,22 @@
 
         .right-section {
           max-width: 100%;
+          margin-top: 5rem;
+          align-items: center;
+          text-align: center;
         }
       }
     }
 
     .guide-section {
-      // padding-top: 10em;
 
       .guide-container {
         flex-direction: column;
-
+        
         .left-section {
           max-width: 100%;
+          align-items: center;
+          text-align: center;
         }
 
         .right-section {
@@ -441,7 +443,7 @@
           padding: 5rem;
 
           .player-container {
-            height: 50rem;
+            height: 30rem;
           }
         }
       }

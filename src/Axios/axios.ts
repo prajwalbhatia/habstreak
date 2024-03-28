@@ -1,42 +1,37 @@
 import { urls } from "Constants";
-import { jwtDecode } from "jwt-decode";
 
 import axios from "axios";
 
 const mode = process.env.REACT_APP_API_MODE;
 // @ts-ignore
 const BASE_URL = urls[mode];
-const axiosObject = axios.create({ baseURL: BASE_URL });
+const axiosObject = axios.create({ baseURL: BASE_URL, withCredentials: true });
 
-axiosObject.interceptors.request.use(
-  async (req) => {
-    if (localStorage.getItem("profile")) {
-      const user = JSON.parse(localStorage.getItem("profile") || "");
-      if (user?.result?.fromGoogle) {
-        req.headers.Authorization = `Bearer ${
-          JSON.parse(localStorage.getItem("profile") || "").token
-        }`;
-      } else {
-        let currentDate = new Date();
-        const decodeToken = jwtDecode(user.token);
-        if (decodeToken.exp && decodeToken.exp * 1000 < currentDate.getTime()) {
-          const data = await axios.post(BASE_URL + "user/refreshToken", {
-            refreshToken: user.refreshToken,
-          });
-          localStorage.setItem("profile", JSON.stringify({ data }));
-          req.headers.Authorization =
-            data?.data && data?.data?.token && `Bearer ${data?.data?.token}`;
-        } else {
-          req.headers.Authorization = `Bearer ${
-            JSON.parse(localStorage.getItem("profile") || "").token
-          }`;
-        }
-      }
-    }
-    return req;
+axiosObject.interceptors.response.use(
+  // @ts-ignore
+  (response) => {
+    return response;
   },
-  (error) => {
-    console.log("INTERSEPTOR ERROR", error);
+  async (error) => {
+    const errorVal = error?.response?.data?.error;
+    const originalRequest = error.config;
+
+    if (
+      errorVal?.status === 403 &&
+      errorVal?.message === "Access token expired. Please re-authenticate." &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      await axios.post(
+        BASE_URL + "user/refreshToken",
+        {},
+        { withCredentials: true }
+      );
+
+      return axiosObject(originalRequest);
+    }
+    console.log("INTERSEPTOR", error);
+    return Promise.reject(error);
   }
 );
 
