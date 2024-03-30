@@ -129,7 +129,7 @@ export const icons = [
   export const urls = {
     dev: 'http://localhost:5000/',
     devMob: 'http://192.168.29.23:5000',
-    preProd: 'https://habstreak-staging.herokuapp.com/',
+    preProd: 'https://habstreak-pre-prod-089590cb1885.herokuapp.com/',
     // prod: 'https://habstreak-api.azurewebsites.net/'
     // prod: 'https://habstreak.tracexpense.in/'
     prod: 'https://habstreak-api-466406ce42df.herokuapp.com/'
