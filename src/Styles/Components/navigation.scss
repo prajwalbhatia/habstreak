@@ -1,0 +1,242 @@
+.navigation {
+    overflow: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    padding: var(--pagesPaddingHorizontal) 4em;
+    width: var(--navigationWidth);
+    background-image: url('../../Assets/Images/menu_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    .brand-name-container {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+  
+      h1 {
+        display: inline-block;
+        color: white;
+        letter-spacing: 0.3rem;
+      }
+  
+      h1:not(:first-child) {
+        color: var(--secondaryColor);
+      }
+    }
+  
+    .avatar-container {
+      width: 10rem;
+      min-height: 10rem;
+      border-radius: 50%;
+      box-shadow: 0px .3rem .6rem var(--boxShadow);
+      background: transparent;
+      margin-top: 4em;
+      background-color: var(--primaryColor);
+      background-position: center;
+      background-size: contain;
+  
+      span
+      {
+        font-family: RobotoBold;
+        font-size: 5rem;
+        color: #fff;
+      }
+    }
+  
+    .personal-detail-container {
+      margin-top: 2.2em;
+      flex-direction: column;
+  
+      .name,
+      .email,
+      .prime
+       {
+        font-family: RobotoMedium;
+        text-align: center;
+      }
+  
+      .email {
+        color: var(--greyText);
+        margin-top: 0.5em;
+      }
+  
+      .prime 
+      {
+        color: var(--primaryColor);
+        margin-top: 0.5em;
+      }
+    }
+  
+    .navigation-container {
+      margin-top: 4em;
+      display: flex;
+      flex: 8;
+  
+      h5 {
+        color: var(--greyText);
+        font-family: RobotoMedium;
+        margin-top: .3em;
+        font-size: 1.4rem;
+        cursor: pointer;
+      }
+  
+      li {
+        margin: 3.1em 0;
+        position: relative;
+      }
+  
+      .active {
+        position: absolute;
+        right: -1rem;
+        top: 50%;
+        transform: translate(0, -50%);
+        width: 0;
+        height: 0.5rem;
+        width: 0.5rem;
+        border-radius: 2.5rem;
+        background-color: var(--primaryColor);
+      }
+  
+      .activeText {
+        color: var(--primaryColor);
+      }
+  
+      .navigation-icons {
+        font-size: 1.4rem;
+        color: var(--greyText);
+        margin-top: .1rem;
+        margin-right: 0.5rem;
+      }
+    }
+  
+    .logout-btn-container {
+      margin-top: 6em;
+      display: flex;
+      width: 105px;
+  
+      h5 {
+        font-size: 1.4rem;
+      }
+  
+      i {
+        font-size: 1.4rem;
+        margin-right: 1.4rem;
+      }
+    }
+  
+    .developer-container {
+      display: flex;
+      flex: 1;
+      margin-top: 5.2em;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-top: .1rem solid white;
+  
+      span {
+        font-size: 1rem;
+        font-family: RobotoMedium;
+        max-width: 8.6rem;
+      }
+  
+      .heart-icon {
+        font-size: 1.3rem;
+        color: var(--primaryColor);
+      }
+    }
+  
+    .vertical-line {
+      top: 5rem;
+      bottom: 5rem;
+      position: absolute;
+      width: .1rem;
+      background-color: var(--greyText);
+      right: 0;
+      opacity: 0.3;
+      box-shadow: 0px .3rem .6rem var(--boxShadow);
+    }
+  }
+  
+  .navigation-small-screen {
+    display: none;
+    position: absolute;
+    bottom: 2rem;
+    box-shadow: 0px .3rem .6rem var(--boxShadow);
+    border-radius: 2rem;
+    left: 3rem;
+    right: 3rem;
+    background: #fff;
+    z-index: 10;
+    height: var(--navigationSmallHeight);
+    padding: 2em 3em;
+  
+     h5 {
+       color: var(--greyText);
+       font-family: RobotoMedium;
+       margin-top: .1em;
+       font-size: 1rem;
+       cursor: pointer;
+     }
+  
+     i
+     {
+       font-size: 2rem;
+     }
+  
+    .active {
+      position: absolute;
+      bottom: -0.5rem;
+      width: 0;
+      height: 0.5rem;
+      width: 0.5rem;
+      border-radius: 2.5rem;
+      background-color: var(--primaryColor);
+    }
+  
+    .activeText {
+      color: var(--primaryColor);
+    }
+  
+    .navigation-icons {
+      font-size: 1.4rem;
+      color: var(--greyText);
+      margin-top: .1em;
+      margin-right: 0.5em;
+    }
+  }
+  
+  
+  .display-none {
+    display: flex;
+  }
+  
+  //MEDIA QUERIES
+  @media only screen and (max-width: 860px) {
+  
+    /* Styles */
+    .display-none {
+      display: none;
+    }
+  
+    .brand-name-container {
+      display: block;
+      flex: none;
+    }
+  
+    .navigation {
+      display: none;
+      bottom: auto;
+    }
+  
+    .navigation-small-screen
+    {
+      display: block;
+    }
+  }

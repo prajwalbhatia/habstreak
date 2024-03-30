@@ -5,5 +5,10 @@
     "activityBar.inactiveForeground": "#494b4477",
     "activityBarBadge.background": "#bf0060",
     "activityBarBadge.foreground": "#e7e7e7"
-  }
+  },
+  "cSpell.words": [
+    "Habstreak",
+    "Signin",
+    "Signup"
+  ]
 }

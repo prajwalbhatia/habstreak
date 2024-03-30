@@ -1,0 +1,19 @@
+.frame {
+    height: 100vh;
+    overflow: hidden;
+    margin-left: calc(var(--navigationWidth));
+    padding: var(--pagesPaddingHorizontal) var(--pagesPaddingHorizontal);
+  
+    .frame-children {
+      position: relative;
+    }
+  
+    // MEDIA QUERIES
+    @media only screen and (max-width: 860px) {
+      margin-left: 0;
+      height: calc(100vh - var(--navigationSmallHeight));
+      overflow: auto;
+      padding: 2em;
+    }
+  }
+  
