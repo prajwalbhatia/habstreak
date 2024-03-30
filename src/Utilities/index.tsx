@@ -146,22 +146,20 @@ export const dialogForCreateAndUpdateStreak = (
           },
     primaryButtonText: type === "update" ? "Update" : "Create",
     secondaryButtonText: "Cancel",
+    disableCheckKeys : ['title' , 'dateFrom' , 'dateTo'],
 
     content: [...contentData],
     btnClickHandler: (data: any) => {
-      data.dateFrom = moment(data.dateFrom).startOf("day").toString();
-      data.dateTo = moment(data.dateTo).endOf("day").toString();
+      data.dateFrom = moment(data?.dateFrom).startOf("day").toString();
+      data.dateTo = moment(data?.dateTo).endOf("day").toString();
 
       if (data.type === "primary") {
         delete data.type;
         if (type === "create" || type === "clone") {
-          // createStreakData(data);
           btnClick("create", data);
         } else {
           btnClick("update", data);
         }
-
-        // updateStreakData(data, streakId);
       }
       Modal.hide();
     },
@@ -267,6 +265,7 @@ export const dialogForCreateAndUpdateReward = (
     icon: "icon-reward",
     primaryButtonText: type === "create" ? "Create" : "Update",
     secondaryButtonText: "Cancel",
+    disableCheckKeys : ['title' , 'streakName' , 'pickDate'],
 
     content: [...contentData],
 

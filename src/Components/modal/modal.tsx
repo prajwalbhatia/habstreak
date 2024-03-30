@@ -21,6 +21,10 @@ import {
 import "react-calendar/dist/Calendar.css";
 import "Styles/Components/modal.scss";
 
+const objectHasKey = (obj: any, keys : any) => {
+  return keys.every((key : any) => key in obj);
+};
+
 function Modal(props: any) {
   const [formData, setFormData] = useState<any>({});
   const [showCalendar, setShowCalendar] = useState(false);
@@ -267,6 +271,7 @@ function Modal(props: any) {
             btnClass={
               modalType === "delete" ? "primary-btn danger-btn" : "primary-btn"
             }
+            disabled={props.disableCheckKeys ? !objectHasKey(formData , props.disableCheckKeys) : false}
           />
 
           {props.secondaryButtonText && (
