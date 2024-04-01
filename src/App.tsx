@@ -1,6 +1,4 @@
-import React, { lazy, FunctionComponent, Suspense, useEffect } from "react";
-import useGetUserData from "Hooks/useGetUserData";
-//Third party libraries
+import { lazy, FunctionComponent, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -11,10 +9,10 @@ import "./App.css";
 import SuspenseFallback from "Components/suspenseFallback/suspenseFallback";
 
 //PAGED
-const DashboardPage = lazy(() => import("Pages/Dashboard/Dashboard"));
-const StreakListPage = lazy(() => import("Pages/StreakList/StreakList"));
-const Streak = lazy(() => import("Pages/Streak/Streak"));
-const RewardList = lazy(() => import("Pages/RewardList/RewardList"));
+const DashboardPage = lazy(() => import("Pages/Dashboard/dashboard"));
+const StreakListPage = lazy(() => import("Pages/StreakList/streakList"));
+const Streak = lazy(() => import("Pages/Streak/streak"));
+const RewardList = lazy(() => import("Pages/RewardList/rewardList"));
 const RecentActivities = lazy(
   () => import("Pages/RecentActivities/recentActivities")
 );

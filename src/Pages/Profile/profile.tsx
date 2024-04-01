@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import size from "lodash/size";
 import moment from "moment";
 import ClipLoader from "react-spinners/ClipLoader";
+import { io } from "socket.io-client";
 
 import Frame from "Components/frame/frame";
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
@@ -30,6 +31,10 @@ import useGetUserData from "Hooks/useGetUserData";
 
 declare var window: any;
 
+const mode = process.env.REACT_APP_API_MODE;
+// @ts-ignore
+const BASE_URL = urls[mode];
+
 function Profile(props: any) {
   const dispatch = useDispatch();
 
@@ -55,6 +60,21 @@ function Profile(props: any) {
       dispatch(storeAuthData(userData));
     }
   }, [userData]);
+
+  /* @ts-ignore */
+  useEffect(() => {
+    const socket = io(BASE_URL);
+
+    socket.on("user-update", (data) => {
+      dispatch({
+        type: "account/invalidateTags",
+        payload: ["GetUserData"],
+      });
+    });
+
+    // Cleanup function to disconnect on component unmount
+    return () => socket.disconnect();
+  }, []);
 
   useEffect(() => {
     if (size(paymentData) > 0) {
@@ -251,32 +271,41 @@ function Profile(props: any) {
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black"></span>
-                        <span className="rob-reg-14-black">Free / <b>Prime</b> </span>
+                        <span className="rob-reg-14-black">
+                          Free / <b>Prime</b>{" "}
+                        </span>
                       </div>
-
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">No of streaks</span>
-                        <span className="rob-reg-14-black">2 / <b>100</b></span>
+                        <span className="rob-reg-14-black">
+                          2 / <b>100</b>
+                        </span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">No of rewards</span>
-                        <span className="rob-reg-14-black">2 / <b>100</b></span>
+                        <span className="rob-reg-14-black">
+                          2 / <b>100</b>
+                        </span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex ">
                         <span className="rob-reg-14-black">
                           Dashboard Summary
                         </span>
-                        <span className="rob-reg-14-black">Yes / <b>Yes</b></span>
+                        <span className="rob-reg-14-black">
+                          Yes / <b>Yes</b>
+                        </span>
                       </div>
 
                       <div className="mt-20 plan-info d-flex mb-20">
                         <span className="rob-reg-14-black">
                           Recent Activities
                         </span>
-                        <span className="rob-reg-14-black">No / <b>Yes</b></span>
+                        <span className="rob-reg-14-black">
+                          No / <b>Yes</b>
+                        </span>
                       </div>
                     </div>
                   </div>
