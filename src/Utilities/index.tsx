@@ -146,7 +146,7 @@ export const dialogForCreateAndUpdateStreak = (
           },
     primaryButtonText: type === "update" ? "Update" : "Create",
     secondaryButtonText: "Cancel",
-    disableCheckKeys : ['title' , 'dateFrom' , 'dateTo'],
+    disableCheckKeys: ["title", "dateFrom", "dateTo"],
 
     content: [...contentData],
     btnClickHandler: (data: any) => {
@@ -265,7 +265,7 @@ export const dialogForCreateAndUpdateReward = (
     icon: "icon-reward",
     primaryButtonText: type === "create" ? "Create" : "Update",
     secondaryButtonText: "Cancel",
-    disableCheckKeys : ['title' , 'streakName' , 'pickDate'],
+    disableCheckKeys: ["title", "streakName", "pickDate"],
 
     content: [...contentData],
 

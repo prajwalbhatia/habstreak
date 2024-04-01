@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import cloneDeep from "lodash/cloneDeep";
 import { ErrorBoundary } from "react-error-boundary";
+import { io } from "socket.io-client";
 
 import Frame from "Components/frame/frame";
 import Table from "Components/table/table";
@@ -16,7 +17,7 @@ import {
   dialogBeforeDeleting,
   isAfter,
   streakTabData,
-  activeTab,
+  activeTab
 } from "Utilities";
 import Fallback from "Utilities/fallback/fallback";
 
@@ -24,6 +25,7 @@ import {
   streakListTableHeadings,
   streakListTableHeadings2,
   plansFeatures,
+  urls,
 } from "Constants/index";
 import {
   RewardInterface,
@@ -50,6 +52,10 @@ import useAddStreak from "Hooks/useAddStreak";
 
 import "Styles/Pages/streakList.scss";
 import "index.scss";
+
+const mode = process.env.REACT_APP_API_MODE;
+// @ts-ignore
+const BASE_URL = urls[mode];
 
 function StreakList() {
   const dispatch = useDispatch();
@@ -108,6 +114,26 @@ function StreakList() {
     });
   }, [streakListTypeData, tabDataClone]);
 
+  /* @ts-ignore */
+  useEffect(() => {
+    const socket = io(BASE_URL);
+
+    socket.on("data-update", (data) => {
+      dispatch({
+        type: "streak/invalidateTags",
+        payload: ["GetStreaks"],
+      });
+
+      dispatch({
+        type: "reward/invalidateTags",
+        payload: ["GetRewards"],
+      });
+    });
+
+    // Cleanup function to disconnect on component unmount
+    return () => socket.disconnect();
+  }, []);
+
   //WHEN STREAK TEXT IS CHANGED
   useEffect(() => {
     if (searchText === "") {
@@ -137,8 +163,9 @@ function StreakList() {
       setStreaks([...streaksData]);
     } else {
       let limitedData =
-        streaksData &&
-        [...streaksData]?.splice(0, plansFeatures["free"].streaks) || [];
+        (streaksData &&
+          [...streaksData]?.splice(0, plansFeatures["free"].streaks)) ||
+        [];
       setStreaks(limitedData || []);
     }
   }, [planType, streaksData]);

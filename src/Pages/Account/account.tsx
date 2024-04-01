@@ -106,7 +106,6 @@ function Account(props: any) {
 
   const [countDown, setCountDown] = useState(60);
   const [authData, setAuthData] = useState<any>({});
-  console.log('🚀 ~ Account ~ authData:', authData)
 
   useEffect(() => {
     if (authData?.result) {

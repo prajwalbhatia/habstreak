@@ -29,7 +29,6 @@ import useAddReward from "Hooks/useAddReward";
 declare var window: any;
 
 const mode  = process.env.REACT_APP_API_MODE;
-console.log('🚀 ~ mode:', mode)
 
 const Header: React.FC<HeaderProps> = ({
   headerText,
