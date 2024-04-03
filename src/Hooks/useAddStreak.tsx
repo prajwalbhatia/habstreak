@@ -31,6 +31,8 @@ const useAddStreak = () => {
     data: streaks,
     isLoading: getStreaksLoading,
     isFetching: getStreaksFetching,
+    refetch,
+    startedTimeStamp
   } = useGetStreaksQuery({});
 
   const [createStreakDetail] = useCreateStreakDetailMutation();
@@ -108,7 +110,9 @@ const useAddStreak = () => {
     streaks,
     getStreaksLoading,
     getStreaksFetching,
-    SnackbarComponent
+    SnackbarComponent,
+    streakRefetch : refetch,
+    startedTimeStamp
   };
 };
 

@@ -30,6 +30,7 @@ import { size } from "lodash";
 import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
 import { useDispatch } from "react-redux";
 import useSnackBar from "Hooks/useSnackBar";
+import useGetUserData from "Hooks/useGetUserData";
 
 declare var window: any;
 
@@ -81,7 +82,6 @@ function Account(props: any) {
 
   const { SnackbarComponent, showSnackBar } = useSnackBar();
 
-
   const otp2ref = useRef<HTMLInputElement | null>(null);
   const otp3ref = useRef<HTMLInputElement | null>(null);
   const otp4ref = useRef<HTMLInputElement | null>(null);
@@ -89,10 +89,10 @@ function Account(props: any) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const storageData = localStorage?.getItem("profile");
   const dispatch = useDispatch();
 
-  const [user] = useState(storageData ? JSON.parse(storageData) : "");
+  const { user } = useGetUserData();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [stage, setStage] = useState("login");
@@ -136,7 +136,7 @@ function Account(props: any) {
     const errText = err?.data?.error?.message;
 
     if (errText) {
-      showSnackBar("error" , errText)
+      showSnackBar("error", errText);
       setFormData(initialState);
       setErrMsg({});
       setSuccessMsg({});
@@ -154,12 +154,11 @@ function Account(props: any) {
   ]);
 
   useEffect(() => {
-    const token = user?.token;
-    if (token && user?.result?.verified) navigate("/dashboard");
+    if (user?.verified) navigate("/dashboard");
     else {
-      if (!user?.result?.verified) setStage("login");
+      if (!user?.verified) setStage("login");
     }
-  }, [navigate, user?.result?.verified, user?.token]);
+  }, [navigate, user?.verified]);
 
   useEffect(() => {
     if (location?.state?.jumpTo === "signup") setStage("signin");
@@ -203,7 +202,7 @@ function Account(props: any) {
     });
 
     if (userData.data === true && !userDataFromGoogle.data) {
-      showSnackBar("error" , "User already exist with same email")
+      showSnackBar("error", "User already exist with same email");
       setLoadingFile(false);
       return;
     }
@@ -214,7 +213,7 @@ function Account(props: any) {
       const googleLogin: any = await auth({
         email: result?.email,
         name: result?.name,
-        token
+        token,
       });
 
       if (googleLogin?.data?.verified) {
@@ -274,7 +273,7 @@ function Account(props: any) {
     if (stage === "signin") {
       const userData: any = await checkUserExist({ email: formData?.email });
       if (userData === true) {
-        showSnackBar("error" , "User already exist")
+        showSnackBar("error", "User already exist");
       } else {
         const signupData: any = await signup(formData);
         const authData = signupData?.data;
@@ -699,8 +698,7 @@ function Account(props: any) {
                 )}
 
                 <p className="t-and-c">
-                  By creating an account means you're okay with
-                  {' '}
+                  By creating an account means you're okay with{" "}
                   <span
                     onClick={() => {
                       navigate("/terms-and-condition");

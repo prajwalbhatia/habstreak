@@ -25,7 +25,8 @@ import {
   isAfter,
   isSame,
   activeTab,
-  rewardTabData
+  rewardTabData,
+  isMoreThanAMinute,
 } from "Utilities";
 
 import Frame from "Components/frame/frame";
@@ -52,10 +53,14 @@ function RewardList() {
   const planType = useGetPlanType();
   const { SnackbarComponent, showSnackBar } = useSnackBar();
 
-  const { data: streaks } = useGetStreaksQuery({});
+  const { data: streaks, refetch: streaksRefetch } = useGetStreaksQuery({});
 
-  const { data: rewardsData, isFetching: rewardListIsFetching } =
-    useGetRewardsQuery({});
+  const {
+    data: rewardsData,
+    isFetching: rewardListIsFetching,
+    refetch: rewardsRefetch,
+    startedTimeStamp,
+  } = useGetRewardsQuery({});
 
   const [updateReward, { isLoading: updateRewardLoading }] =
     useUpdateRewardMutation();
@@ -75,6 +80,13 @@ function RewardList() {
   };
 
   useEffect(() => {
+    const val = sessionStorage.getItem("rewardRefetch");
+    if (!val) {
+      streaksRefetch();
+      rewardsRefetch();
+      sessionStorage.setItem("rewardRefetch", "true");
+    }
+
     if (location.state && location.state.goTo) {
       setCurrentTab(location.state.goTo);
 
@@ -84,6 +96,11 @@ function RewardList() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (startedTimeStamp && isMoreThanAMinute(startedTimeStamp) && rewardsRefetch)
+      rewardsRefetch();
+  }, [startedTimeStamp]);
 
   useEffect(() => {
     if (planType && rewardsData) {
@@ -127,10 +144,11 @@ function RewardList() {
       const earned: any = [];
       const toBuy: any = [];
 
-      [...rewards].forEach((reward) => {
-        if (!reward.rewardEarned) toBuy.push(reward);
-        else earned.push(reward);
-      });
+      rewards &&
+        [...rewards].forEach((reward) => {
+          if (!reward.rewardEarned) toBuy.push(reward);
+          else earned.push(reward);
+        });
 
       setRewardsEarned([...earned]);
       setRewardsToBuy([...toBuy]);

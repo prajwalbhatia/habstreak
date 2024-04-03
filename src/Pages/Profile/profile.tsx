@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import size from "lodash/size";
 import moment from "moment";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -16,6 +16,7 @@ import {
 import { usePaymentRequestMutation } from "../../Redux/Slices/paymentSlice";
 import useGetPlanType from "Hooks/useGetPlanType";
 import useSnackBar from "Hooks/useSnackBar";
+import useGetUserData from "Hooks/useGetUserData";
 
 import { ErrorBoundary } from "react-error-boundary";
 import Fallback from "Utilities/fallback/fallback";
@@ -27,7 +28,6 @@ import { storeAuthData } from "../../Redux/Slices/authDataStoreSlice";
 
 import "Styles/Pages/profile.scss";
 import "index.scss";
-import useGetUserData from "Hooks/useGetUserData";
 
 declare var window: any;
 
@@ -39,7 +39,7 @@ function Profile(props: any) {
   const dispatch = useDispatch();
 
   const { user } = useGetUserData();
-  const { data: userData, isLoading: userLoading } = useGetUserQuery(
+  const { data: userData, isLoading: userLoading  , refetch} = useGetUserQuery(
     { email: user?.email },
     { skip: !user?.email }
   );
@@ -63,6 +63,12 @@ function Profile(props: any) {
 
   /* @ts-ignore */
   useEffect(() => {
+    const val = sessionStorage.getItem("profileRefetch");
+    if (refetch && !val) {
+      refetch();
+      sessionStorage.setItem("profileRefetch", "true");
+    }
+
     const socket = io(BASE_URL);
 
     socket.on("user-update", (data) => {

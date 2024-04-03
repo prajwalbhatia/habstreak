@@ -646,3 +646,10 @@ export const getLatestRecentActivities = (dispatch: any) => {
     payload: ["GetActivities"],
   });
 };
+
+export const isMoreThanAMinute = (startedTimeStamp : any) => {
+  const currentTime = Date.now();
+  const timeDifference = currentTime - startedTimeStamp;
+
+  return timeDifference > (60 * 1000); // 60 seconds in milliseconds
+}
