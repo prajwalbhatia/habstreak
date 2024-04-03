@@ -6,7 +6,12 @@ import { Skeleton } from "@mui/material";
 import { OutlinedPrimaryButton } from "Components/buttons/buttons";
 
 import { icons, theme } from "Constants/index";
-import { isSame, isSameOrBefore, isSameOrAfter, perPerDay } from "Utilities";
+import {
+  isMoreThanAMinute,
+  isSame,
+  isSameOrBefore,
+  perPerDay,
+} from "Utilities";
 
 import {
   StreakInterface,
@@ -31,7 +36,26 @@ const StreakSummary = () => {
     getStreaksLoading: streakListLoading,
     getStreaksFetching: streakListFetching,
     SnackbarComponent,
+    streakRefetch,
+    startedTimeStamp,
   } = useAddStreak();
+
+  useEffect(() => {
+    const val = sessionStorage.getItem("streakHookRefetch");
+    if (streakRefetch && !val) {
+      streakRefetch();
+      sessionStorage.setItem("streakHookRefetch", "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      startedTimeStamp &&
+      isMoreThanAMinute(startedTimeStamp) &&
+      streakRefetch
+    )
+      streakRefetch();
+  }, [startedTimeStamp]);
 
   useEffect(() => {
     if (streakList && streakList.length) {

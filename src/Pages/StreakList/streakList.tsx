@@ -17,7 +17,8 @@ import {
   dialogBeforeDeleting,
   isAfter,
   streakTabData,
-  activeTab
+  activeTab,
+  isMoreThanAMinute,
 } from "Utilities";
 import Fallback from "Utilities/fallback/fallback";
 
@@ -90,6 +91,7 @@ function StreakList() {
     data: streaksData,
     isFetching: streakListIsFetching,
     refetch,
+    startedTimeStamp,
   } = useGetStreaksQuery({});
 
   const [updateStreak, { isLoading: updateStreakLoading }] =
@@ -116,6 +118,12 @@ function StreakList() {
 
   /* @ts-ignore */
   useEffect(() => {
+    const val = sessionStorage.getItem("streakRefetch");
+    if (refetch && !val) {
+      refetch();
+      sessionStorage.setItem("streakRefetch", "true");
+    }
+
     const socket = io(BASE_URL);
 
     socket.on("data-update", (data) => {
@@ -133,6 +141,11 @@ function StreakList() {
     // Cleanup function to disconnect on component unmount
     return () => socket.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (startedTimeStamp && isMoreThanAMinute(startedTimeStamp) && refetch)
+      refetch();
+  }, [startedTimeStamp]);
 
   //WHEN STREAK TEXT IS CHANGED
   useEffect(() => {

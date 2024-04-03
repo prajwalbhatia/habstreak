@@ -2,6 +2,9 @@ import { urls } from "Constants";
 
 import axios from "axios";
 
+import store from "../Redux/Store/store";
+import { clearResults } from "../Redux/Slices/clearPersistSlice";
+
 const mode = process.env.REACT_APP_API_MODE;
 // @ts-ignore
 const BASE_URL = urls[mode];
@@ -22,15 +25,27 @@ axiosObject.interceptors.response.use(
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
-      await axios.post(
-        BASE_URL + "user/refreshToken",
-        {},
-        { withCredentials: true }
-      );
 
-      return axiosObject(originalRequest);
+      try {
+        await axios.post(
+          BASE_URL + "user/refreshToken",
+          {},
+          { withCredentials: true }
+        );
+        return axiosObject(originalRequest);
+      } catch (error: any) {
+        if (
+          error?.response?.data?.error?.status === 403 &&
+          error?.response?.data?.error?.message === "Token is Expired"
+        ) {
+          localStorage.clear();
+          sessionStorage.clear();
+          store.dispatch(clearResults());
+
+          window.location.replace(`/account`);
+        }
+      }
     }
-    console.log("INTERSEPTOR", error);
     return Promise.reject(error);
   }
 );
