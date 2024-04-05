@@ -16,7 +16,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blackList: [],
+  whitelist: ["authDataStore"],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

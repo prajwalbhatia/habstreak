@@ -17,6 +17,7 @@ const useLogout = (refreshToken: string) => {
 
       if (logoutData?.data?.message === "You logged out successfully") {
         localStorage.clear();
+        sessionStorage.clear();
         store.dispatch(clearResults());
 
         if (window.ReactNativeWebView) {
