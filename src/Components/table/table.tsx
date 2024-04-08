@@ -21,7 +21,8 @@ const Table: any = (props: any) => {
     props;
   const planType = useGetPlanType();
   const { addStreak, SnackbarComponent } = useAddStreak();
-  const { addReward , SnackbarComponent : SnackBarComponentReward  } = useAddReward();
+  const { addReward, SnackbarComponent: SnackBarComponentReward } =
+    useAddReward();
 
   //FUNCTIONS
   const renderTableHeading = () => {
@@ -275,7 +276,16 @@ const Table: any = (props: any) => {
     let val = 0;
     return (
       <div className="d-flex o-scroll table-card-container">
-        {data.length > 0 ? (
+        {loading ? (
+          Array(data.length || 1)
+            .fill(0)
+            .map((val: any, index: any) => (
+              <Skeleton
+                variant="rounded"
+                sx={{ minWidth: 218, height: `calc(100% - 20px)`, margin: 1 , borderRadius : 4 }}
+              />
+            ))
+        ) : data.length > 0 ? (
           data.map((dataInner: any, index: any) => {
             val += 1;
             if (val === 10) val = 0;
@@ -414,6 +424,7 @@ const Table: any = (props: any) => {
         }
         btnContainerClass="mt-30 small-screen-btn"
         btnClass="h-60 br-16"
+        loading={loading}
       />
     </div>
   );
