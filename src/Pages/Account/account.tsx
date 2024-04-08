@@ -538,7 +538,7 @@ function Account(props: any) {
                     value={formData["fullName"]}
                     containerClass={"mt-25"}
                     onChange={handleChange}
-                    onBlur={validation}
+                    onKeyUp={validation}
                     errMsg={errMsg["fullName"]}
                     successMsg={successMsg["fullName"]}
                     icon={<i className="demo-icon icon-person size-16-8f" />}
@@ -555,7 +555,7 @@ function Account(props: any) {
                       value={formData["email"]}
                       containerClass={"mt-25"}
                       onChange={handleChange}
-                      onBlur={validation}
+                      onKeyUp={validation}
                       errMsg={errMsg["email"]}
                       successMsg={successMsg["email"]}
                       icon={<i className="demo-icon icon-email size-16-8f" />}
@@ -569,7 +569,7 @@ function Account(props: any) {
                       containerClass={"mt-25"}
                       value={formData["password"]}
                       onChange={handleChange}
-                      onBlur={stage ? validation : undefined}
+                      onKeyUp={stage ? validation : undefined}
                       errMsg={stage ? errMsg["password"] : undefined}
                       successMsg={stage ? successMsg["password"] : undefined}
                       icon={
@@ -591,7 +591,7 @@ function Account(props: any) {
                     type={showConfirmPassword ? "text" : "password"}
                     containerClass={"mt-25"}
                     onChange={handleChange}
-                    onBlur={validation}
+                    onKeyUp={validation}
                     errMsg={errMsg["confirmPassword"]}
                     successMsg={successMsg["confirmPassword"]}
                     icon={
@@ -667,6 +667,7 @@ function Account(props: any) {
                   }
                   typeVal="submit"
                   disabled={isValid || stage === "verify" ? false : true}
+                  loading={signinLoading || signupLoading || verifyEmailLoading}
                 />
 
                 {(stage === "signin" || stage === "login") && (
